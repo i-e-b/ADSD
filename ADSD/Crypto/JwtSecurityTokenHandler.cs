@@ -18,7 +18,7 @@ namespace ADSD
     /// </summary>
     public class JwtSecurityTokenHandler 
     {
-        private SignatureProviderFactory signatureProviderFactory = new SignatureProviderFactory();
+        SignatureProviderFactory signatureProviderFactory = new SignatureProviderFactory();
         private int _maximumTokenSizeInBytes = 2097152;
         private int _defaultTokenLifetimeInMinutes = JwtSecurityTokenHandler.DefaultTokenLifetimeInMinutes;
         private static IDictionary<string, string> outboundAlgorithmMap = (IDictionary<string, string>) new Dictionary<string, string>()
@@ -204,7 +204,7 @@ namespace ADSD
         /// <summary>
         /// Returns 'true' which indicates this instance can validate a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.
         /// </summary>
-        public override bool CanValidateToken
+        public bool CanValidateToken
         {
             get
             {
@@ -215,7 +215,7 @@ namespace ADSD
         /// <summary>
         /// Returns 'true', which indicates this instance can write <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.
         /// </summary>
-        public override bool CanWriteToken
+        public bool CanWriteToken
         {
             get
             {
@@ -258,15 +258,6 @@ namespace ADSD
         }
 
         /// <summary>
-        /// Obsolete method, use <see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> when processing tokens.
-        /// </summary>
-        /// <exception cref="T:System.NotSupportedException"> use <see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" />. when processing tokens.</exception>
-        public override void LoadCustomConfiguration(XmlNodeList nodelist)
-        {
-            throw new NotSupportedException("IDX11004: Loading from Configuration is not supported use TokenValidationParameters to set validation parameters.");
-        }
-
-        /// <summary>
         /// Gets or sets the <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.SignatureProviderFactory" /> for creating <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />(s).
         /// </summary>
         /// <remarks>This extensibility point can be used to insert custom <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />(s).
@@ -289,7 +280,7 @@ namespace ADSD
         /// <summary>
         /// Gets the <see cref="T:System.Type" /> supported by this handler.
         /// </summary>
-        public override Type TokenType
+        public Type TokenType
         {
             get
             {
@@ -313,7 +304,7 @@ namespace ADSD
         /// </returns>
         /// <remarks>The 'EncodingType' attribute is optional, if it is set, it must be equal to: "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary".</remarks>
         /// <exception cref="T:System.ArgumentNullException">'reader' is null.</exception>
-        public override bool CanReadToken(XmlReader reader)
+        public bool CanReadToken(XmlReader reader)
         {
             if (reader == null)
                 throw new ArgumentNullException(nameof (reader));
@@ -327,10 +318,10 @@ namespace ADSD
                     return (attribute2 == null || StringComparer.Ordinal.Equals(attribute2, "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary")) && (attribute1 == null || StringComparer.Ordinal.Equals(attribute1, "urn:ietf:params:oauth:token-type:jwt") || StringComparer.OrdinalIgnoreCase.Equals(attribute1, "JWT"));
                 }
             }
-            catch (XmlException ex)
+            catch (XmlException)
             {
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
             }
             return false;
@@ -347,7 +338,7 @@ namespace ADSD
         /// <para>'false' if token.Length * 2 &gt;  <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.MaximumTokenSizeInBytes" />.</para>
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">'tokenString' is null.</exception>
-        public override bool CanReadToken(string tokenString)
+        public bool CanReadToken(string tokenString)
         {
             if (tokenString == null)
                 throw new ArgumentNullException(nameof (tokenString));
@@ -362,7 +353,7 @@ namespace ADSD
         /// Creating <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" /> is not NotSupported.
         /// </summary>
         /// <exception cref="T:System.NotSupportedException"> to create a <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" />.</exception>
-        public override SecurityKeyIdentifierClause CreateSecurityTokenReference(
+        public SecurityKeyIdentifierClause CreateSecurityTokenReference(
             SecurityToken token,
             bool attached)
         {
@@ -378,7 +369,7 @@ namespace ADSD
         /// If <see cref="P:System.IdentityModel.Tokens.SecurityTokenDescriptor.SigningCredentials" /> is not null, <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.RawData" /> will be signed.
         /// </remarks>
         /// <exception cref="T:System.ArgumentNullException">'tokenDescriptor' is null.</exception>
-        public override SecurityToken CreateToken(SecurityTokenDescriptor tokenDescriptor)
+        public SecurityToken CreateToken(SimpleTokenDescriptor tokenDescriptor)
         {
             if (tokenDescriptor == null)
                 throw new ArgumentNullException(nameof (tokenDescriptor));
@@ -447,7 +438,7 @@ namespace ADSD
         /// <returns>A collection of strings that identify the tokens this instance can handle.</returns>
         /// <remarks>When receiving a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> wrapped inside a &lt;wsse:BinarySecurityToken&gt; element. The &lt;wsse:BinarySecurityToken&gt; element must have the ValueType attribute set to one of these values
         /// in order for this handler to recognize that it can read the token.</remarks>
-        public override string[] GetTokenTypeIdentifiers()
+        public string[] GetTokenTypeIdentifiers()
         {
             return JwtSecurityTokenHandler.tokenTypeIdentifiers;
         }
@@ -471,7 +462,7 @@ namespace ADSD
         /// </remarks>
         /// <exception cref="T:System.ArgumentNullException">'reader' is null.</exception>
         /// <exception cref="T:System.ArgumentException">if <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.CanReadToken(System.Xml.XmlReader)" /> returns false.</exception>
-        public override SecurityToken ReadToken(XmlReader reader)
+        public SecurityToken ReadToken(XmlReader reader)
         {
             if (reader == null)
                 throw new ArgumentNullException(nameof (reader));
@@ -497,7 +488,7 @@ namespace ADSD
         /// The contents of the JWT returned are not validated in any way, the token is simply decoded. Use ValidateToken to validate the JWT.
         /// </remarks>
         /// <returns>A <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /></returns>
-        public override SecurityToken ReadToken(string tokenString)
+        public SecurityToken ReadToken(string tokenString)
         {
             if (tokenString == null)
                 throw new ArgumentNullException("token");
@@ -514,7 +505,7 @@ namespace ADSD
         /// Obsolete method, use <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.ValidateToken(System.String,System.IdentityModel.Tokens.TokenValidationParameters,System.IdentityModel.Tokens.SecurityToken@)" />.
         /// </summary>
         /// <exception cref="T:System.NotSupportedException"> use <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.ValidateToken(System.String,System.IdentityModel.Tokens.TokenValidationParameters,System.IdentityModel.Tokens.SecurityToken@)" />.</exception>
-        public override ReadOnlyCollection<ClaimsIdentity> ValidateToken(
+        public ReadOnlyCollection<ClaimsIdentity> ValidateToken(
             SecurityToken token)
         {
             throw new NotSupportedException("IDX11008: This method is not supported to validate a 'jwt' use the method: ValidateToken(String, TokenValidationParameters, out SecurityToken).");
@@ -553,33 +544,23 @@ namespace ADSD
             Validators.ValidateTokenReplay(securityToken, nullable, validationParameters);
             if (validationParameters.ValidateLifetime)
             {
-                if (validationParameters.LifetimeValidator != null)
-                {
-                    if (!validationParameters.LifetimeValidator(notBefore, nullable, (SecurityToken) jwt, validationParameters))
-                        throw new SecurityTokenInvalidLifetimeException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10230: Lifetime validation failed. Delegate returned false, securitytoken: '{0}'.", (object) jwt.ToString()));
-                }
-                else
-                    this.ValidateLifetime(notBefore, nullable, (SecurityToken) jwt, validationParameters);
+                ValidateLifetime(notBefore, nullable, (SecurityToken) jwt, validationParameters);
             }
             if (validationParameters.ValidateAudience)
             {
-                if (validationParameters.AudienceValidator != null)
-                {
-                    if (!validationParameters.AudienceValidator(jwt.Audiences, (SecurityToken) jwt, validationParameters))
-                        throw new SecurityTokenInvalidAudienceException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10231: Audience validation failed. Delegate returned false, securitytoken: '{0}'.", (object) jwt.ToString()));
-                }
-                else
-                    this.ValidateAudience(jwt.Audiences, (SecurityToken) jwt, validationParameters);
+                ValidateAudience(jwt.Audiences, (SecurityToken) jwt, validationParameters);
             }
             string issuer = jwt.Issuer;
             if (validationParameters.ValidateIssuer)
-                issuer = validationParameters.IssuerValidator == null ? this.ValidateIssuer(issuer, (SecurityToken) jwt, validationParameters) : validationParameters.IssuerValidator(issuer, (SecurityToken) jwt, validationParameters);
+                issuer = this.ValidateIssuer(issuer, (SecurityToken) jwt, validationParameters);
+
             if (validationParameters.ValidateActor && !string.IsNullOrWhiteSpace(jwt.Actor))
             {
                 SecurityToken validatedToken1 = (SecurityToken) null;
                 this.ValidateToken(jwt.Actor, validationParameters, out validatedToken1);
             }
             ClaimsIdentity claimsIdentity = this.CreateClaimsIdentity(jwt, issuer, validationParameters);
+
             if (validationParameters.SaveSigninToken)
                 claimsIdentity.BootstrapContext = (object) new BootstrapContext(securityToken);
             validatedToken = (SecurityToken) jwt;
@@ -595,7 +576,7 @@ namespace ADSD
         /// <exception cref="T:System.ArgumentNullException">'token' is null.</exception>
         /// <exception cref="T:System.ArgumentException">'token' is not a not <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.</exception>
         /// <remarks>The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> current contents are encoded. If <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.SigningCredentials" /> is not null, the encoding will contain a signature.</remarks>
-        public override void WriteToken(XmlWriter writer, SecurityToken token)
+        public void WriteToken(XmlWriter writer, SecurityToken token)
         {
             if (writer == null)
                 throw new ArgumentNullException(nameof (writer));
@@ -623,7 +604,7 @@ namespace ADSD
         /// <exception cref="T:System.ArgumentNullException">'token' is null.</exception>
         /// <exception cref="T:System.ArgumentException">'token' is not a not <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.</exception>
         /// <returns>The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> as a signed (if <see cref="T:System.IdentityModel.Tokens.SigningCredentials" /> exist) encoded string.</returns>
-        public override string WriteToken(SecurityToken token)
+        public string WriteToken(SecurityToken token)
         {
             if (token == null)
                 throw new ArgumentNullException(nameof (token));
@@ -710,7 +691,7 @@ namespace ADSD
             {
                 if (!validationParameters.RequireSignedTokens)
                     return jwtSecurityToken;
-                throw new SecurityTokenValidationException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10504: Unable to validate signature, token does not have a signature: '{0}'", (object) jwtSecurityToken.ToString()));
+                throw new Exception(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10504: Unable to validate signature, token does not have a signature: '{0}'", (object) jwtSecurityToken.ToString()));
             }
             string index = jwtSecurityToken.Header.Alg;
             if (index != null && JwtSecurityTokenHandler.InboundAlgorithmMap.ContainsKey(index))
@@ -719,18 +700,9 @@ namespace ADSD
             if (signingKeyIdentifier.Count > 0)
             {
                 SecurityKey securityKey;
-                if (validationParameters.IssuerSigningKeyResolver != null)
-                {
-                    securityKey = validationParameters.IssuerSigningKeyResolver(token, (SecurityToken) jwtSecurityToken, signingKeyIdentifier, validationParameters);
-                    if (securityKey == null)
-                        throw new SecurityTokenSignatureKeyNotFoundException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10505: Unable to validate signature. The 'Delegate' specified on TokenValidationParameters, returned a null SecurityKey.\nSecurityKeyIdentifier: '{0}'\nToken: '{1}'.", (object) signingKeyIdentifier, (object) jwtSecurityToken.ToString()));
-                }
-                else
-                {
                     securityKey = this.ResolveIssuerSigningKey(token, (SecurityToken) jwtSecurityToken, signingKeyIdentifier, validationParameters);
                     if (securityKey == null)
-                        throw new SecurityTokenSignatureKeyNotFoundException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10500: Signature validation failed. Unable to resolve SecurityKeyIdentifier: '{0}', \ntoken: '{1}'.", (object) signingKeyIdentifier, (object) jwtSecurityToken.ToString()));
-                }
+                        throw new Exception(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10500: Signature validation failed. Unable to resolve SecurityKeyIdentifier: '{0}', \ntoken: '{1}'.", (object) signingKeyIdentifier, (object) jwtSecurityToken.ToString()));
                 try
                 {
                     if (this.ValidateSignature(bytes, signature, securityKey, index))
@@ -741,9 +713,9 @@ namespace ADSD
                 }
                 catch (Exception ex)
                 {
-                    throw new SignatureVerificationFailedException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10502: Signature validation failed. Key tried: '{0}'.\nException caught:\n '{1}'.\ntoken: '{2}'", (object) JwtSecurityTokenHandler.CreateKeyString(securityKey), (object) ex.ToString(), (object) jwtSecurityToken.ToString()), ex);
+                    throw new Exception(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10502: Signature validation failed. Key tried: '{0}'.\nException caught:\n '{1}'.\ntoken: '{2}'", (object) JwtSecurityTokenHandler.CreateKeyString(securityKey), (object) ex.ToString(), (object) jwtSecurityToken.ToString()), ex);
                 }
-                throw new SignatureVerificationFailedException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10501: Signature validation failed. Key tried: '{0}'.\ntoken: '{1}'", (object) JwtSecurityTokenHandler.CreateKeyString(securityKey), (object) jwtSecurityToken.ToString()));
+                throw new Exception(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10501: Signature validation failed. Key tried: '{0}'.\ntoken: '{1}'", (object) JwtSecurityTokenHandler.CreateKeyString(securityKey), (object) jwtSecurityToken.ToString()));
             }
             Exception inner = (Exception) null;
             StringBuilder stringBuilder1 = new StringBuilder();
@@ -760,20 +732,12 @@ namespace ADSD
                 }
                 catch (Exception ex)
                 {
-                    if (DiagnosticUtility.IsFatal(ex))
-                    {
-                        throw;
-                    }
-                    else
-                    {
-                        if (inner == null)
-                            inner = ex;
-                        stringBuilder1.AppendLine(ex.ToString());
-                    }
+                    if (inner == null) inner = ex;
+                    stringBuilder1.AppendLine(ex.ToString());
                 }
                 stringBuilder2.AppendLine(JwtSecurityTokenHandler.CreateKeyString(allKey));
             }
-            throw new SignatureVerificationFailedException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10503: Signature validation failed. Keys tried: '{0}'.\nExceptions caught:\n '{1}'.\ntoken: '{2}'", (object) stringBuilder2.ToString(), (object) stringBuilder1.ToString(), (object) jwtSecurityToken.ToString()), inner);
+            throw new Exception(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10503: Signature validation failed. Keys tried: '{0}'.\nExceptions caught:\n '{1}'.\ntoken: '{2}'", (object) stringBuilder2.ToString(), (object) stringBuilder1.ToString(), (object) jwtSecurityToken.ToString()), inner);
         }
 
         private IEnumerable<SecurityKey> GetAllKeys(
@@ -782,32 +746,10 @@ namespace ADSD
             SecurityKeyIdentifier keyIdentifier,
             TokenValidationParameters validationParameters)
         {
-            if (validationParameters.IssuerSigningKeyResolver != null)
+            foreach (SecurityToken issuerSigningToken in validationParameters.IssuerSigningTokens)
             {
-                yield return validationParameters.IssuerSigningKeyResolver(token, securityToken, keyIdentifier, validationParameters);
-            }
-            else
-            {
-                if (validationParameters.IssuerSigningKey != null)
-                    yield return validationParameters.IssuerSigningKey;
-                if (validationParameters.IssuerSigningKeys != null)
-                {
-                    foreach (SecurityKey issuerSigningKey in validationParameters.IssuerSigningKeys)
-                        yield return issuerSigningKey;
-                }
-                if (validationParameters.IssuerSigningToken != null)
-                {
-                    foreach (SecurityKey securityKey in validationParameters.IssuerSigningToken.SecurityKeys)
-                        yield return securityKey;
-                }
-                if (validationParameters.IssuerSigningTokens != null)
-                {
-                    foreach (SecurityToken issuerSigningToken in validationParameters.IssuerSigningTokens)
-                    {
-                        foreach (SecurityKey securityKey in issuerSigningToken.SecurityKeys)
-                            yield return securityKey;
-                    }
-                }
+                foreach (SecurityKey securityKey in issuerSigningToken.SecurityKeys)
+                    yield return securityKey;
             }
         }
 
@@ -901,13 +843,6 @@ namespace ADSD
                 BootstrapContext bootstrapContext2 = actor.BootstrapContext as BootstrapContext;
                 if (bootstrapContext2 != null)
                 {
-                    JwtSecurityToken securityToken = bootstrapContext2.SecurityToken as JwtSecurityToken;
-                    if (securityToken != null)
-                    {
-                        if (securityToken.RawData != null)
-                            return securityToken.RawData;
-                        return this.WriteToken((SecurityToken) securityToken);
-                    }
                     if (bootstrapContext2.Token != null)
                         return bootstrapContext2.Token;
                 }
@@ -1014,23 +949,6 @@ namespace ADSD
                         }
                     }
                 }
-                if (validationParameters.IssuerSigningKey != null)
-                {
-                    SecurityToken token1 = (SecurityToken) null;
-                    if (JwtSecurityTokenHandler.Matches(keyIdentifierClause, validationParameters.IssuerSigningKey, certMatcher, out token1))
-                        return validationParameters.IssuerSigningKey;
-                }
-                if (validationParameters.IssuerSigningKeys != null)
-                {
-                    foreach (SecurityKey issuerSigningKey in validationParameters.IssuerSigningKeys)
-                    {
-                        SecurityToken token1 = (SecurityToken) null;
-                        if (JwtSecurityTokenHandler.Matches(keyIdentifierClause, issuerSigningKey, certMatcher, out token1))
-                            return issuerSigningKey;
-                    }
-                }
-                if (validationParameters.IssuerSigningToken != null && validationParameters.IssuerSigningToken.MatchesKeyIdentifierClause(keyIdentifierClause))
-                    return validationParameters.IssuerSigningToken.SecurityKeys[0];
                 if (validationParameters.IssuerSigningTokens != null)
                 {
                     foreach (SecurityToken issuerSigningToken in validationParameters.IssuerSigningTokens)

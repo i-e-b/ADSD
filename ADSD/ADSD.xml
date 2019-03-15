@@ -4,6 +4,16 @@
         <name>ADSD</name>
     </assembly>
     <members>
+        <member name="T:ADSD.AadSecurityCheck">
+            <summary>
+            Verify security with Azure Active Directory
+            </summary>
+        </member>
+        <member name="M:ADSD.AadSecurityCheck.Validate(System.String)">
+            <summary>
+            Read authentication headers and check them against an AAD server.
+            </summary>
+        </member>
         <member name="T:ADSD.AsymmetricSecurityKey">
             <summary>Base class for asymmetric keys.</summary>
         </member>
@@ -33,6 +43,145 @@
             <summary>When overridden in a derived class, gets a value that indicates whether the private key is available.</summary>
             <returns>
             <see langword="true" /> when the private key is available; otherwise, <see langword="false" />. </returns>
+        </member>
+        <member name="T:ADSD.AsymmetricSignatureProvider">
+            <summary>
+            Provides signing and verifying operations when working with an <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />
+            </summary>
+        </member>
+        <member name="M:ADSD.AsymmetricSignatureProvider.#ctor(ADSD.AsymmetricSecurityKey,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.AsymmetricSignatureProvider" /> class used to create and verify signatures.
+            </summary>
+            <param name="key">
+            The <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" /> that will be used for cryptographic operations.
+            </param>
+            <param name="algorithm">The signature algorithm to apply.</param>
+            <param name="willCreateSignatures">
+            If this <see cref="T:System.IdentityModel.Tokens.AsymmetricSignatureProvider" /> is required to create signatures then set this to true.
+            <para>
+            Creating signatures requires that the <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" /> has access to a private key.
+            Verifying signatures (the default), does not require access to the private key.
+            </para>
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            'key' is null.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            'algorithm' is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            'algorithm' contains only whitespace.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            willCreateSignatures is true and <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />.KeySize is less than <see cref="P:System.IdentityModel.Tokens.SignatureProviderFactory.MinimumAsymmetricKeySizeInBitsForSigning" />.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />.KeySize is less than <see cref="P:System.IdentityModel.Tokens.SignatureProviderFactory.MinimumAsymmetricKeySizeInBitsForVerifying" />. Note: this is always checked.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Is thrown if the <see cref="M:System.IdentityModel.Tokens.AsymmetricSecurityKey.GetHashAlgorithmForSignature(System.String)" /> throws.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Is thrown if the <see cref="M:System.IdentityModel.Tokens.AsymmetricSecurityKey.GetHashAlgorithmForSignature(System.String)" /> returns null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Is thrown if the <see cref="M:System.IdentityModel.Tokens.AsymmetricSecurityKey.GetSignatureFormatter(System.String)" /> throws.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Is thrown if the <see cref="M:System.IdentityModel.Tokens.AsymmetricSecurityKey.GetSignatureFormatter(System.String)" /> returns null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Is thrown if the <see cref="M:System.IdentityModel.Tokens.AsymmetricSecurityKey.GetSignatureDeformatter(System.String)" /> throws.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Is thrown if the <see cref="M:System.IdentityModel.Tokens.AsymmetricSecurityKey.GetSignatureDeformatter(System.String)" /> returns null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Is thrown if the <see cref="M:System.Security.Cryptography.AsymmetricSignatureFormatter.SetHashAlgorithm(System.String)" /> throws.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Is thrown if the <see cref="M:System.Security.Cryptography.AsymmetricSignatureDeformatter.SetHashAlgorithm(System.String)" /> throws.
+            </exception>
+        </member>
+        <member name="M:ADSD.AsymmetricSignatureProvider.Sign(System.Byte[])">
+            <summary>
+            Produces a signature over the 'input' using the <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" /> and algorithm passed to <see cref="M:System.IdentityModel.Tokens.AsymmetricSignatureProvider.#ctor(System.IdentityModel.Tokens.AsymmetricSecurityKey,System.String,System.Boolean)" />.
+            </summary>
+            <param name="input">bytes to be signed.</param>
+            <returns>a signature over the input.</returns>
+            <exception cref="T:System.ArgumentNullException">'input' is null. </exception>
+            <exception cref="T:System.ArgumentException">'input.Length' == 0. </exception>
+            <exception cref="T:System.ObjectDisposedException">if <see cref="M:System.IdentityModel.Tokens.AsymmetricSignatureProvider.Dispose(System.Boolean)" /> has been called. </exception>
+            <exception cref="T:System.InvalidOperationException">if the internal <see cref="T:System.Security.Cryptography.AsymmetricSignatureFormatter" /> is null. This can occur if the constructor parameter 'willBeUsedforSigning' was not 'true'.</exception>
+            <exception cref="T:System.InvalidOperationException">if the internal <see cref="T:System.Security.Cryptography.HashAlgorithm" /> is null. This can occur if a derived type deletes it or does not create it.</exception>
+        </member>
+        <member name="M:ADSD.AsymmetricSignatureProvider.Verify(System.Byte[],System.Byte[])">
+            <summary>
+            Verifies that a signature over the' input' matches the signature.
+            </summary>
+            <param name="input">the bytes to generate the signature over.</param>
+            <param name="signature">the value to verify against.</param>
+            <returns>true if signature matches, false otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">'input' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">'signature' is null.</exception>
+            <exception cref="T:System.ArgumentException">'input.Length' == 0.</exception>
+            <exception cref="T:System.ArgumentException">'signature.Length' == 0.</exception>
+            <exception cref="T:System.ObjectDisposedException">if <see cref="M:System.IdentityModel.Tokens.AsymmetricSignatureProvider.Dispose(System.Boolean)" /> has been called. </exception>
+            <exception cref="T:System.InvalidOperationException">if the internal <see cref="T:System.Security.Cryptography.AsymmetricSignatureDeformatter" /> is null. This can occur if a derived type does not call the base constructor.</exception>
+            <exception cref="T:System.InvalidOperationException">if the internal <see cref="T:System.Security.Cryptography.HashAlgorithm" /> is null. This can occur if a derived type deletes it or does not create it.</exception>
+        </member>
+        <member name="M:ADSD.AsymmetricSignatureProvider.Dispose(System.Boolean)">
+            <summary>
+            Calls <see cref="M:System.Security.Cryptography.HashAlgorithm.Dispose" /> to release this managed resources.
+            </summary>
+            <param name="disposing">true, if called from Dispose(), false, if invoked inside a finalizer.</param>
+        </member>
+        <member name="T:ADSD.Base64UrlEncoder">
+            <summary>Encodes and Decodes strings as Base64Url encoding.</summary>
+        </member>
+        <member name="M:ADSD.Base64UrlEncoder.Encode(System.String)">
+            <summary>
+            The following functions perform base64url encoding which differs from regular base64 encoding as follows
+            * padding is skipped so the pad character '=' doesn't have to be percent encoded
+            * the 62nd and 63rd regular base64 encoding characters ('+' and '/') are replace with ('-' and '_')
+            The changes make the encoding alphabet file and URL safe.
+            </summary>
+            <param name="arg">string to encode.</param>
+            <returns>Base64Url encoding of the UTF8 bytes.</returns>
+        </member>
+        <member name="M:ADSD.Base64UrlEncoder.Encode(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Converts a subset of an array of 8-bit unsigned integers to its equivalent string representation that is encoded with base-64-url digits. Parameters specify
+            the subset as an offset in the input array, and the number of elements in the array to convert.
+            </summary>
+            <param name="inArray">An array of 8-bit unsigned integers.</param>
+            <param name="length">An offset in inArray.</param>
+            <param name="offset">The number of elements of inArray to convert.</param>
+            <returns>The string representation in base 64 url encodingof length elements of inArray, starting at position offset.</returns>
+            <exception cref="T:System.ArgumentNullException">'inArray' is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">offset or length is negative OR offset plus length is greater than the length of inArray.</exception>
+        </member>
+        <member name="M:ADSD.Base64UrlEncoder.Encode(System.Byte[])">
+            <summary>
+            Converts a subset of an array of 8-bit unsigned integers to its equivalent string representation that is encoded with base-64-url digits. Parameters specify
+            the subset as an offset in the input array, and the number of elements in the array to convert.
+            </summary>
+            <param name="inArray">An array of 8-bit unsigned integers.</param>
+            <returns>The string representation in base 64 url encodingof length elements of inArray, starting at position offset.</returns>
+            <exception cref="T:System.ArgumentNullException">'inArray' is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">offset or length is negative OR offset plus length is greater than the length of inArray.</exception>
+        </member>
+        <member name="M:ADSD.Base64UrlEncoder.DecodeBytes(System.String)">
+            <summary>
+            Converts the specified string, which encodes binary data as base-64-url digits, to an equivalent 8-bit unsigned integer array.</summary>
+            <param name="str">base64Url encoded string.</param>
+            <returns>UTF8 bytes.</returns>
+        </member>
+        <member name="M:ADSD.Base64UrlEncoder.Decode(System.String)">
+            <summary>Decodes the string from Base64UrlEncoded to UTF8.</summary>
+            <param name="arg">string to decode.</param>
+            <returns>UTF8 string.</returns>
         </member>
         <member name="T:ADSD.BinaryKeyIdentifierClause">
             <summary>Represents a base class for key identifier clauses that are based upon binary data.</summary>
@@ -127,6 +276,43 @@
             <returns>
             <see langword="true" /> if there is a match; otherwise, <see langword="false" />.</returns>
         </member>
+        <member name="T:ADSD.BootstrapContext">
+            <summary>Contains a serialized version of the original token that was used at sign-in time.</summary>
+        </member>
+        <member name="M:ADSD.BootstrapContext.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.BootstrapContext" /> class from a stream.</summary>
+            <param name="info">The serialized data.</param>
+            <param name="context">The context for serialization.</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="info" /> is null.</exception>
+        </member>
+        <member name="M:ADSD.BootstrapContext.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.BootstrapContext" /> class by using the specified string.</summary>
+            <param name="token">A string that represents the token.</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="token" /> is <see langword="null" />.</exception>
+        </member>
+        <member name="M:ADSD.BootstrapContext.#ctor(System.Byte[])">
+            <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.BootstrapContext" /> class by using the specified array.</summary>
+            <param name="token">An array that represents the token.</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="token" /> is <see langword="null" />.</exception>
+        </member>
+        <member name="M:ADSD.BootstrapContext.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Populates the <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with data needed to serialize the current <see cref="T:System.IdentityModel.Tokens.BootstrapContext" /> object.</summary>
+            <param name="info">The object to populate with data.</param>
+            <param name="context">The destination for this serialization. Can be <see langword="null" />.</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="info" /> is <see langword="null" />.</exception>
+        </member>
+        <member name="P:ADSD.BootstrapContext.TokenBytes">
+            <summary>Gets the array that was used to initialize the context.</summary>
+            <returns>The array that was used to initialize the context or <see langword="null" />.</returns>
+        </member>
+        <member name="P:ADSD.BootstrapContext.Token">
+            <summary>Gets the string that was used to initialize the context.</summary>
+            <returns>The string that was used to initialize the context or <see langword="null" />.</returns>
+        </member>
         <member name="T:ADSD.CipherData">
             <summary>
             CipherData
@@ -196,6 +382,51 @@
             <param name="value">An <see cref="T:System.Xml.XmlElement" /> object that represents an XML element to use as the reference.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> provided is <see langword="null" />.</exception>
         </member>
+        <member name="T:ADSD.ClaimTypeMapping">
+            <summary>
+            Defines the inbound and outbound mapping for claim claim types from jwt to .net claim
+            </summary>
+        </member>
+        <member name="P:ADSD.ClaimTypeMapping.InboundClaimTypeMap">
+            <summary>
+            Gets the InboundClaimTypeMap used by JwtSecurityTokenHandler when producing claims from jwt.
+            </summary>
+        </member>
+        <member name="P:ADSD.ClaimTypeMapping.OutboundClaimTypeMap">
+            <summary>
+            Gets the OutboundClaimTypeMap is used by JwtSecurityTokenHandler to shorten claim types when creating a jwt.
+            </summary>
+        </member>
+        <member name="T:ADSD.ConfigurationBasedIssuerNameRegistry">
+            <summary>Represents an issuer name registry that maintains a list of trusted issuers loaded from elements in the application configuration file that associate each issuer name to the X.509 certificate that is needed to verify the signature of tokens produced by the issuer.</summary>
+        </member>
+        <member name="M:ADSD.ConfigurationBasedIssuerNameRegistry.LoadCustomConfiguration(System.Xml.XmlNodeList)">
+            <summary>Loads the trusted issuers from configuration.</summary>
+            <param name="customConfiguration">The XML that represents the map of trusted issuers that is specified in the configuration file.</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="customConfiguration" /> is <see langword="null" />.</exception>
+            <exception cref="T:System.InvalidOperationException">The configuration contains one or more elements that are not recognized.</exception>
+        </member>
+        <member name="M:ADSD.ConfigurationBasedIssuerNameRegistry.GetIssuerName(ADSD.SecurityToken)">
+            <summary>Returns the issuer name associated with the specified <see cref="T:System.IdentityModel.Tokens.X509SecurityToken" /> by mapping the certificate thumbprint to a name in the trusted issuers dictionary.</summary>
+            <param name="securityToken">The security token for which the issuer name is requested. Should be assignable as <see cref="T:System.IdentityModel.Tokens.X509SecurityToken" />.</param>
+            <returns>The issuer name if an entry for the certificate thumbprint of the token exists in the <see cref="P:System.IdentityModel.Tokens.ConfigurationBasedIssuerNameRegistry.ConfiguredTrustedIssuers" /> dictionary; otherwise, <see langword="null" />.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="securityToken" /> is <see langword="null" />.</exception>
+        </member>
+        <member name="P:ADSD.ConfigurationBasedIssuerNameRegistry.ConfiguredTrustedIssuers">
+            <summary>Gets the dictionary of trusted issuers that have been configured for this instance. </summary>
+            <returns>A dictionary that contains the trusted issuers.</returns>
+        </member>
+        <member name="M:ADSD.ConfigurationBasedIssuerNameRegistry.AddTrustedIssuer(System.String,System.String)">
+            <summary>Adds an issuer to the dictionary of trusted issuers.</summary>
+            <param name="certificateThumbprint">ASN.1 encoded form of the issuer's certificate thumbprint.</param>
+            <param name="name">The name of the issuer.</param>
+            <exception cref="T:System.ArgumentException">
+            <paramref name="certificateThumbprint" /> is <see langword="null" /> or empty.-or-
+            <paramref name="name" /> is <see langword="null" /> or empty.</exception>
+            <exception cref="T:System.InvalidOperationException">The issuer specified by <paramref name="certificateThumbprint" /> has already been configured. (The issuer already exists in the <see cref="P:System.IdentityModel.Tokens.ConfigurationBasedIssuerNameRegistry.ConfiguredTrustedIssuers" /> dictionary.)</exception>
+        </member>
         <member name="T:ADSD.DataObject">
             <summary>Represents the object element of an XML signature that holds data to be signed.</summary>
         </member>
@@ -250,6 +481,33 @@
             <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.DataReference" /> class using the specified Uniform Resource Identifier (URI) and a <see cref="T:System.Security.Cryptography.Xml.TransformChain" /> object.</summary>
             <param name="uri">A Uniform Resource Identifier (URI) that points to the encrypted data.</param>
             <param name="transformChain">A <see cref="T:System.Security.Cryptography.Xml.TransformChain" /> object that describes transforms to do on the encrypted data.</param>
+        </member>
+        <member name="T:ADSD.DateTimeUtil">
+            <summary>Helper class for adding DateTimes and Timespans.</summary>
+        </member>
+        <member name="M:ADSD.DateTimeUtil.Add(System.DateTime,System.TimeSpan)">
+            <summary>
+            Add a DateTime and a TimeSpan.
+            The maximum time is DateTime.MaxTime.  It is not an error if time + timespan &gt; MaxTime.
+            Just return MaxTime.
+            </summary>
+            <param name="time">Initial <see cref="T:System.DateTime" /> value.</param>
+            <param name="timespan"><see cref="T:System.TimeSpan" /> to add.</param>
+            <returns><see cref="T:System.DateTime" /> as the sum of time and timespan.</returns>
+        </member>
+        <member name="M:ADSD.DateTimeUtil.GetMaxValue(System.DateTimeKind)">
+            <summary>
+            Gets the Maximum value for a DateTime specifying kind.
+            </summary>
+            <param name="kind">DateTimeKind to use.</param>
+            <returns>DateTime of specified kind.</returns>
+        </member>
+        <member name="M:ADSD.DateTimeUtil.GetMinValue(System.DateTimeKind)">
+            <summary>
+            Gets the Minimum value for a DateTime specifying kind.
+            </summary>
+            <param name="kind">DateTimeKind to use.</param>
+            <returns>DateTime of specified kind.</returns>
         </member>
         <member name="T:ADSD.DisposingContainer`1">
             <summary>
@@ -960,6 +1218,28 @@
             <returns>
             <see langword="true" /> if access to the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object is synchronized (thread safe); otherwise, <see langword="false" />.</returns>
         </member>
+        <member name="T:ADSD.EpochTime">
+            <summary>
+            Returns the absolute DateTime or the Seconds since Unix Epoch, where Epoch is UTC 1970-01-01T0:0:0Z.
+            </summary>
+        </member>
+        <member name="F:ADSD.EpochTime.UnixEpoch">
+            <summary>DateTime as UTV for UnixEpoch</summary>
+        </member>
+        <member name="M:ADSD.EpochTime.GetIntDate(System.DateTime)">
+            <summary>
+            Per JWT spec:
+            Gets the number of seconds from 1970-01-01T0:0:0Z as measured in UTC until the desired date/time.
+            </summary>
+            <param name="datetime">The DateTime to convert to seconds.</param>
+            <remarks>if dateTimeUtc less than UnixEpoch, return 0</remarks>
+            <returns>the number of seconds since Unix Epoch.</returns>
+        </member>
+        <member name="M:ADSD.EpochTime.DateTime(System.Int64)">
+            <summary>Creates a DateTime from epoch time.</summary>
+            <param name="secondsSinceUnixEpoch">Number of seconds.</param>
+            <returns>The DateTime in UTC.</returns>
+        </member>
         <member name="T:ADSD.Evidence">
             <summary>
             Policy evidence
@@ -1264,6 +1544,333 @@
             <param name="token">JWT token string</param>
             <returns>Validation result</returns>
         </member>
+        <member name="T:ADSD.IssuerNameRegistry">
+            <summary>The abstract base class for an issuer name registry. An issuer name registry is used to associate a mnemonic name to the cryptographic material that is needed to verify the signatures of tokens produced by the corresponding issuer. The issuer name registry maintains a list of issuers that are trusted by a relying party (RP) application.</summary>
+        </member>
+        <member name="M:ADSD.IssuerNameRegistry.GetIssuerName(ADSD.SecurityToken)">
+            <summary>When overridden in a derived class, returns the name of the issuer of the specified security token.</summary>
+            <param name="securityToken">The security token for which to return the issuer name.</param>
+            <returns>The issuer name.</returns>
+        </member>
+        <member name="M:ADSD.IssuerNameRegistry.GetIssuerName(ADSD.SecurityToken,System.String)">
+            <summary>When overridden in a derived class, returns the name of the issuer of the specified security token. The specified issuer name may be considered in determining the issuer name to return.</summary>
+            <param name="securityToken">The security token for which to return the issuer name.</param>
+            <param name="requestedIssuerName">An issuer name to consider in the request.</param>
+            <returns>The issuer name.</returns>
+        </member>
+        <member name="M:ADSD.IssuerNameRegistry.GetWindowsIssuerName">
+            <summary>Returns the default issuer name to be used for Windows claims.</summary>
+            <returns>The default issuer name for Windows claims.</returns>
+        </member>
+        <member name="T:ADSD.ITokenReplayCache">
+            <summary>
+            Interface that defines a simple cache for tacking replaying of security tokens.
+            </summary>
+        </member>
+        <member name="M:ADSD.ITokenReplayCache.TryAdd(System.String,System.DateTime)">
+            <summary>Try to add a securityToken.</summary>
+            <param name="securityToken">the security token to add.</param>
+            <param name="expiresOn">the time when security token expires.</param>
+            <returns>true if the security token was successfully added.</returns>
+        </member>
+        <member name="M:ADSD.ITokenReplayCache.TryFind(System.String)">
+            <summary>Try to find securityToken</summary>
+            <param name="securityToken">the security token to find.</param>
+            <returns>true if the security token is found.</returns>
+        </member>
+        <member name="T:ADSD.JsonExtensions">
+            <summary>Dictionary extensions for serializations</summary>
+        </member>
+        <member name="M:ADSD.JsonExtensions.SerializeToJson(System.Object)">
+            <summary>Serializes an object to JSON.</summary>
+            <param name="value">The object to serialize</param>
+            <returns>the object as JSON.</returns>
+        </member>
+        <member name="M:ADSD.JsonExtensions.DeserializeFromJson``1(System.String)">
+            <summary>Deserialzes JSON into an instance of type T.</summary>
+            <typeparam name="T">the object type.</typeparam>
+            <param name="jsonString">the JSON to deserialze.</param>
+            <returns>a new instance of type T.</returns>
+        </member>
+        <member name="M:ADSD.JsonExtensions.DeserializeJwtHeader(System.String)">
+            <summary>
+            Deserialzes JSON into an instance of <see cref="T:System.IdentityModel.Tokens.JwtHeader" />.
+            </summary>
+            <param name="jsonString">the JSON to deserialze.</param>
+            <returns>a new instance <see cref="T:System.IdentityModel.Tokens.JwtHeader" />.</returns>
+        </member>
+        <member name="M:ADSD.JsonExtensions.DeserializeJwtPayload(System.String)">
+            <summary>
+            Deserialzes JSON into an instance of <see cref="T:System.IdentityModel.Tokens.JwtPayload" />.
+            </summary>
+            <param name="jsonString">the JSON to deserialze.</param>
+            <returns>a new instance <see cref="T:System.IdentityModel.Tokens.JwtPayload" />.</returns>
+        </member>
+        <member name="T:ADSD.JwtHeader">
+            <summary>
+            Initializes a new instance of <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> which contains JSON objects representing the cryptographic operations applied to the JWT and optionally any additional properties of the JWT.
+            The member names within the JWT Header are referred to as Header Parameter Names.
+            <para>These names MUST be unique and the values must be <see cref="T:System.String" />(s). The corresponding values are referred to as Header Parameter Values.</para>
+            </summary>
+        </member>
+        <member name="M:ADSD.JwtHeader.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> class. Default string comparer <see cref="P:System.StringComparer.Ordinal" />.
+            </summary>
+        </member>
+        <member name="M:ADSD.JwtHeader.#ctor(ADSD.SigningCredentials)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> class. With the Header Parameters as follows:
+            <para>{ { typ, JWT }, { alg, Mapped( <see cref="P:System.IdentityModel.Tokens.SigningCredentials.SignatureAlgorithm" /> } }
+            See: Algorithm Mapping below.</para>
+            </summary>
+            <param name="signingCredentials">The <see cref="P:System.IdentityModel.Tokens.JwtHeader.SigningCredentials" /> that will be or were used to sign the <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.</param>
+            <remarks>
+            <para>For each <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" /> in signingCredentials.SigningKeyIdentifier</para>
+            <para>if the clause  is a <see cref="T:System.IdentityModel.Tokens.NamedKeySecurityKeyIdentifierClause" /> Header Parameter { clause.Name, clause.Id } will be added.</para>
+            <para>For example, if clause.Name == 'kid' and clause.Id == 'SecretKey99'. The JSON object { kid, SecretKey99 } would be added.</para>
+            <para>In addition, if the <see cref="P:System.IdentityModel.Tokens.JwtHeader.SigningCredentials" /> is a <see cref="T:System.IdentityModel.Tokens.X509SigningCredentials" /> the JSON object { x5t, Base64UrlEncoded( <see cref="M:System.Security.Cryptography.X509Certificates.X509Certificate.GetCertHashString" /> } will be added.</para>
+            <para>This simplifies the common case where a X509Certificate is used.</para>
+            <para>================= </para>
+            <para>Algorithm Mapping</para>
+            <para>================= </para>
+            <para><see cref="P:System.IdentityModel.Tokens.SigningCredentials.SignatureAlgorithm" /> describes the algorithm that is discoverable by the CLR runtime.</para>
+            <para>The  { alg, 'value' } placed in the header reflects the JWT specification.</para>
+            <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.OutboundAlgorithmMap" /> contains a signature mapping where the 'value' above will be translated according to this mapping.
+            <para>Current mapping is:</para>
+            <para>    'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256' =&gt; 'RS256'</para>
+            <para>    'http://www.w3.org/2001/04/xmldsig-more#hmac-sha256' =&gt; 'HS256'</para>
+            </remarks>
+        </member>
+        <member name="P:ADSD.JwtHeader.Alg">
+            <summary>
+            Gets the signature algorithm that was used to create the signature.
+            </summary>
+            <remarks>If the signature algorithm is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtHeader.SigningCredentials">
+            <summary>
+            Gets the <see cref="P:System.IdentityModel.Tokens.JwtHeader.SigningCredentials" /> passed in the constructor.
+            </summary>
+            <remarks>This value may be null.</remarks>
+        </member>
+        <member name="P:ADSD.JwtHeader.Typ">
+            <summary>Gets the mime type (Typ) of the token.</summary>
+            <remarks>If the mime type is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtHeader.SigningKeyIdentifier">
+            <summary>
+            Gets a <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifier" /> that contains a <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" /> for each key found.
+            </summary>
+            <remarks>
+            Keys are identified by matching a 'Reserved Header Parameter Name' found in the in JSON Web Signature specification.
+            <para>Names recognized are: jku, jkw, kid, x5c, x5t, x5u</para>
+            <para>'x5t' adds a <see cref="T:System.IdentityModel.Tokens.X509ThumbprintKeyIdentifierClause" /> passing a the Base64UrlDecoded( Value ) to the constructor.</para>
+            <para>'jku', 'jkw', 'kid', 'x5u', 'x5c' each add a <see cref="T:System.IdentityModel.Tokens.NamedKeySecurityKeyIdentifierClause" /> with the { Name, Value } passed to the <see cref="M:System.IdentityModel.Tokens.NamedKeySecurityKeyIdentifierClause.#ctor(System.String,System.String)" />.</para>
+            <para>   </para>
+            <para>If no keys are found, an empty <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifier" /> will be returned.</para>
+            </remarks>
+        </member>
+        <member name="M:ADSD.JwtHeader.SerializeToJson">
+            <summary>Serializes this instance to JSON.</summary>
+            <returns>this instance as JSON.</returns>
+            <remarks>use <see cref="P:System.IdentityModel.Tokens.JsonExtensions.Serializer" /> to customize JSON serialization.</remarks>
+        </member>
+        <member name="M:ADSD.JwtHeader.Base64UrlEncode">
+            <summary>Encodes this instance as Base64UrlEncoded JSON.</summary>
+            <returns>Base64UrlEncoded JSON.</returns>
+            <remarks>use <see cref="P:System.IdentityModel.Tokens.JsonExtensions.Serializer" /> to customize JSON serialization.</remarks>
+        </member>
+        <member name="M:ADSD.JwtHeader.Base64UrlDeserialize(System.String)">
+            <summary>
+            Deserializes Base64UrlEncoded JSON into a <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> instance.
+            </summary>
+            <param name="base64UrlEncodedJsonString">base64url encoded JSON to deserialize.</param>
+            <returns>an instance of <see cref="T:System.IdentityModel.Tokens.JwtHeader" />.</returns>
+            <remarks>use <see cref="P:System.IdentityModel.Tokens.JsonExtensions.Deserializer" /> to customize JSON serialization.</remarks>
+        </member>
+        <member name="M:ADSD.JwtHeader.Deserialize(System.String)">
+            <summary>
+            Deserialzes JSON into a <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> instance.
+            </summary>
+            <param name="jsonString"> the JSON to deserialize.</param>
+            <returns>an instance of <see cref="T:System.IdentityModel.Tokens.JwtHeader" />.</returns>
+            <remarks>use <see cref="P:System.IdentityModel.Tokens.JsonExtensions.Deserializer" /> to customize JSON serialization.</remarks>
+        </member>
+        <member name="T:ADSD.JwtPayload">
+            <summary>
+            Initializes a new instance of <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> which contains JSON objects representing the claims contained in the JWT. Each claim is a JSON object of the form { Name, Value }.
+            </summary>
+        </member>
+        <member name="M:ADSD.JwtPayload.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> class with no claims. Default string comparer <see cref="P:System.StringComparer.Ordinal" />.
+            Creates a empty <see cref="T:System.IdentityModel.Tokens.JwtPayload" />
+            </summary>
+        </member>
+        <member name="M:ADSD.JwtPayload.#ctor(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> class with <see cref="T:System.Collections.Generic.IEnumerable`1" />. Default string comparer <see cref="P:System.StringComparer.Ordinal" />.
+            <param name="claims">the claims to add.</param>
+            </summary>
+        </member>
+        <member name="M:ADSD.JwtPayload.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim},System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> class with claims added for each parameter specified. Default string comparer <see cref="P:System.StringComparer.Ordinal" />.
+            </summary>
+            <param name="issuer">if this value is not null, a { iss, 'issuer' } claim will be added.</param>
+            <param name="audience">if this value is not null, a { aud, 'audience' } claim will be added</param>
+            <param name="claims">if this value is not null then for each <see cref="T:System.Security.Claims.Claim" /> a { 'Claim.Type', 'Claim.Value' } is added. If duplicate claims are found then a { 'Claim.Type', List&lt;object&gt; } will be created to contain the duplicate values.</param>
+            <param name="notBefore">if notbefore.HasValue is 'true' a { nbf, 'value' } claim is added.</param>
+            <param name="expires">if expires.HasValue is 'true' a { exp, 'value' } claim is added.</param>
+            <remarks>Comparison is set to <see cref="P:System.StringComparer.Ordinal" />
+            <para>The 4 parameters: 'issuer', 'audience', 'notBefore', 'expires' take precednece over <see cref="T:System.Security.Claims.Claim" />(s) in 'claims'. The values in 'claims' will be overridden.</para></remarks>
+            <exception cref="T:System.ArgumentException">if 'expires' &lt;= 'notbefore'.</exception>
+        </member>
+        <member name="P:ADSD.JwtPayload.Actort">
+            <summary>
+            Gets the 'value' of the 'actor' claim { actort, 'value' }.
+            </summary>
+            <remarks>If the 'actor' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Acr">
+            <summary>Gets the 'value' of the 'acr' claim { acr, 'value' }.</summary>
+            <remarks>If the 'acr' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Amr">
+            <summary>Gets the 'value' of the 'amr' claim { amr, 'value' }.</summary>
+            <remarks>If the 'amr' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.AuthTime">
+            <summary>
+            Gets the 'value' of the 'auth_time' claim { auth_time, 'value' }.
+            </summary>
+            <remarks>If the 'auth_time' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Aud">
+            <summary>
+            Gets the 'value' of the 'audience' claim { aud, 'value' } as a list of strings.
+            </summary>
+            <remarks>If the 'audience' claim is not found, an empty enumerable is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Azp">
+            <summary>Gets the 'value' of the 'azp' claim { azp, 'value' }.</summary>
+            <remarks>If the 'azp' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.CHash">
+            <summary>
+            Gets 'value' of the 'c_hash' claim { c_hash, 'value' }.
+            </summary>
+            <remarks>If the 'c_hash' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Exp">
+            <summary>
+            Gets the 'value' of the 'expiration' claim { exp, 'value' }.
+            </summary>
+            <remarks>If the 'expiration' claim is not found OR could not be converted to <see cref="T:System.Int32" />, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Jti">
+            <summary>
+            Gets the 'value' of the 'JWT ID' claim { jti, 'value' }.
+            </summary>
+            <remarks>If the 'JWT ID' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Iat">
+            <summary>
+            Gets the 'value' of the 'Issued At' claim { iat, 'value' }.
+            </summary>
+            <remarks>If the 'Issued At' claim is not found OR cannot be converted to <see cref="T:System.Int32" /> null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Iss">
+            <summary>Gets 'value' of the 'issuer' claim { iss, 'value' }.</summary>
+            <remarks>If the 'issuer' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Nbf">
+            <summary>
+            Gets the 'value' of the 'expiration' claim { nbf, 'value' }.
+            </summary>
+            <remarks>If the 'notbefore' claim is not found OR could not be converted to <see cref="T:System.Int32" />, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Nonce">
+            <summary>Gets 'value' of the 'nonce' claim { nonce, 'value' }.</summary>
+            <remarks>If the 'nonce' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Sub">
+            <summary>Gets "value" of the 'subject' claim { sub, 'value' }.</summary>
+            <remarks>If the 'subject' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.ValidFrom">
+            <summary>
+            Gets 'value' of the 'notbefore' claim { nbf, 'value' } converted to a <see cref="T:System.DateTime" /> assuming 'value' is seconds since UnixEpoch (UTC 1970-01-01T0:0:0Z).
+            </summary>
+            <remarks>If the 'notbefore' claim is not found, then <see cref="F:System.DateTime.MinValue" /> is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.ValidTo">
+            <summary>
+            Gets 'value' of the 'expiration' claim { exp, 'value' } converted to a <see cref="T:System.DateTime" /> assuming 'value' is seconds since UnixEpoch (UTC 1970-01-01T0:0:0Z).
+            </summary>
+            <remarks>If the 'expiration' claim is not found, then <see cref="F:System.DateTime.MinValue" /> is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtPayload.Claims">
+            <summary>
+            Gets a <see cref="T:System.Collections.Generic.IEnumerable`1" /><see cref="T:System.Security.Claims.Claim" /> for each JSON { name, value }.
+            </summary>
+            <remarks>Each <see cref="T:System.Security.Claims.Claim" />(s) returned will have the <see cref="P:System.Security.Claims.Claim.Type" /> translated according to the mapping found in <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.InboundClaimTypeMap" />. Adding and removing to <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.InboundClaimTypeMap" /> will affect the value of the <see cref="P:System.Security.Claims.Claim.Type" />.
+            <para><see cref="P:System.Security.Claims.Claim.Issuer" /> and <see cref="P:System.Security.Claims.Claim.OriginalIssuer" /> will be set to the value of <see cref="P:System.IdentityModel.Tokens.JwtPayload.Iss" /> ( <see cref="F:System.String.Empty" /> if null).</para></remarks>
+        </member>
+        <member name="M:ADSD.JwtPayload.AddClaim(System.Security.Claims.Claim)">
+            <summary>
+            Adds a JSON object representing the <see cref="T:System.Security.Claims.Claim" /> to the <see cref="T:System.IdentityModel.Tokens.JwtPayload" />
+            </summary>
+            <param name="claim">{ 'Claim.Type', 'Claim.Value' } is added. If a JSON object is found with the name == <see cref="P:System.Security.Claims.Claim.Type" /> then a { 'Claim.Type', List&lt;object&gt; } will be created to contain the duplicate values.</param>
+            <remarks>See <see cref="M:System.IdentityModel.Tokens.JwtPayload.AddClaims(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})" /> for details on how <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.OutboundClaimTypeMap" /> is applied.</remarks>
+            <exception cref="T:System.ArgumentNullException">'claim' is null.</exception>
+        </member>
+        <member name="M:ADSD.JwtPayload.AddClaims(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+            <summary>
+            Adds a number of <see cref="T:System.Security.Claims.Claim" /> to the <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> as JSON { name, value } pairs.
+            </summary>
+            <param name="claims">for each <see cref="T:System.Security.Claims.Claim" /> a JSON pair { 'Claim.Type', 'Claim.Value' } is added. If duplicate claims are found then a { 'Claim.Type', List&lt;object&gt; } will be created to contain the duplicate values.</param>
+            <remarks><para>Each <see cref="T:System.Security.Claims.Claim" /> added will have <see cref="P:System.Security.Claims.Claim.Type" /> translated according to the mapping found in <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.OutboundClaimTypeMap" />. Adding and removing to <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.OutboundClaimTypeMap" />
+            will affect the name component of the Json claim</para>
+            <para>Any <see cref="T:System.Security.Claims.Claim" /> in the <see cref="T:System.Collections.Generic.IEnumerable`1" /> that is null, will be ignored.</para></remarks>
+            <exception cref="T:System.ArgumentNullException">'claims' is null.</exception>
+        </member>
+        <member name="M:ADSD.JwtPayload.GetDateTime(System.String)">
+            <summary>
+            Gets the DateTime using the number of seconds from 1970-01-01T0:0:0Z (UTC)
+            </summary>
+            <param name="key">Claim in the payload that should map to an integer.</param>
+            <remarks>If the claim is not found, the function returns: DateTime.MinValue</remarks>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenException">if an overflow exception is thrown by the runtime.</exception>
+            <returns>the DateTime representation of a claim.</returns>
+        </member>
+        <member name="M:ADSD.JwtPayload.SerializeToJson">
+            <summary>Serializes this instance to JSON.</summary>
+            <returns>this instance as JSON.</returns>
+            <remarks>use <see cref="P:System.IdentityModel.Tokens.JsonExtensions.Serializer" /> to customize JSON serialization.</remarks>
+        </member>
+        <member name="M:ADSD.JwtPayload.Base64UrlEncode">
+            <summary>Encodes this instance as Base64UrlEncoded JSON.</summary>
+            <returns>Base64UrlEncoded JSON.</returns>
+            <remarks>use <see cref="P:System.IdentityModel.Tokens.JsonExtensions.Serializer" /> to customize JSON serialization.</remarks>
+        </member>
+        <member name="M:ADSD.JwtPayload.Base64UrlDeserialize(System.String)">
+            <summary>
+            Deserializes Base64UrlEncoded JSON into a <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> instance.
+            </summary>
+            <param name="base64UrlEncodedJsonString">base64url encoded JSON to deserialize.</param>
+            <returns>an instance of <see cref="T:System.IdentityModel.Tokens.JwtPayload" />.</returns>
+            <remarks>use <see cref="P:System.IdentityModel.Tokens.JsonExtensions.Deserializer" /> to customize JSON serialization.</remarks>
+        </member>
+        <member name="M:ADSD.JwtPayload.Deserialize(System.String)">
+            <summary>
+            Deserialzes JSON into a <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> instance.
+            </summary>
+            <param name="jsonString">the JSON to deserialize.</param>
+            <returns>an instance of <see cref="T:System.IdentityModel.Tokens.JwtPayload" />.</returns>
+            <remarks>use <see cref="P:System.IdentityModel.Tokens.JsonExtensions.Deserializer" /> to customize JSON serialization.</remarks>
+        </member>
         <member name="T:ADSD.JwtSecurityKey">
             <summary>
             An X509 key used in signing JWT tokens
@@ -1371,6 +1978,553 @@
             <summary>
             Gets the <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2" />.
             </summary>
+        </member>
+        <member name="T:ADSD.JwtSecurityToken">
+            <summary>
+            A <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> designed for representing a JSON Web Token (JWT).
+            </summary>
+        </member>
+        <member name="M:ADSD.JwtSecurityToken.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> from a string in JWS Compact serialized format.
+            </summary>
+            <param name="jwtEncodedString">A JSON Web Token that has been serialized in JWS Compact serialized format.</param>
+            <exception cref="T:System.ArgumentNullException">'jwtEncodedString' is null.</exception>
+            <exception cref="T:System.ArgumentException">'jwtEncodedString' contains only whitespace.</exception>
+            <exception cref="T:System.ArgumentException">'jwtEncodedString' is not in JWS Compact serialized format.</exception>
+            <remarks>
+            The contents of this <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> have not been validated, the JSON Web Token is simply decoded. Validation can be accomplished using <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.ValidateToken(System.String,System.IdentityModel.Tokens.TokenValidationParameters,System.IdentityModel.Tokens.SecurityToken@)" />
+            </remarks>
+        </member>
+        <member name="M:ADSD.JwtSecurityToken.#ctor(ADSD.JwtHeader,ADSD.JwtPayload,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> class where the <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> contains the crypto algorithms applied to the encoded <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> and <see cref="T:System.IdentityModel.Tokens.JwtPayload" />. The jwtEncodedString is the result of those operations.
+            </summary>
+            <param name="header">Contains JSON objects representing the cryptographic operations applied to the JWT and optionally any additional properties of the JWT</param>
+            <param name="payload">Contains JSON objects representing the claims contained in the JWT. Each claim is a JSON object of the form { Name, Value }</param>
+            <param name="rawHeader">base64urlencoded JwtHeader</param>
+            <param name="rawPayload">base64urlencoded JwtPayload</param>
+            <param name="rawSignature">base64urlencoded JwtSignature</param>
+            <exception cref="T:System.ArgumentNullException">'header' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">'payload' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">'rawSignature' is null.</exception>
+            <exception cref="T:System.ArgumentException">'rawHeader' or 'rawPayload' is null or whitespace.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityToken.#ctor(ADSD.JwtHeader,ADSD.JwtPayload)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> class where the <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> contains the crypto algorithms applied to the encoded <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> and <see cref="T:System.IdentityModel.Tokens.JwtPayload" />. The jwtEncodedString is the result of those operations.
+            </summary>
+            <param name="header">Contains JSON objects representing the cryptographic operations applied to the JWT and optionally any additional properties of the JWT</param>
+            <param name="payload">Contains JSON objects representing the claims contained in the JWT. Each claim is a JSON object of the form { Name, Value }</param>
+            <exception cref="T:System.ArgumentNullException">'header' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">'payload' is null.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityToken.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim},System.Nullable{System.DateTime},System.Nullable{System.DateTime},ADSD.SigningCredentials)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> class specifying optional parameters.
+            </summary>
+            <param name="issuer">if this value is not null, a { iss, 'issuer' } claim will be added.</param>
+            <param name="audience">if this value is not null, a { aud, 'audience' } claim will be added</param>
+            <param name="claims">if this value is not null then for each <see cref="T:System.Security.Claims.Claim" /> a { 'Claim.Type', 'Claim.Value' } is added. If duplicate claims are found then a { 'Claim.Type', List&lt;object&gt; } will be created to contain the duplicate values.</param>
+            <param name="expires">if expires.HasValue a { exp, 'value' } claim is added.</param>
+            <param name="notBefore">if notbefore.HasValue a { nbf, 'value' } claim is added.</param>
+            <param name="signingCredentials">The <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.SigningCredentials" /> that will be used to sign the <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />. See <see cref="M:System.IdentityModel.Tokens.JwtHeader.#ctor(System.IdentityModel.Tokens.SigningCredentials)" /> for details pertaining to the Header Parameter(s).</param>
+            <exception cref="T:System.ArgumentException">if 'expires' &lt;= 'notbefore'.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.Actor">
+            <summary>
+            Gets the 'value' of the 'actor' claim { actort, 'value' }.
+            </summary>
+            <remarks>If the 'actor' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.Audiences">
+            <summary>Gets the list of 'audience' claim { aud, 'value' }.</summary>
+            <remarks>If the 'audience' claim is not found, enumeration will be empty.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.Claims">
+            <summary>
+            Gets the <see cref="T:System.Security.Claims.Claim" />(s) for this token.
+            </summary>
+            <remarks><para><see cref="T:System.Security.Claims.Claim" />(s) returned will NOT have the <see cref="P:System.Security.Claims.Claim.Type" /> translated according to <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.InboundClaimTypeMap" /></para></remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.EncodedHeader">
+            <summary>
+            Gets the Base64UrlEncoded <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> associated with this instance.
+            </summary>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.EncodedPayload">
+            <summary>
+            Gets the Base64UrlEncoded <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> associated with this instance.
+            </summary>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.Header">
+            <summary>
+            Gets the <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> associated with this instance.
+            </summary>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.Id">
+            <summary>
+            Gets the 'value' of the 'JWT ID' claim { jti, ''value' }.
+            </summary>
+            <remarks>If the 'JWT ID' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.Issuer">
+            <summary>
+            Gets the 'value' of the 'issuer' claim { iss, 'value' }.
+            </summary>
+            <remarks>If the 'issuer' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.Payload">
+            <summary>
+            Gets the <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> associated with this instance.
+            </summary>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.RawData">
+            <summary>
+            Gets the original raw data of this instance when it was created.
+            </summary>
+            <remarks>The original JSON Compact serialized format passed to one of the two constructors <see cref="M:System.IdentityModel.Tokens.JwtSecurityToken.#ctor(System.String)" />
+            or <see cref="M:System.IdentityModel.Tokens.JwtSecurityToken.#ctor(System.IdentityModel.Tokens.JwtHeader,System.IdentityModel.Tokens.JwtPayload,System.String,System.String,System.String)" /></remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.RawHeader">
+            <summary>
+            Gets the original raw data of this instance when it was created.
+            </summary>
+            <remarks>The original JSON Compact serialized format passed to one of the two constructors <see cref="M:System.IdentityModel.Tokens.JwtSecurityToken.#ctor(System.String)" />
+            or <see cref="M:System.IdentityModel.Tokens.JwtSecurityToken.#ctor(System.IdentityModel.Tokens.JwtHeader,System.IdentityModel.Tokens.JwtPayload,System.String,System.String,System.String)" /></remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.RawPayload">
+            <summary>
+            Gets the original raw data of this instance when it was created.
+            </summary>
+            <remarks>The original JSON Compact serialized format passed to one of the two constructors <see cref="M:System.IdentityModel.Tokens.JwtSecurityToken.#ctor(System.String)" />
+            or <see cref="M:System.IdentityModel.Tokens.JwtSecurityToken.#ctor(System.IdentityModel.Tokens.JwtHeader,System.IdentityModel.Tokens.JwtPayload,System.String,System.String,System.String)" /></remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.RawSignature">
+            <summary>
+            Gets the original raw data of this instance when it was created.
+            </summary>
+            <remarks>The original JSON Compact serialized format passed to one of the two constructors <see cref="M:System.IdentityModel.Tokens.JwtSecurityToken.#ctor(System.String)" />
+            or <see cref="M:System.IdentityModel.Tokens.JwtSecurityToken.#ctor(System.IdentityModel.Tokens.JwtHeader,System.IdentityModel.Tokens.JwtPayload,System.String,System.String,System.String)" /></remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.SecurityKeys">
+            <summary>
+            Gets the <see cref="T:System.IdentityModel.Tokens.SecurityKey" />s for this instance.
+            </summary>
+            <remarks>By default an empty collection is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.SignatureAlgorithm">
+            <summary>
+            Gets the signature algorithm associated with this instance.
+            </summary>
+            <remarks>if there is a <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.SigningCredentials" /> associated with this instance, a value will be returned.  Null otherwise.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.SigningCredentials">
+            <summary>
+            Gets the <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.SigningCredentials" /> associated with this instance.
+            </summary>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.SigningKey">
+            <summary>
+            Gets or sets the <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that signed this instance.
+            </summary>
+            <remarks><see cref="T:System.IdentityModel.Tokens.JwtSecurityTokenHandler" />.ValidateSignature(...) sets this value when a <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> is used to successfully validate a signature.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.SigningToken">
+            <summary>
+            Gets or sets the <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> that contains a <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that signed this instance.
+            </summary>
+            <remarks><see cref="T:System.IdentityModel.Tokens.JwtSecurityTokenHandler" />.ValidateSignature(...) sets this value when a <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> is used to successfully validate a signature.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.Subject">
+            <summary>Gets "value" of the 'subject' claim { sub, 'value' }.</summary>
+            <remarks>If the 'subject' claim is not found, null is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.ValidFrom">
+            <summary>
+            Gets 'value' of the 'notbefore' claim { nbf, 'value' } converted to a <see cref="T:System.DateTime" /> assuming 'value' is seconds since UnixEpoch (UTC 1970-01-01T0:0:0Z).
+            </summary>
+            <remarks>If the 'notbefore' claim is not found, then <see cref="F:System.DateTime.MinValue" /> is returned.</remarks>
+        </member>
+        <member name="P:ADSD.JwtSecurityToken.ValidTo">
+            <summary>
+            Gets 'value' of the 'expiration' claim { exp, 'value' } converted to a <see cref="T:System.DateTime" /> assuming 'value' is seconds since UnixEpoch (UTC 1970-01-01T0:0:0Z).
+            </summary>
+            <remarks>If the 'expiration' claim is not found, then <see cref="F:System.DateTime.MinValue" /> is returned.</remarks>
+        </member>
+        <member name="M:ADSD.JwtSecurityToken.ToString">
+            <summary>
+            Decodes the <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> and <see cref="T:System.IdentityModel.Tokens.JwtPayload" />
+            </summary>
+            <returns>A string containing the header and payload in JSON format</returns>
+        </member>
+        <member name="M:ADSD.JwtSecurityToken.Decode(System.String)">
+            <summary>
+            Decodes the string into the header, payload and signature
+            </summary>
+            <param name="jwtEncodedString">Base64Url encoded string.</param>
+        </member>
+        <member name="T:ADSD.JwtSecurityTokenHandler">
+            <summary>
+            A <see cref="T:System.IdentityModel.Tokens.SecurityTokenHandler" /> designed for creating and validating Json Web Tokens. See http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-07.
+            </summary>
+        </member>
+        <member name="F:ADSD.JwtSecurityTokenHandler.DefaultTokenLifetimeInMinutes">
+            <summary>
+            Default lifetime of tokens created. When creating tokens, if 'expires' and 'notbefore' are both null, then a default will be set to: expires = DateTime.UtcNow, notbefore = DateTime.UtcNow + TimeSpan.FromMinutes(TokenLifetimeInMinutes).
+            </summary>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.InboundAlgorithmMap">
+            <summary>Gets or sets the <see cref="T:System.Collections.Generic.IDictionary`2" /> used to map Inbound Cryptographic Algorithms.</summary>
+            <remarks>Strings that describe Cryptographic Algorithms that are understood by the runtime are not necessarily the same values used in the JsonWebToken specification.
+            <para>When a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> signature is validated, the algorithm is obtained from the HeaderParameter { alg, 'value' }.
+            The 'value' is translated according to this mapping and the translated 'value' is used when performing cryptographic operations.</para>
+            <para>Default mapping is:</para>
+            <para>    RS256 =&gt; http://www.w3.org/2001/04/xmldsig-more#rsa-sha256 </para>
+            <para>    HS256 =&gt; http://www.w3.org/2001/04/xmldsig-more#hmac-sha256 </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">'value' is null.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.OutboundAlgorithmMap">
+            <summary>Gets or sets the <see cref="T:System.Collections.Generic.IDictionary`2" /> used to map Outbound Cryptographic Algorithms.</summary>
+            <remarks>Strings that describe Cryptographic Algorithms understood by the runtime are not necessarily the same in the JsonWebToken specification.
+            <para>This property contains mappings the will be used to when creating a <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> and setting the HeaderParameter { alg, 'value' }.
+            The 'value' set is translated according to this mapping.
+            </para>
+            <para>Default mapping is:</para>
+            <para>    http://www.w3.org/2001/04/xmldsig-more#rsa-sha256  =&gt; RS256</para>
+            <para>    http://www.w3.org/2001/04/xmldsig-more#hmac-sha256 =&gt; HS256</para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">'value' is null.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.InboundClaimTypeMap">
+            <summary>
+            Gets or sets the <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.InboundClaimTypeMap" /> that is used when setting the <see cref="P:System.Security.Claims.Claim.Type" /> for claims in the <see cref="T:System.Security.Claims.ClaimsPrincipal" /> extracted when validating a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.
+            <para>The <see cref="P:System.Security.Claims.Claim.Type" /> is set to the JSON claim 'name' after translating using this mapping.</para>
+            </summary>
+            <exception cref="T:System.ArgumentNullException">'value is null.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.OutboundClaimTypeMap">
+            <summary>
+            <para>Gets or sets the <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.OutboundClaimTypeMap" /> that is used when creating a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> from <see cref="T:System.Security.Claims.Claim" />(s).</para>
+            <para>The JSON claim 'name' value is set to <see cref="P:System.Security.Claims.Claim.Type" /> after translating using this mapping.</para>
+            </summary>
+            <remarks>This mapping is applied only when using <see cref="M:System.IdentityModel.Tokens.JwtPayload.AddClaim(System.Security.Claims.Claim)" /> or <see cref="M:System.IdentityModel.Tokens.JwtPayload.AddClaims(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})" />. Adding values directly will not result in translation.</remarks>
+            <exception cref="T:System.ArgumentNullException">'value is null.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.InboundClaimFilter">
+            <summary>Gets or sets the <see cref="T:System.Collections.Generic.ISet`1" /> used to filter claims when populating a <see cref="T:System.Security.Claims.ClaimsIdentity" /> claims form a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.
+            When a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> is validated, claims with types found in this <see cref="T:System.Collections.Generic.ISet`1" /> will not be added to the <see cref="T:System.Security.Claims.ClaimsIdentity" />.</summary>
+            <exception cref="T:System.ArgumentNullException">'value' is null.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.ShortClaimTypeProperty">
+            <summary>
+            Gets or sets the property name of <see cref="P:System.Security.Claims.Claim.Properties" /> the will contain the original JSON claim 'name' if a mapping occurred when the <see cref="T:System.Security.Claims.Claim" />(s) were created.
+            <para>See <seealso cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.InboundClaimTypeMap" /> for more information.</para>
+            </summary>
+            <exception cref="T:System.ArgumentException">if <see cref="T:System.String" />.IsIsNullOrWhiteSpace('value') is true.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.JsonClaimTypeProperty">
+            <summary>
+            Gets or sets the property name of <see cref="P:System.Security.Claims.Claim.Properties" /> the will contain .Net type that was recogninzed when JwtPayload.Claims serialized the value to JSON.
+            <para>See <seealso cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.InboundClaimTypeMap" /> for more information.</para>
+            </summary>
+            <exception cref="T:System.ArgumentException">if <see cref="T:System.String" />.IsIsNullOrWhiteSpace('value') is true.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.CanValidateToken">
+            <summary>
+            Returns 'true' which indicates this instance can validate a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.
+            </summary>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.CanWriteToken">
+            <summary>
+            Returns 'true', which indicates this instance can write <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.
+            </summary>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.TokenLifetimeInMinutes">
+            <summary>Gets and sets the token lifetime in minutes.</summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">'value' less than 1.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.MaximumTokenSizeInBytes">
+            <summary>
+            Gets and sets the maximum size in bytes, that a will be processed.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">'value' less than 1.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.SignatureProviderFactory">
+            <summary>
+            Gets or sets the <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.SignatureProviderFactory" /> for creating <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />(s).
+            </summary>
+            <remarks>This extensibility point can be used to insert custom <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />(s).
+            <para><see cref="M:System.IdentityModel.Tokens.SignatureProviderFactory.CreateForVerifying(System.IdentityModel.Tokens.SecurityKey,System.String)" /> is called to obtain a <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />(s) when needed.</para></remarks>
+            <exception cref="T:System.ArgumentNullException">'value' is null.</exception>
+        </member>
+        <member name="P:ADSD.JwtSecurityTokenHandler.TokenType">
+            <summary>
+            Gets the <see cref="T:System.Type" /> supported by this handler.
+            </summary>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.CanReadToken(System.Xml.XmlReader)">
+            <summary>
+            Determines if the <see cref="T:System.Xml.XmlReader" /> is positioned on a well formed &lt;BinarySecurityToken&gt; element.
+            </summary>
+            <param name="reader"><see cref="T:System.Xml.XmlReader" /> positioned at xml.</param>
+            <returns>
+            <para>'true' if the reader is positioned at an element &lt;BinarySecurityToken&gt;.
+            in the namespace: 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'</para>
+            <para>With an attribute of 'valueType' equal to one of: </para>
+            <para>    "urn:ietf:params:oauth:token-type:jwt", "JWT" </para>
+            <para>
+            For example: &lt;wsse:BinarySecurityToken valueType = "JWT"&gt; ...
+            </para>
+            'false' otherwise.
+            </returns>
+            <remarks>The 'EncodingType' attribute is optional, if it is set, it must be equal to: "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary".</remarks>
+            <exception cref="T:System.ArgumentNullException">'reader' is null.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.CanReadToken(System.String)">
+            <summary>
+            Determines if the string is a well formed Json Web token (see http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-07)
+            </summary>
+            <param name="tokenString">string that should represent a valid JSON Web Token.</param>
+            <remarks>Uses <see cref="M:System.Text.RegularExpressions.Regex.IsMatch(System.String,System.String)" />( token, @"^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$" ).
+            </remarks>
+            <returns>
+            <para>'true' if the token is in JSON compact serialization format.</para>
+            <para>'false' if token.Length * 2 &gt;  <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.MaximumTokenSizeInBytes" />.</para>
+            </returns>
+            <exception cref="T:System.ArgumentNullException">'tokenString' is null.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.CreateSecurityTokenReference(ADSD.SecurityToken,System.Boolean)">
+            <summary>
+            Creating <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" /> is not NotSupported.
+            </summary>
+            <exception cref="T:System.NotSupportedException"> to create a <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" />.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.CreateToken(ADSD.SimpleTokenDescriptor)">
+            <summary>
+            Creates a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> based on values found in the <see cref="T:System.IdentityModel.Tokens.SecurityTokenDescriptor" />.
+            </summary>
+            <param name="tokenDescriptor">Contains the parameters used to create the token.</param>
+            <returns>A <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.</returns>
+            <remarks>
+            If <see cref="P:System.IdentityModel.Tokens.SecurityTokenDescriptor.SigningCredentials" /> is not null, <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.RawData" /> will be signed.
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">'tokenDescriptor' is null.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.CreateToken(System.String,System.String,System.Security.Claims.ClaimsIdentity,System.Nullable{System.DateTime},System.Nullable{System.DateTime},ADSD.SigningCredentials,ADSD.SignatureProvider)">
+            <summary>
+            Uses the <see cref="M:System.IdentityModel.Tokens.JwtSecurityToken.#ctor(System.IdentityModel.Tokens.JwtHeader,System.IdentityModel.Tokens.JwtPayload,System.String,System.String,System.String)" /> constructor, first creating the <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> and <see cref="T:System.IdentityModel.Tokens.JwtPayload" />.
+            <para>If <see cref="T:System.IdentityModel.Tokens.SigningCredentials" /> is not null, <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.RawData" /> will be signed.</para>
+            </summary>
+            <param name="issuer">the issuer of the token.</param>
+            <param name="audience">the audience for this token.</param>
+            <param name="subject">the source of the <see cref="T:System.Security.Claims.Claim" />(s) for this token.</param>
+            <param name="notBefore">the notbefore time for this token.</param>
+            <param name="expires">the expiration time for this token.</param>
+            <param name="signingCredentials">contains cryptographic material for generating a signature.</param>
+            <param name="signatureProvider">optional <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />.</param>
+            <remarks>If <see cref="P:System.Security.Claims.ClaimsIdentity.Actor" /> is not null, then a claim { actort, 'value' } will be added to the payload. <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.CreateActorValue(System.Security.Claims.ClaimsIdentity)" /> for details on how the value is created.
+            <para>See <seealso cref="T:System.IdentityModel.Tokens.JwtHeader" /> for details on how the HeaderParameters are added to the header.</para>
+            <para>See <seealso cref="T:System.IdentityModel.Tokens.JwtPayload" /> for details on how the values are added to the payload.</para></remarks>
+            <para>If signautureProvider is not null, then it will be used to create the signature and <see cref="M:System.IdentityModel.Tokens.SignatureProviderFactory.CreateForSigning(System.IdentityModel.Tokens.SecurityKey,System.String)" /> will not be called.</para>
+            <returns>A <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.</returns>
+            <exception cref="T:System.ArgumentException">if 'expires' &lt;= 'notBefore'.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.GetTokenTypeIdentifiers">
+            <summary>
+            Gets the token type identifier(s) supported by this handler.
+            </summary>
+            <returns>A collection of strings that identify the tokens this instance can handle.</returns>
+            <remarks>When receiving a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> wrapped inside a &lt;wsse:BinarySecurityToken&gt; element. The &lt;wsse:BinarySecurityToken&gt; element must have the ValueType attribute set to one of these values
+            in order for this handler to recognize that it can read the token.</remarks>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ReadToken(System.Xml.XmlReader)">
+            <summary>
+            Reads a JSON web token wrapped inside a WS-Security BinarySecurityToken xml element.
+            </summary>
+            <param name="reader">The <see cref="T:System.Xml.XmlReader" /> pointing at the jwt.</param>
+            <returns>An instance of <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /></returns>
+            <remarks>First calls <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.CanReadToken
+            <para>The reader must be positioned at an element named:</para>
+            <para>BinarySecurityToken'.
+            in the namespace: 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
+            with a 'ValueType' attribute equal to one of: "urn:ietf:params:oauth:token-type:jwt", "JWT".</para>
+            <para>
+            For example &lt;wsse:BinarySecurityToken valueType = "JWT"&gt; ...
+            </para>
+            <para>
+            The 'EncodingType' attribute is optional, if it is set, it must be equal to: "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">'reader' is null.</exception>
+            <exception cref="T:System.ArgumentException">if <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.CanReadToken(System.Xml.XmlReader)" /> returns false.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ReadToken(System.String)">
+            <summary>
+            Reads a token encoded in JSON Compact serialized format.
+            </summary>
+            <param name="tokenString">A 'JSON Web Token' (JWT) that has been encoded as a JSON object. May be signed
+            using 'JSON Web Signature' (JWS).</param>
+            <remarks>
+            The JWT must be encoded using Base64Url encoding of the UTF-8 representation of the JWT: Header, Payload and Signature.
+            The contents of the JWT returned are not validated in any way, the token is simply decoded. Use ValidateToken to validate the JWT.
+            </remarks>
+            <returns>A <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /></returns>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ValidateToken(ADSD.SecurityToken)">
+            <summary>
+            Obsolete method, use <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.ValidateToken(System.String,System.IdentityModel.Tokens.TokenValidationParameters,System.IdentityModel.Tokens.SecurityToken@)" />.
+            </summary>
+            <exception cref="T:System.NotSupportedException"> use <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.ValidateToken(System.String,System.IdentityModel.Tokens.TokenValidationParameters,System.IdentityModel.Tokens.SecurityToken@)" />.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ValidateToken(System.String,ADSD.TokenValidationParameters,ADSD.SecurityToken@)">
+            <summary>
+            Reads and validates a token encoded in JSON Compact serialized format.
+            </summary>
+            <param name="securityToken">A 'JSON Web Token' (JWT) that has been encoded as a JSON object. May be signed using 'JSON Web Signature' (JWS).</param>
+            <param name="validationParameters">Contains validation parameters for the <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.</param>
+            <param name="validatedToken">The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> that was validated.</param>
+            <exception cref="T:System.ArgumentNullException">'securityToken' is null or whitespace.</exception>
+            <exception cref="T:System.ArgumentNullException">'validationParameters' is null.</exception>
+            <exception cref="T:System.ArgumentException">'securityToken.Length' &gt; <see cref="P:System.IdentityModel.Tokens.JwtSecurityTokenHandler.MaximumTokenSizeInBytes" />.</exception>
+            <returns>A <see cref="T:System.Security.Claims.ClaimsPrincipal" /> from the jwt. Does not include the header claims.</returns>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.WriteToken(System.Xml.XmlWriter,ADSD.SecurityToken)">
+            <summary>
+            Writes the <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> wrapped in a WS-Security BinarySecurityToken using the <see cref="T:System.Xml.XmlWriter" />.
+            </summary>
+            <param name="writer"><see cref="T:System.Xml.XmlWriter" /> used to write token.</param>
+            <param name="token">The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> that will be written.</param>
+            <exception cref="T:System.ArgumentNullException">'writer' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">'token' is null.</exception>
+            <exception cref="T:System.ArgumentException">'token' is not a not <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.</exception>
+            <remarks>The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> current contents are encoded. If <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.SigningCredentials" /> is not null, the encoding will contain a signature.</remarks>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.WriteToken(ADSD.SecurityToken)">
+            <summary>
+            Writes the <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> as a JSON Compact serialized format string.
+            </summary>
+            <param name="token"><see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> to serialize.</param>
+            <remarks>
+            <para>If the <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.SigningCredentials" /> are not null, the encoding will contain a signature.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">'token' is null.</exception>
+            <exception cref="T:System.ArgumentException">'token' is not a not <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.</exception>
+            <returns>The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> as a signed (if <see cref="T:System.IdentityModel.Tokens.SigningCredentials" /> exist) encoded string.</returns>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.CreateSignature(System.String,ADSD.SecurityKey,System.String,ADSD.SignatureProvider)">
+            <summary>
+            Produces a signature over the 'input' using the <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> and algorithm specified.
+            </summary>
+            <param name="inputString">string to be signed</param>
+            <param name="key">the <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> to use.</param>
+            <param name="algorithm">the algorithm to use.</param>
+            <param name="signatureProvider">if provided, the <see cref="T:System.IdentityModel.Tokens.SignatureProvider" /> will be used to sign the token</param>
+            <returns>The signature over the bytes obtained from UTF8Encoding.GetBytes( 'input' ).</returns>
+            <remarks>The <see cref="T:System.IdentityModel.Tokens.SignatureProvider" /> used to created the signature is obtained by calling <see cref="M:System.IdentityModel.Tokens.SignatureProviderFactory.CreateForSigning(System.IdentityModel.Tokens.SecurityKey,System.String)" />.</remarks>
+            <exception cref="T:System.ArgumentNullException">'input' is null.</exception>
+            <exception cref="T:System.InvalidProgramException"><see cref="M:System.IdentityModel.Tokens.SignatureProviderFactory.CreateForSigning(System.IdentityModel.Tokens.SecurityKey,System.String)" /> returns null.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ValidateSignature(System.String,ADSD.TokenValidationParameters)">
+            <summary>
+            Validates that the signature, if found and / or required is valid.
+            </summary>
+            <param name="token">A 'JSON Web Token' (JWT) that has been encoded as a JSON object. May be signed
+            using 'JSON Web Signature' (JWS).</param>
+            <param name="validationParameters"><see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> that contains signing keys.</param>
+            <exception cref="T:System.ArgumentNullException"> thrown if 'token is null or whitespace.</exception>
+            <exception cref="T:System.ArgumentNullException"> thrown if 'validationParameters is null.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenValidationException"> thrown if a signature is not found and <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.RequireSignedTokens" /> is true.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenSignatureKeyNotFoundException"> thrown if the 'token' has a key identifier and none of the <see cref="T:System.IdentityModel.Tokens.SecurityKey" />(s) provided result in a validated signature.
+            This can indicate that a key refresh is required.</exception>
+            <exception cref="T:System.IdentityModel.SignatureVerificationFailedException"> thrown if after trying all the <see cref="T:System.IdentityModel.Tokens.SecurityKey" />(s), none result in a validated signture AND the 'token' does not have a key identifier.</exception>
+            <returns><see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> that has the signature validated if token was signed and <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.RequireSignedTokens" /> is true.</returns>
+            <remarks><para>If the 'token' is signed, the signature is validated even if <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.RequireSignedTokens" /> is false.</para>
+            <para>If the 'token' signature is validated, then the <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.SigningKey" /> will be set to the key that signed the 'token'.</para></remarks>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.CreateKeyString(ADSD.SecurityKey)">
+            <summary>
+            Produces a readable string for a key, used in error messages.
+            </summary>
+            <param name="securityKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.CreateClaimsIdentity(ADSD.JwtSecurityToken,System.String,ADSD.TokenValidationParameters)">
+            <summary>
+            Creates a <see cref="T:System.Security.Claims.ClaimsIdentity" /> from a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.
+            </summary>
+            <param name="jwt">The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> to use as a <see cref="T:System.Security.Claims.Claim" /> source.</param>
+            <param name="issuer">The value to set <see cref="P:System.Security.Claims.Claim.Issuer" /></param>
+            <param name="validationParameters"> contains parameters for validating the token.</param>
+            <returns>A <see cref="T:System.Security.Claims.ClaimsIdentity" /> containing the <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.Claims" />.</returns>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.CreateActorValue(System.Security.Claims.ClaimsIdentity)">
+            <summary>
+            Creates the 'value' for the actor claim: { actort, 'value' }
+            </summary>
+            <param name="actor"><see cref="T:System.Security.Claims.ClaimsIdentity" /> as actor.</param>
+            <returns><see cref="T:System.String" /> representing the actor.</returns>
+            <remarks>If <see cref="P:System.Security.Claims.ClaimsIdentity.BootstrapContext" /> is not null:
+            <para>  if 'type' is 'string', return as string.</para>
+            <para>  if 'type' is 'BootstrapContext' and 'BootstrapContext.SecurityToken' is 'JwtSecurityToken'</para>
+            <para>    if 'JwtSecurityToken.RawData' != null, return RawData.</para>
+            <para>    else return <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.WriteToken(System.IdentityModel.Tokens.SecurityToken)" />.</para>
+            <para>  if 'BootstrapContext.Token' != null, return 'Token'.</para>
+            <para>default: <see cref="M:System.IdentityModel.Tokens.JwtSecurityTokenHandler.WriteToken(System.IdentityModel.Tokens.SecurityToken)" /> new ( <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />( actor.Claims ).</para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">'actor' is null.</exception>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ValidateAudience(System.Collections.Generic.IEnumerable{System.String},ADSD.SecurityToken,ADSD.TokenValidationParameters)">
+            <summary>
+            Determines if the audiences found in a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> are valid.
+            </summary>
+            <param name="audiences">The audiences found in the <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.</param>
+            <param name="securityToken">The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> being validated.</param>
+            <param name="validationParameters"><see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> required for validation.</param>
+            <remarks>see <see cref="M:System.IdentityModel.Tokens.Validators.ValidateAudience(System.Collections.Generic.IEnumerable{System.String},System.IdentityModel.Tokens.SecurityToken,System.IdentityModel.Tokens.TokenValidationParameters)" /> for additional details.</remarks>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ValidateLifetime(System.Nullable{System.DateTime},System.Nullable{System.DateTime},ADSD.SecurityToken,ADSD.TokenValidationParameters)">
+            <summary>
+            Validates the lifetime of a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" />.
+            </summary>
+            <param name="notBefore">The <see cref="T:System.DateTime" /> value of the 'nbf' claim if it exists in the 'jwt'.</param>
+            <param name="expires">The <see cref="T:System.DateTime" /> value of the 'exp' claim if it exists in the 'jwt'.</param>
+            <param name="securityToken">The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> being validated.</param>
+            <param name="validationParameters"><see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> required for validation.</param>
+            <remarks><see cref="M:System.IdentityModel.Tokens.Validators.ValidateLifetime(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.IdentityModel.Tokens.SecurityToken,System.IdentityModel.Tokens.TokenValidationParameters)" /> for additional details.</remarks>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ValidateIssuer(System.String,ADSD.SecurityToken,ADSD.TokenValidationParameters)">
+            <summary>
+            Determines if an issuer found in a <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> is valid.
+            </summary>
+            <param name="issuer">The issuer to validate</param>
+            <param name="securityToken">The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> that is being validated.</param>
+            <param name="validationParameters"><see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> required for validation.</param>
+            <returns>The issuer to use when creating the <see cref="T:System.Security.Claims.Claim" />(s) in the <see cref="T:System.Security.Claims.ClaimsIdentity" />.</returns>
+            <remarks><see cref="M:System.IdentityModel.Tokens.Validators.ValidateIssuer(System.String,System.IdentityModel.Tokens.SecurityToken,System.IdentityModel.Tokens.TokenValidationParameters)" /> for additional details.</remarks>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ResolveIssuerSigningKey(System.String,ADSD.SecurityToken,ADSD.SecurityKeyIdentifier,ADSD.TokenValidationParameters)">
+            <summary>
+            Returns a <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> to use when validating the signature of a token.
+            </summary>
+            <param name="token">the <see cref="T:System.String" /> representation of the token that is being validated.</param>
+            <param name="securityToken">the <SecurityToken> that is being validated.</SecurityToken></param>
+            <param name="keyIdentifier">the <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifier" /> found in the token.</param>
+            <param name="validationParameters">A <see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" />  required for validation.</param>
+            <returns>Returns a <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> to use for signature validation.</returns>
+            <exception cref="T:System.ArgumentNullException">if 'keyIdentifier' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">if 'validationParameters' is null.</exception>
+            <remarks>If key fails to resolve, then null is returned</remarks>
+        </member>
+        <member name="M:ADSD.JwtSecurityTokenHandler.ValidateIssuerSecurityKey(ADSD.SecurityKey,ADSD.SecurityToken,ADSD.TokenValidationParameters)">
+            <summary>
+            Validates the <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.SigningKey" /> is an expected value.
+            </summary>
+            <param name="securityKey">The <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that signed the <see cref="T:System.IdentityModel.Tokens.SecurityToken" />.</param>
+            <param name="securityToken">The <see cref="T:System.IdentityModel.Tokens.JwtSecurityToken" /> to validate.</param>
+            <param name="validationParameters">the current <see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" />.</param>
+            <remarks>If the <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.SigningKey" /> is a <see cref="T:System.IdentityModel.Tokens.X509SecurityKey" /> then the X509Certificate2 will be validated using <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.CertificateValidator" />.</remarks>
         </member>
         <member name="T:ADSD.KeyInfo">
             <summary>Represents an XML digital signature or XML encryption <see langword="&lt;KeyInfo&gt;" /> element.</summary>
@@ -1655,6 +2809,38 @@
         <member name="M:ADSD.LocalIdKeyIdentifierClause.ToString">
             <summary>Returns a string that represents the current object.</summary>
             <returns>A <see cref="T:System.String" /> that represents the current object.</returns>
+        </member>
+        <member name="T:ADSD.NamedKeySecurityKeyIdentifierClause">
+            <summary>
+            A <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" /> that can be used to match <see cref="T:System.IdentityModel.Tokens.NamedKeySecurityToken" />.
+            </summary>
+        </member>
+        <member name="M:ADSD.NamedKeySecurityKeyIdentifierClause.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.NamedKeySecurityKeyIdentifierClause" /> class. The 'name' for matching key identifiers found in the securityToken.
+            </summary>
+            <param name="name">Used to identify a named collection of keys.</param>
+            <param name="id">Additional information for matching.</param>
+            <exception cref="T:System.ArgumentNullException">if 'name' is null or whitespace.</exception>
+            <exception cref="T:System.ArgumentNullException">if 'id' is null or whitespace</exception>
+        </member>
+        <member name="P:ADSD.NamedKeySecurityKeyIdentifierClause.Name">
+            <summary>
+            Gets the name of the <see cref="T:System.IdentityModel.Tokens.SecurityKey" />(s) this <see cref="T:System.IdentityModel.Tokens.NamedKeySecurityKeyIdentifierClause" /> represents.
+            </summary>
+        </member>
+        <member name="M:ADSD.NamedKeySecurityKeyIdentifierClause.Matches(ADSD.SecurityKeyIdentifierClause)">
+            <summary>
+            Determines if a <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" /> matches this instance.
+            </summary>
+            <param name="keyIdentifierClause">The <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" /> to match.</param>
+            <returns>true if:
+            <para>    1. keyIdentifierClause is a <see cref="T:System.IdentityModel.Tokens.NamedKeySecurityKeyIdentifierClause" />.</para>
+            <para>    2. string.Equals( keyIdentifierClause.Name, this.Name, StringComparison.Ordinal).</para>
+            <para>    2. string.Equals( keyIdentifierClause.Id, this.Id, StringComparison.Ordinal).</para>
+            <para>Otherwise calls base.Matches( keyIdentifierClause ).</para>
+            </returns>
+            <exception cref="T:System.ArgumentNullException">'keyIdentifierClause' is null.</exception>
         </member>
         <member name="T:ADSD.Reference">
             <summary>
@@ -2067,6 +3253,148 @@
             <summary>Adds a <see cref="T:System.Security.Cryptography.Xml.DataObject" /> to the list of objects to be signed.</summary>
             <param name="dataObject">The <see cref="T:System.Security.Cryptography.Xml.DataObject" /> to be added to the list of objects to be signed. </param>
         </member>
+        <member name="T:ADSD.SignatureProvider">
+            <summary>
+            This class defines the object model for types that provide signature services.
+            </summary>
+        </member>
+        <member name="P:ADSD.SignatureProvider.Context">
+            <summary>
+            Gets or sets a user context for a <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />.
+            </summary>
+        </member>
+        <member name="M:ADSD.SignatureProvider.Sign(System.Byte[])">
+            <summary>Produces a signature over the 'input'</summary>
+            <param name="input">bytes to sign.</param>
+            <returns>signed bytes</returns>
+        </member>
+        <member name="M:ADSD.SignatureProvider.Verify(System.Byte[],System.Byte[])">
+            <summary>
+            Verifies that a signature created over the 'input' matches the signature.
+            </summary>
+            <param name="input">bytes to verify.</param>
+            <param name="signature">signature to compare against.</param>
+            <returns>true if the computed signature matches the signature parameter, false otherwise.</returns>
+        </member>
+        <member name="M:ADSD.SignatureProvider.Dispose">
+            <summary>
+            Calls <see cref="M:System.IdentityModel.Tokens.SignatureProvider.Dispose(System.Boolean)" /> and <see cref="M:System.GC.SuppressFinalize(System.Object)" />
+            </summary>
+        </member>
+        <member name="M:ADSD.SignatureProvider.Dispose(System.Boolean)">
+            <summary>
+            Can be over written in descendants to dispose of internal components.
+            </summary>
+            <param name="disposing">true, if called from Dispose(), false, if invoked inside a finalizer</param>
+        </member>
+        <member name="T:ADSD.SignatureProviderFactory">
+            <summary>
+            Creates <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />s by specifying a <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> and algorithm.
+            <para>Supports both <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" /> and <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" />.</para>
+            </summary>
+        </member>
+        <member name="F:ADSD.SignatureProviderFactory.AbsoluteMinimumAsymmetricKeySizeInBitsForSigning">
+            <summary>
+            This is the minimum <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />.KeySize when creating signatures.
+            </summary>
+        </member>
+        <member name="F:ADSD.SignatureProviderFactory.AbsoluteMinimumAsymmetricKeySizeInBitsForVerifying">
+            <summary>
+            This is the minimum <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />.KeySize when verifying signatures.
+            </summary>
+        </member>
+        <member name="F:ADSD.SignatureProviderFactory.AbsoluteMinimumSymmetricKeySizeInBits">
+            <summary>
+            This is the minimum <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" />.KeySize when creating and verifying signatures.
+            </summary>
+        </member>
+        <member name="P:ADSD.SignatureProviderFactory.MinimumSymmetricKeySizeInBits">
+            <summary>
+            Gets or sets the minimum <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" />.KeySize"/&gt;.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">'value' is smaller than <see cref="F:System.IdentityModel.Tokens.SignatureProviderFactory.AbsoluteMinimumSymmetricKeySizeInBits" />.</exception>
+        </member>
+        <member name="P:ADSD.SignatureProviderFactory.MinimumAsymmetricKeySizeInBitsForSigning">
+            <summary>
+            Gets or sets the minimum <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />.KeySize for creating signatures.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">'value' is smaller than <see cref="F:System.IdentityModel.Tokens.SignatureProviderFactory.AbsoluteMinimumAsymmetricKeySizeInBitsForSigning" />.</exception>
+        </member>
+        <member name="P:ADSD.SignatureProviderFactory.MinimumAsymmetricKeySizeInBitsForVerifying">
+            <summary>
+            Gets or sets the minimum <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />.KeySize for verifying signatures.
+            <exception cref="T:System.ArgumentOutOfRangeException">'value' is smaller than <see cref="F:System.IdentityModel.Tokens.SignatureProviderFactory.AbsoluteMinimumAsymmetricKeySizeInBitsForVerifying" />.</exception>
+            </summary>
+        </member>
+        <member name="M:ADSD.SignatureProviderFactory.CreateForSigning(ADSD.SecurityKey,System.String)">
+            <summary>
+            Creates a <see cref="T:System.IdentityModel.Tokens.SignatureProvider" /> that supports the <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> and algorithm.
+            </summary>
+            <param name="key">
+            The <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> to use for signing.
+            </param>
+            <param name="algorithm">The algorithm to use for signing.</param>
+            <exception cref="T:System.ArgumentNullException">
+            'key' is null.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            'algorithm' is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            'algorithm' contains only whitespace.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            '<see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />' is smaller than <see cref="P:System.IdentityModel.Tokens.SignatureProviderFactory.MinimumAsymmetricKeySizeInBitsForSigning" />.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            '<see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" />' is smaller than <see cref="P:System.IdentityModel.Tokens.SignatureProviderFactory.MinimumSymmetricKeySizeInBits" />.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            '<see cref="T:System.IdentityModel.Tokens.SecurityKey" />' is not a <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" /> or a <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" />.
+            </exception>
+            <remarks>
+            AsymmetricSignatureProviders require access to a PrivateKey for Signing.
+            </remarks>
+            <returns>
+            The <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />.
+            </returns>
+        </member>
+        <member name="M:ADSD.SignatureProviderFactory.CreateForVerifying(ADSD.SecurityKey,System.String)">
+            <summary>
+            Returns a <see cref="T:System.IdentityModel.Tokens.SignatureProvider" /> instance supports the <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> and algorithm.
+            </summary>
+            <param name="key">
+            The <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> to use for signing.
+            </param>
+            <param name="algorithm">The algorithm to use for signing.</param>
+            <exception cref="T:System.ArgumentNullException">
+            'key' is null.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            'algorithm' is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            'algorithm' contains only whitespace.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            '<see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />' is smaller than <see cref="P:System.IdentityModel.Tokens.SignatureProviderFactory.MinimumAsymmetricKeySizeInBitsForVerifying" />.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            '<see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" />' is smaller than <see cref="P:System.IdentityModel.Tokens.SignatureProviderFactory.MinimumSymmetricKeySizeInBits" />.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            '<see cref="T:System.IdentityModel.Tokens.SecurityKey" />' is not a <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" /> or a <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" />.
+            </exception>
+            <returns>
+            The <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />.
+            </returns>
+        </member>
+        <member name="M:ADSD.SignatureProviderFactory.ReleaseProvider(ADSD.SignatureProvider)">
+            <summary>
+            When finished with a <see cref="T:System.IdentityModel.Tokens.SignatureProvider" /> call this method for cleanup. The default behavior is to call <see cref="M:System.IdentityModel.Tokens.SignatureProvider.Dispose(System.Boolean)" />
+            </summary>
+            <param name="signatureProvider"><see cref="T:System.IdentityModel.Tokens.SignatureProvider" /> to be released.</param>
+        </member>
         <member name="T:ADSD.SignedInfo">
             <summary>Contains information about the canonicalization algorithm and signature algorithm used for the XML signature.</summary>
         </member>
@@ -2372,6 +3700,83 @@
             <param name="idValue">The ID of the <see cref="T:System.Xml.XmlElement" /> object to retrieve from the <see cref="T:System.Xml.XmlDocument" /> object.</param>
             <returns>The <see cref="T:System.Xml.XmlElement" /> object with the specified ID from the specified <see cref="T:System.Xml.XmlDocument" /> object, or <see langword="null" /> if it could not be found.</returns>
         </member>
+        <member name="T:ADSD.SigningCredentials">
+            <summary>Represents the cryptographic key and security algorithms that are used to generate a digital signature.</summary>
+        </member>
+        <member name="M:ADSD.SigningCredentials.#ctor(ADSD.SecurityKey,System.String,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.SigningCredentials" /> class.  </summary>
+            <param name="signingKey">A <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that contains the cryptographic key that is used to generate the digital signature. </param>
+            <param name="signatureAlgorithm">A URI that represents the cryptographic algorithm that is used to generate the digital signature.</param>
+            <param name="digestAlgorithm">A URI that represents the cryptographic algorithm that is used to compute the digest for the portion of the SOAP message that is to be digitally signed.</param>
+        </member>
+        <member name="M:ADSD.SigningCredentials.#ctor(ADSD.SecurityKey,System.String,System.String,ADSD.SecurityKeyIdentifier)">
+            <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.SigningCredentials" /> class. </summary>
+            <param name="signingKey">A <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that contains the cryptographic key that is used to generate the digital signature.</param>
+            <param name="signatureAlgorithm">A URI that represents the cryptographic algorithm that is used to generate the digital signature.</param>
+            <param name="digestAlgorithm">A URI that represents the cryptographic algorithm that is used to compute the digest for the portion of the SOAP message that is to be digitally signed.</param>
+            <param name="signingKeyIdentifier">A <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifier" /> that specifies the identifier that represents the key that is used to create a digital signature.</param>
+        </member>
+        <member name="P:ADSD.SigningCredentials.DigestAlgorithm">
+            <summary>Gets the cryptographic algorithm that is used to compute the digest for the portion of the SOAP message that is to be digitally signed.</summary>
+            <returns>A URI that represents the cryptographic algorithm that is used to compute the digest for the portion of the SOAP message that is to be digitally signed.</returns>
+        </member>
+        <member name="P:ADSD.SigningCredentials.SignatureAlgorithm">
+            <summary>Gets the cryptographic algorithm that is used to generate the digital signature.</summary>
+            <returns>A URI that represents the cryptographic algorithm that is used to generate the digital signature.</returns>
+        </member>
+        <member name="P:ADSD.SigningCredentials.SigningKey">
+            <summary>Gets the cryptographic key that is used to generate the digital signature.</summary>
+            <returns>A <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that contains the cryptographic key that is used to generate the digital signature.</returns>
+        </member>
+        <member name="P:ADSD.SigningCredentials.SigningKeyIdentifier">
+            <summary>Gets the identifier that represents the key that is used to create a digital signature.</summary>
+            <returns>A <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifier" /> that specifies the identifier that represents the key that is used to create a digital signature.</returns>
+        </member>
+        <member name="T:ADSD.Lifetime">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:ADSD.Lifetime.Created">
+            <summary>
+            Creation date
+            </summary>
+        </member>
+        <member name="F:ADSD.Lifetime.Expires">
+            <summary>
+            Expiry date
+            </summary>
+        </member>
+        <member name="T:ADSD.SimpleTokenDescriptor">
+            <summary>
+            Minimal token descriptor
+            </summary>
+        </member>
+        <member name="F:ADSD.SimpleTokenDescriptor.Lifetime">
+            <summary>
+            Lifetime
+            </summary>
+        </member>
+        <member name="F:ADSD.SimpleTokenDescriptor.TokenIssuerName">
+            <summary>
+            TokenIssuerName
+            </summary>
+        </member>
+        <member name="F:ADSD.SimpleTokenDescriptor.AppliesToAddress">
+            <summary>
+            Target address
+            </summary>
+        </member>
+        <member name="F:ADSD.SimpleTokenDescriptor.Subject">
+            <summary>
+            Subject
+            </summary>
+        </member>
+        <member name="F:ADSD.SimpleTokenDescriptor.SigningCredentials">
+            <summary>
+            Credentials
+            </summary>
+        </member>
         <member name="T:ADSD.SoapHexBinary">
             <summary>Wraps an XSD <see langword="hexBinary" /> type.</summary>
         </member>
@@ -2471,6 +3876,164 @@
             <summary>When overridden in a derived class, gets the bytes that represent the symmetric key.</summary>
             <returns>An array of <see cref="T:System.Byte" /> that contains the symmetric key.</returns>
         </member>
+        <member name="T:ADSD.SymmetricSignatureProvider">
+            <summary>
+            Provides signing and verifying operations using a <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" /> and specifying an algorithm.
+            </summary>
+        </member>
+        <member name="M:ADSD.SymmetricSignatureProvider.#ctor(ADSD.SymmetricSecurityKey,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.SymmetricSignatureProvider" /> class that uses an <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" /> to create and / or verify signatures over a array of bytes.
+            </summary>
+            <param name="key">The <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" /> used for signing.</param>
+            <param name="algorithm">The signature algorithm to use.</param>
+            <exception cref="T:System.ArgumentNullException">'key' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">'algorithm' is null.</exception>
+            <exception cref="T:System.ArgumentException">'algorithm' contains only whitespace.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">'<see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" />.KeySize' is smaller than <see cref="P:System.IdentityModel.Tokens.SignatureProviderFactory.MinimumSymmetricKeySizeInBits" />.</exception>
+            <exception cref="T:System.InvalidOperationException"><see cref="M:System.IdentityModel.Tokens.SymmetricSecurityKey.GetKeyedHashAlgorithm(System.String)" /> throws.</exception>
+            <exception cref="T:System.InvalidOperationException"><see cref="M:System.IdentityModel.Tokens.SymmetricSecurityKey.GetKeyedHashAlgorithm(System.String)" /> returns null.</exception>
+            <exception cref="T:System.InvalidOperationException"><see cref="M:System.IdentityModel.Tokens.SymmetricSecurityKey.GetSymmetricKey" /> throws.</exception>
+        </member>
+        <member name="M:ADSD.SymmetricSignatureProvider.Sign(System.Byte[])">
+            <summary>
+            Produces a signature over the 'input' using the <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" /> and 'algorithm' passed to <see cref="M:System.IdentityModel.Tokens.SymmetricSignatureProvider.#ctor(System.IdentityModel.Tokens.SymmetricSecurityKey,System.String)" />.
+            </summary>
+            <param name="input">bytes to sign.</param>
+            <returns>signed bytes</returns>
+            <exception cref="T:System.ArgumentNullException">'input' is null. </exception>
+            <exception cref="T:System.ArgumentException">'input.Length' == 0. </exception>
+            <exception cref="T:System.ObjectDisposedException"><see cref="M:System.IdentityModel.Tokens.SymmetricSignatureProvider.Dispose(System.Boolean)" /> has been called.</exception>
+            <exception cref="T:System.InvalidOperationException"><see cref="T:System.Security.Cryptography.KeyedHashAlgorithm" /> is null. This can occur if a derived type deletes it or does not create it.</exception>
+        </member>
+        <member name="M:ADSD.SymmetricSignatureProvider.Verify(System.Byte[],System.Byte[])">
+            <summary>
+            Verifies that a signature created over the 'input' matches the signature. Using <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" /> and 'algorithm' passed to <see cref="M:System.IdentityModel.Tokens.SymmetricSignatureProvider.#ctor(System.IdentityModel.Tokens.SymmetricSecurityKey,System.String)" />.
+            </summary>
+            <param name="input">bytes to verify.</param>
+            <param name="signature">signature to compare against.</param>
+            <returns>true if computed signature matches the signature parameter, false otherwise.</returns>
+            <exception cref="T:System.ArgumentNullException">'input' is null.</exception>
+            <exception cref="T:System.ArgumentNullException">'signature' is null.</exception>
+            <exception cref="T:System.ArgumentException">'input.Length' == 0.</exception>
+            <exception cref="T:System.ArgumentException">'signature.Length' == 0. </exception>
+            <exception cref="T:System.ObjectDisposedException"><see cref="M:System.IdentityModel.Tokens.SymmetricSignatureProvider.Dispose(System.Boolean)" /> has been called.</exception>
+            <exception cref="T:System.InvalidOperationException">if the internal <see cref="T:System.Security.Cryptography.KeyedHashAlgorithm" /> is null. This can occur if a derived type deletes it or does not create it.</exception>
+        </member>
+        <member name="M:ADSD.SymmetricSignatureProvider.Dispose(System.Boolean)">
+            <summary>Disposes of internal components.</summary>
+            <param name="disposing">true, if called from Dispose(), false, if invoked inside a finalizer.</param>
+        </member>
+        <member name="M:ADSD.SymmetricSignatureProvider.AreEqual(System.Byte[],System.Byte[])">
+            <summary>
+            Compares two byte arrays for equality. Hash size is fixed normally it is 32 bytes.
+            The attempt here is to take the same time if an attacker shortens the signature OR changes some of the signed contents.
+            </summary>
+            <param name="a">One set of bytes to compare.</param>
+            <param name="b">The other set of bytes to compare with.</param>
+            <returns>true if the bytes are equal, false otherwise.</returns>
+        </member>
+        <member name="T:ADSD.TokenValidationParameters">
+            <summary>
+            Temp?
+            </summary>
+        </member>
+        <member name="F:ADSD.TokenValidationParameters.DefaultAuthenticationType">
+            <summary>
+            Deafult authentication type
+            </summary>
+        </member>
+        <member name="M:ADSD.TokenValidationParameters.CreateClaimsIdentity(ADSD.SecurityToken,System.String)">
+            <summary>
+            Creates a <see cref="T:System.Security.Claims.ClaimsIdentity" /> using:
+            <para><see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.AuthenticationType" /></para>
+            <para>'NameClaimType' is calculated: If NameClaimTypeRetriever call that else use NameClaimType. If the result is a null or empty string, use <see cref="F:System.Security.Claims.ClaimsIdentity.DefaultNameClaimType" /></para>.
+            <para>'RoleClaimType' is calculated: If RoleClaimTypeRetriever call that else use RoleClaimType. If the result is a null or empty string, use <see cref="F:System.Security.Claims.ClaimsIdentity.DefaultRoleClaimType" /></para>.
+            </summary>
+            <returns>A <see cref="T:System.Security.Claims.ClaimsIdentity" /> with Authentication, NameClaimType and RoleClaimType set.</returns>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.AuthenticationType">
+            <summary>
+            Gets or sets the AuthenticationType when creating a <see cref="T:System.Security.Claims.ClaimsIdentity" /> during token validation.
+            </summary>
+            <exception cref="T:System.ArgumentNullException"> if 'value' is null or whitespace.</exception>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ValidAudience">
+            <summary>
+            Audience that is considered valid
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.RequireSignedTokens">
+            <summary>
+            Gets or sets a value indicating whether a <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> can be valid if not signed.
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ValidIssuer">
+            <summary>
+            Issuer that is trusted
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ValidIssuers">
+            <summary>
+            Gets or sets the <see cref="T:System.Collections.Generic.ICollection`1" /> that contains valid issuers that will be used during token validation.
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ValidateLifetime">
+            <summary>
+            Gets or sets a boolean to control if the lifetime will be validated during token validation.
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.RequireExpirationTime">
+            <summary>
+            Gets or sets a value indicating whether tokens must have an 'expiration' value.
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ClockSkew">
+            <summary>
+            Gets or sets the clock skew to apply when validating times
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.IssuerSigningTokens">
+            <summary>
+            Acceptable signing tokens
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ValidateAudience">
+            <summary>
+            Gets or sets a boolean to control if the audience will be validated during token validation.
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ValidateIssuer">
+            <summary>
+            Gets or sets a boolean to control if the issuer will be validated during token validation.
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ValidAudiences">
+            <summary>
+            Gets or sets the <see cref="T:System.Collections.Generic.ICollection`1" /> that contains valid audiences that will be used during token validation.
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ValidateIssuerSigningKey">
+            <summary>
+            Gets or sets a boolean that controls if validation of the <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that signed the securityToken is called.
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.SaveSigninToken">
+            <summary>
+            Gets or sets a boolean to control if the original token is saved when a session is created.
+            </summary>
+            <remarks>The SecurityTokenValidator will use this value to save the orginal string that was validated.</remarks>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.TokenReplayCache">
+            <summary>
+            Gets or set the <see cref="T:System.IdentityModel.Tokens.ITokenReplayCache" /> that will be checked to help in detecting that a token has been 'seen' before.
+            </summary>
+        </member>
+        <member name="P:ADSD.TokenValidationParameters.ValidateActor">
+            <summary>
+            Gets or sets a value indicating whether the <see cref="P:System.IdentityModel.Tokens.JwtSecurityToken.Actor" /> should be validated.
+            </summary>
+        </member>
         <member name="T:ADSD.Transform">
             <summary>
             XML Transform
@@ -2556,6 +4119,71 @@
             <param name="index">The index into the <see cref="T:System.Security.Cryptography.Xml.TransformChain" /> object that specifies which transform to return. </param>
             <returns>The transform at the specified index in the <see cref="T:System.Security.Cryptography.Xml.TransformChain" /> object.</returns>
             <exception cref="T:System.ArgumentException">The <paramref name="index" /> parameter is greater than the number of transforms.</exception>
+        </member>
+        <member name="T:ADSD.Validators">
+            <summary>AudienceValidator</summary>
+        </member>
+        <member name="M:ADSD.Validators.ValidateAudience(System.Collections.Generic.IEnumerable{System.String},ADSD.SecurityToken,ADSD.TokenValidationParameters)">
+            <summary>
+            Determines if the audiences found in a <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> are valid.
+            </summary>
+            <param name="audiences">The audiences found in the <see cref="T:System.IdentityModel.Tokens.SecurityToken" />.</param>
+            <param name="securityToken">The <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> being validated.</param>
+            <param name="validationParameters"><see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> required for validation.</param>
+            <exception cref="T:System.ArgumentNullException"> if 'vaidationParameters' is null.</exception>
+            <exception cref="T:System.ArgumentNullException"> if 'audiences' is null and <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidateAudience" /> is true.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenInvalidAudienceException"> if <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidAudience" /> is null or whitespace and <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidAudiences" /> is null.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenInvalidAudienceException"> if none of the 'audiences' matched either <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidAudience" /> or one of <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidAudiences" />.</exception>
+            <remarks>An EXACT match is required.</remarks>
+        </member>
+        <member name="M:ADSD.Validators.ValidateIssuer(System.String,ADSD.SecurityToken,ADSD.TokenValidationParameters)">
+            <summary>
+            Determines if an issuer found in a <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> is valid.
+            </summary>
+            <param name="issuer">The issuer to validate</param>
+            <param name="securityToken">The <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> that is being validated.</param>
+            <param name="validationParameters"><see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> required for validation.</param>
+            <returns>The issuer to use when creating the "Claim"(s) in a "ClaimsIdentity".</returns>
+            <exception cref="T:System.ArgumentNullException"> if 'vaidationParameters' is null.</exception>
+            <exception cref="T:System.ArgumentNullException"> if 'issuer' is null or whitespace and <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidateIssuer" /> is true.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenInvalidIssuerException"> if <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidIssuer" /> is null or whitespace and <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidIssuers" /> is null.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenInvalidIssuerException"> if 'issuer' failed to matched either <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidIssuer" /> or one of <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ValidIssuers" />.</exception>
+            <remarks>An EXACT match is required.</remarks>
+        </member>
+        <member name="M:ADSD.Validators.ValidateIssuerSecurityKey(ADSD.SecurityKey,ADSD.SecurityToken,ADSD.TokenValidationParameters)">
+            <summary>
+            Validates the <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that signed a <see cref="T:System.IdentityModel.Tokens.SecurityToken" />.
+            </summary>
+            <param name="securityKey">The <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that signed the <see cref="T:System.IdentityModel.Tokens.SecurityToken" />.</param>
+            <param name="securityToken">The <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> being validated.</param>
+            <param name="validationParameters"><see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> required for validation.</param>
+            <exception cref="T:System.ArgumentNullException"> if 'vaidationParameters' is null.</exception>
+        </member>
+        <member name="M:ADSD.Validators.ValidateLifetime(System.Nullable{System.DateTime},System.Nullable{System.DateTime},ADSD.SecurityToken,ADSD.TokenValidationParameters)">
+            <summary>
+            Validates the lifetime of a <see cref="T:System.IdentityModel.Tokens.SecurityToken" />.
+            </summary>
+            <param name="notBefore">The 'notBefore' time found in the <see cref="T:System.IdentityModel.Tokens.SecurityToken" />.</param>
+            <param name="expires">The 'expiration' time found in the <see cref="T:System.IdentityModel.Tokens.SecurityToken" />.</param>
+            <param name="securityToken">The <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> being validated.</param>
+            <param name="validationParameters"><see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> required for validation.</param>
+            <exception cref="T:System.ArgumentNullException"> if 'vaidationParameters' is null.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenNoExpirationException"> if 'expires.HasValue' is false and <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.RequireExpirationTime" /> is true.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenInvalidLifetimeException"> if 'notBefore' is &gt; 'expires'.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenNotYetValidException"> if 'notBefore' is &gt; DateTime.UtcNow.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenExpiredException"> if 'expires' is &lt; DateTime.UtcNow.</exception>
+            <remarks>All time comparisons apply <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.ClockSkew" />.</remarks>
+        </member>
+        <member name="M:ADSD.Validators.ValidateTokenReplay(System.String,System.Nullable{System.DateTime},ADSD.TokenValidationParameters)">
+            <summary>Validates if a token has been replayed.</summary>
+            <param name="securityToken">The <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> being validated.</param>
+            <param name="expirationTime">When does the security token expire.</param>
+            <param name="validationParameters"><see cref="T:System.IdentityModel.Tokens.TokenValidationParameters" /> required for validation.</param>
+            <exception cref="T:System.ArgumentNullException">if 'securityToken' is null or whitespace.</exception>
+            <exception cref="T:System.ArgumentNullException">if 'validationParameters' is null or whitespace.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenNoExpirationException">if <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.TokenReplayCache" /> is not null and expirationTime.HasValue is false. When a TokenReplayCache is set, tokens require an expiration time.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenReplayDetectedException">if the 'securityToken' is found in the cache.</exception>
+            <exception cref="T:System.IdentityModel.Tokens.SecurityTokenReplayAddFailedException">if the 'securityToken' could not be added to the <see cref="P:System.IdentityModel.Tokens.TokenValidationParameters.TokenReplayCache" />.</exception>
         </member>
         <member name="T:ADSD.X509AsymmetricSecurityKey">
             <summary>Represents an asymmetric key for X.509 certificates.</summary>
@@ -2752,6 +4380,20 @@
             <summary>Returns the current object.</summary>
             <returns>A <see cref="T:System.String" /> that represents the current object.</returns>
         </member>
+        <member name="T:ADSD.X509SecurityKey">
+            <summary>Security key that allows access to cert</summary>
+        </member>
+        <member name="M:ADSD.X509SecurityKey.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Instantiates a <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> using a <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2" />
+            </summary>
+            <param name="certificate"> cert to use.</param>
+        </member>
+        <member name="P:ADSD.X509SecurityKey.Certificate">
+            <summary>
+            Gets the <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2" />.
+            </summary>
+        </member>
         <member name="T:ADSD.X509SecurityToken">
             <summary>Represents a security token that is based upon an X.509 certificate.</summary>
         </member>
@@ -2809,6 +4451,35 @@
         <member name="M:ADSD.X509SecurityToken.ThrowIfDisposed">
             <summary>Throws an exception if the <see cref="M:System.IdentityModel.Tokens.X509SecurityToken.ThrowIfDisposed" /> method has been called for this instance.</summary>
             <exception cref="T:System.ObjectDisposedException">the <see cref="M:System.IdentityModel.Tokens.X509SecurityToken.ThrowIfDisposed" />  method has been called for this instance.</exception>
+        </member>
+        <member name="T:ADSD.X509SigningCredentials">
+            <summary>Represents an X.509 token used as the signing credential.</summary>
+        </member>
+        <member name="M:ADSD.X509SigningCredentials.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.X509SigningCredentials" /> class based on the specified X.509 certificate.</summary>
+            <param name="certificate">The X.509 certificate.</param>
+        </member>
+        <member name="M:ADSD.X509SigningCredentials.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2,System.String,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.X509SigningCredentials" /> class based on the specified X.509 certificate, signature algorithm, and digest algorithm. </summary>
+            <param name="certificate">The X.509 certificate.</param>
+            <param name="signatureAlgorithm">The signature algorithm.</param>
+            <param name="digestAlgorithm">The digest algorithm.</param>
+        </member>
+        <member name="M:ADSD.X509SigningCredentials.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2,ADSD.SecurityKeyIdentifier)">
+            <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.X509SigningCredentials" /> class based on the specified X.509 certificate and security key identifier. </summary>
+            <param name="certificate">The X.509 certificate.</param>
+            <param name="ski">The security key identifier.</param>
+        </member>
+        <member name="M:ADSD.X509SigningCredentials.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2,ADSD.SecurityKeyIdentifier,System.String,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.X509SigningCredentials" /> class based on the specified X.509 certificate, security key identifier, signature algorithm, and digest algorithm. </summary>
+            <param name="certificate">The X.509 certificate.</param>
+            <param name="ski">The security key identifier.</param>
+            <param name="signatureAlgorithm">The signature algorithm.</param>
+            <param name="digestAlgorithm">The digest algorithm.</param>
+        </member>
+        <member name="P:ADSD.X509SigningCredentials.Certificate">
+            <summary>Gets the X.509 certificate.</summary>
+            <returns>The X.509 certificate.</returns>
         </member>
         <member name="T:ADSD.X509SubjectKeyIdentifierClause">
             <summary>Represents a key identifier clause that identifies a <see cref="T:System.IdentityModel.Tokens.X509SecurityToken" /> security token using the X.509 certificate's subject key identifier extension.</summary>
@@ -3132,6 +4803,437 @@
         <member name="M:ADSD.SigningKeys.ClientWithDefaultProxy">
             <summary>
             Create a HttpClient with system default proxy
+            </summary>
+        </member>
+        <member name="T:SkinnyJson.ChainStep">
+            <summary>
+            Represents a step in a dynamic call chain
+            </summary>
+        </member>
+        <member name="P:SkinnyJson.ChainStep.Name">
+            <summary>
+            Name of property
+            </summary>
+        </member>
+        <member name="P:SkinnyJson.ChainStep.SingleIndex">
+            <summary>
+            Index lookup, if any
+            </summary>
+        </member>
+        <member name="P:SkinnyJson.ChainStep.IsIndex">
+            <summary>
+            True if there is an index
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.ChainStep.PropertyStep(System.String)">
+            <summary>
+            Make a property lookup
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.ChainStep.IndexStep(System.Int32)">
+            <summary>
+            Make an indexed lookup
+            </summary>
+        </member>
+        <member name="T:SkinnyJson.DynamicWrapper">
+            <summary>
+            Wrapper around a parser object
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.#ctor(System.Object)">
+            <summary>
+            Wrap a parser output object in a dynamic object
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.#ctor(System.Object,System.Collections.Generic.List{SkinnyJson.ChainStep},SkinnyJson.ChainStep)">
+            <summary>
+            Wrap parser output object in a dynamic object with a query path chain
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.TryInvokeMember(System.Dynamic.InvokeMemberBinder,System.Object[],System.Object@)">
+            <summary>
+            Syntax: dyn.path.elems()
+            Access value at position
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.TryInvoke(System.Dynamic.InvokeBinder,System.Object[],System.Object@)">
+            <summary>
+            Syntax: dyn.path.elems[0]()
+            Try to directly invoke an instance
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
+            <summary>
+            Syntax: dyn.parent.child.grandchild
+            Add a step in the path to access
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.TryGetIndex(System.Dynamic.GetIndexBinder,System.Object[],System.Object@)">
+            <summary>
+            Syntax: Check.That....[predicate]
+            applies predicate to matching paths.
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.TrySetIndex(System.Dynamic.SetIndexBinder,System.Object[],System.Object)">
+            <summary>
+            Syntax: dyn.path.elems[0] = x
+            Update wrapped object at path with a new array item
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
+            <summary>
+            Syntax: dyn.path.elems = x
+            Update wrapped object at path with a new value
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.TryConvert(System.Dynamic.ConvertBinder,System.Object@)">
+            <summary>
+            Handle conversions
+            </summary>
+        </member>
+        <member name="T:SkinnyJson.DynamicWrapper.Valuate">
+            <summary>
+            Helper.
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.op_Explicit(SkinnyJson.DynamicWrapper)~SkinnyJson.DynamicWrapper.Valuate">
+            <summary>
+            Cast path to an integer value
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.ToObject(SkinnyJson.DynamicWrapper)">
+            <summary>
+            Cast to object by resolving path
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.op_Explicit(SkinnyJson.DynamicWrapper)~System.Int32">
+            <summary>
+            Cast path to an integer value
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.DynamicWrapper.op_Explicit(SkinnyJson.DynamicWrapper)~System.String">
+            <summary>
+            Cast path to an integer value
+            </summary>
+        </member>
+        <member name="T:SkinnyJson.Json">
+            <summary>
+            SkinnyJson entry point. Use the static methods of this class to interact with JSON data
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.Json.DefaultStreamEncoding">
+            <summary>
+            String encoding to use for streams, when no specific encoding is provided.
+            Initial value is UTF8.
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Freeze(System.Object)">
+            <summary> Turn an object into a JSON string </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Freeze(System.Object,System.IO.Stream,System.Text.Encoding)">
+            <summary> Write an object to a stream as a JSON string </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Defrost(System.String)">
+            <summary> Turn a JSON string into a detected object </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Defrost(System.Byte[])">
+            <summary> Turn a JSON byte array into a detected object </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Defrost(System.IO.Stream,System.Text.Encoding)">
+            <summary> Turn a JSON data stream into a detected object </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.WrapperType(System.Object)">
+            <summary> Return the type name that SkinnyJson will use for the serialising the object </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Defrost``1(System.String)">
+            <summary> Turn a JSON string into a specific object </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Defrost``1(System.IO.Stream,System.Text.Encoding)">
+            <summary> Turn a JSON data stream into a specific object </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Defrost(System.String,System.Type)">
+            <summary> Turn a JSON string into a runtime type </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Defrost(System.Byte[],System.Type)">
+            <summary> Turn a JSON byte array into a runtime type </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Defrost(System.IO.Stream,System.Type,System.Text.Encoding)">
+            <summary> Turn a JSON data stream into a runtime type </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.DefrostDynamic(System.String)">
+            <summary> Turn a JSON string into an object containing properties found </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.DefrostFromPath``1(System.String,System.String)">
+            <summary>
+            Turn a sub-path of a JSON document into an enumeration of values, by specific type
+            </summary>
+            <remarks>This is intended to extract useful fragments from repository-style files</remarks>
+            <typeparam name="T">Type of the fragments to be returned</typeparam>
+            <param name="path">Dotted path through document. If the path can't be found, an empty enumeration will be returned.
+            An empty path is equivalent to `Defrost&lt;T&gt;`</param>
+            <param name="json">The JSON document string to read</param>
+        </member>
+        <member name="M:SkinnyJson.Json.Clone``1(``0)">
+            <summary> Create a copy of an object through serialisation </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Parse(System.String)">
+            <summary>Read a JSON object into an anonymous .Net object</summary>
+        </member>
+        <member name="M:SkinnyJson.Json.Beautify(System.String)">
+            <summary>Pretty print a JSON string. This is done without value parsing.</summary>
+        </member>
+        <member name="M:SkinnyJson.Json.BeautifyStream(System.IO.Stream,System.Text.Encoding,System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Pretty print a JSON data stream to another stream.
+            This is done without value parsing or buffering, so very large streams can be processed.
+            The input and output encodings can be the same or different.
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.FillObject(System.Object,System.String)">
+            <summary>Fill the members of an .Net object from a JSON object string</summary>
+        </member>
+        <member name="F:SkinnyJson.Json.DefaultParameters">
+            <summary>
+            You can set these parameters globally for all calls
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.SelectObjects``1(System.Object,System.String,System.Text.Encoding)">
+            <summary>
+            Pick items out of a parsed object using dotted string path
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.PathWalk``1(System.Object,System.Collections.Generic.Dictionary{System.String,System.Object},System.String[],System.Int32)">
+            <summary>
+            Recursive helper for SelectObjects˂T˃
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.ToObject(System.Object,System.Type,System.Text.Encoding)">
+            <summary>
+            Create a new object by type, using input json data
+            </summary>
+            <param name="json">Either a stream of utf-8 data or an in-memory `string`</param>
+            <param name="type">Target return type</param>
+            <param name="encoding">String encoding to use, if reading from a stream</param>
+        </member>
+        <member name="M:SkinnyJson.Json.StrengthenType(System.Type,System.Object,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Try to decode a parsed json object into a new type instance
+            </summary>
+            <param name="type">Target output type</param>
+            <param name="decodedObject">raw memory map of json</param>
+            <param name="globalTypes">cache of typematches</param>
+        </member>
+        <member name="M:SkinnyJson.Json.ParserFromStreamOrStringOrBytes(System.Object,System.Text.Encoding)">
+            <summary>
+            Pass in either a string or a stream and get back a parser instance
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.GenericListType(System.Type)">
+            <summary>
+            Make an IList˂T˃() instance for a runtime type
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.GetTypeAssemblyName(System.Type)">
+            <summary>
+            Get a shortened string name for a type's containing assembly
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.ShortenName(System.String)">
+            <summary>
+            Shorten an assembly qualified name
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.GetTypeFromCache(System.String)">
+            <summary>
+            Try to get or build a type for a given type-name
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.FastCreateInstance(System.Type)">
+            <summary>
+            Try to make a new instance of a type.
+            Will drop down to 'SlowCreateInstance' in special cases
+            </summary>
+        </member>
+        <member name="T:SkinnyJson.Json.GenericSetter">
+            <param name="target">object instance to accept the value</param>
+            <param name="value">value of property to set</param>
+            <param name="key">optional key for dictionaries</param>
+        </member>
+        <member name="M:SkinnyJson.Json.ParseDictionary(System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IDictionary{System.String,System.Object},System.Type,System.Object)">
+            <summary>
+            Read a weakly-typed dictionary tree into a strong type. If the keys do not match exactly,
+            all matching field/properties will be filled.
+            If *no* keys match the target type, this will return `null`
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.MapJsonValueToObject(System.String,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IDictionary{System.String,System.Object},SkinnyJson.SafeDictionary{System.String,SkinnyJson.Json.TypePropertyInfo})">
+            <summary>
+            Map json value dictionary to the properties and fields of a target object instance
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.WriteValueToTypeInstance(System.String,System.Object,SkinnyJson.Json.TypePropertyInfo,System.Object)">
+            <summary>
+            Inject a value into an object's property
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.GetProperties(System.Type,System.String)">
+            <summary>
+            Read the properties and public fields of a type.
+            In special cases, this will also read private fields
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.CreateMyProp(System.Type)">
+            <summary>
+            Read reflection data for a type
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.CreateGetMethod(System.Reflection.PropertyInfo)">
+            <summary>
+            Try to create a value-setting proxy for an object property
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.CreateSetMethod(System.Reflection.PropertyInfo)">
+            <summary>
+            Try to create a value-setting proxy for an object property
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.ChangeType(System.Object,System.Type)">
+            <summary>
+            Convert between runtime types
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.Json.GetGetters(System.Type)">
+            <summary>
+            Return a list of propery/field access proxies for a type
+            </summary>
+        </member>
+        <member name="T:SkinnyJson.Json.TypePropertyInfo">
+            <summary>
+            Record of reflected type infor for fields and properties on objects
+            </summary>
+        </member>
+        <member name="T:SkinnyJson.JsonParameters">
+            <summary>
+            Parameters for serialising and deserialising.
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.JsonParameters.UseOptimizedDatasetSchema">
+            <summary>
+            Use a special format for Sql Datasets. Default true
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.JsonParameters.UseFastGuid">
+            <summary>
+            Use Base64 encoding for Guids. If false, uses Hex.
+            Default true
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.JsonParameters.SerializeNullValues">
+            <summary>
+            Insert null values into JSON output. Otherwise remove field.
+            Default true
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.JsonParameters.UseUtcDateTime">
+            <summary>
+            Force datetimes to UTC. Default true
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.JsonParameters.ShowReadOnlyProperties">
+            <summary>
+            Serialise properties that can't be written on deserialise. Default false
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.JsonParameters.UsingGlobalTypes">
+            <summary>
+            Declare types once at the start of a document. Otherwise declare in each object.
+            Default true, but overridden by `EnableAnonymousTypes`
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.JsonParameters.IgnoreCaseOnDeserialize">
+            <summary>
+            Allow case insensitive matching on deserialise. Default false
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.JsonParameters.EnableAnonymousTypes">
+            <summary>
+            Default true. If false, source type information will be included in serialised output.<para></para>
+            Sets `UseExtensions` and `UsingGlobalTypes` to false.
+            Directly serialising an anonymous type will use these settings for that call, without needing a global setting.
+            </summary>
+        </member>
+        <member name="F:SkinnyJson.JsonParameters.UseExtensions">
+            <summary>
+            Add type and schema information to output JSON, using $type, $types, $schema and $map properties.
+            Default true, but overridden by `EnableAnonymousTypes`
+            </summary>
+        </member>
+        <member name="T:SkinnyJson.JsonParser">
+            <summary>
+            This class encodes and decodes JSON strings.
+            Spec. details, see http://www.json.org/
+            
+            JSON uses Arrays and Objects. These correspond here to the datatypes ArrayList and Hashtable.
+            All numbers are parsed to doubles.
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.JsonParser.#ctor(System.String,System.Boolean)">
+            <summary>
+            Create a parser for an JSON string loaded in memory
+            </summary>
+            <param name="json">The input JSON string</param>
+            <param name="ignorecase">If `true`, all property names will be lowercased</param>
+        </member>
+        <member name="M:SkinnyJson.JsonParser.#ctor(System.IO.Stream,System.Boolean,System.Text.Encoding)">
+            <summary>
+            Create a parser for an JSON string accessible as a stream
+            </summary>
+            <param name="json">The input JSON stream</param>
+            <param name="ignorecase">If `true`, all property names will be lowercased</param>
+            <param name="encoding">String encoding to use</param>
+        </member>
+        <member name="M:SkinnyJson.JsonParser.#ctor(System.Byte[],System.Boolean)">
+            <summary>
+            Create a parser for an JSON byte array loaded in memory
+            </summary>
+            <param name="json">The input JSON byte array</param>
+            <param name="ignorecase">If `true`, all property names will be lowercased</param>
+        </member>
+        <member name="M:SkinnyJson.JsonParser.Decode">
+            <summary>
+            Decode the provided JSON into an object representation
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.JsonSerializer.ConvertToJson(System.Object,System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Serialise a .Net object to a writable stream.
+            Ignores the 'globalTypes' setting, will always either write types inline or elide them.
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.JsonSerializer.ConvertToJson(System.Object)">
+            <summary>
+            Output a .Net object as a JSON string.
+            Supports global types
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.JsonSerializer.WriteValue(System.Object)">
+            <summary>
+            This is the root of the serialiser.
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.JsonSerializer.WriteStringFast(System.String)">
+            <summary>
+            Directly output strings we know won't need escape sequences
+            </summary>
+        </member>
+        <member name="M:SkinnyJson.JsonSerializer.WriteString(System.String)">
+            <summary>
+            Write a string to the output, converting characters to escape sequences where needed.
+            </summary>
+        </member>
+        <member name="T:SkinnyJson.SafeDictionary`2">
+            <summary>
+            Dictionary with thread locks
             </summary>
         </member>
     </members>

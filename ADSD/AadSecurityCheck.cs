@@ -9,7 +9,7 @@ namespace ADSD
     /// </summary>
     public class AadSecurityCheck: ISecurityCheck {
 
-        private static readonly string TennantKey = "";//SecuritySettings.Config.TennantKey;
+        //private static readonly string TennantKey = "";//SecuritySettings.Config.TennantKey;
         private static readonly string Audience = "";//SecuritySettings.Config.Audience;
         private static readonly string Issuer = "";//SecuritySettings.Config.AadTokenIssuer + TennantKey + "/";
 
