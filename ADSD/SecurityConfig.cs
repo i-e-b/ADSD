@@ -8,7 +8,7 @@
         /// <summary>
         /// Security tennant key. Must be the same across the AAD organisation.
         /// </summary>
-        public string TennantKey;
+        public string TenantKey;
         
         /// <summary>
         /// Optional: Signing authority.

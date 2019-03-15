@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSD", "ADSD\ADSD.csproj", "{9A3D4344-B4AE-48D1-A775-193B8315CDEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADSD", "ADSD\ADSD.csproj", "{9A3D4344-B4AE-48D1-A775-193B8315CDEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{7B99B84E-BEA5-4FE9-B5E2-D6BC3D1FC341}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9A3D4344-B4AE-48D1-A775-193B8315CDEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A3D4344-B4AE-48D1-A775-193B8315CDEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A3D4344-B4AE-48D1-A775-193B8315CDEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B99B84E-BEA5-4FE9-B5E2-D6BC3D1FC341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B99B84E-BEA5-4FE9-B5E2-D6BC3D1FC341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B99B84E-BEA5-4FE9-B5E2-D6BC3D1FC341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B99B84E-BEA5-4FE9-B5E2-D6BC3D1FC341}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

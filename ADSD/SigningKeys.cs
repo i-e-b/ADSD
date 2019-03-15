@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
+using SkinnyJson;
 
 namespace ADSD
 {
@@ -59,9 +60,8 @@ namespace ADSD
             new Thread(()=>{
                 using (var client = ClientWithDefaultProxy()) {
                     // ReSharper disable once AccessToDisposedClosure
-                    //var str = Sync.Run(() => client.GetStringAsync(keyDiscoveryUrl));
-                    // TODO: .Net Standard SkinnyJson, or just throw it in the pile?
-                    var data = new JwkSet();//Json.Defrost<JwkSet>(str);
+                    var str = Sync.Run(() => client.GetStringAsync(keyDiscoveryUrl));
+                    var data = Json.Defrost<JwkSet>(str);
 
                     foreach (var key in data.keys)
                     {
@@ -73,6 +73,8 @@ namespace ADSD
                         {
                             if (KeyCache.ContainsKey(key.kid)) KeyCache[key.kid] = key.x5c[0];
                             else KeyCache.Add(key.kid, key.x5c[0]);
+
+                            Console.WriteLine("Added key " + key.kid);
                         }
                     }
 

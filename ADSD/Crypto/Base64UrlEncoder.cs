@@ -65,8 +65,8 @@ namespace ADSD
         /// <returns>UTF8 bytes.</returns>
         public static byte[] DecodeBytes(string str)
         {
-            if (str == null)
-                throw new ArgumentNullException(nameof (str));
+            if (str == null) throw new ArgumentNullException(nameof (str));
+
             str = str.Replace(Base64UrlEncoder.base64UrlCharacter62, Base64UrlEncoder.base64Character62);
             str = str.Replace(Base64UrlEncoder._base64UrlCharacter63, Base64UrlEncoder.base64Character63);
             switch (str.Length % 4)
@@ -77,7 +77,7 @@ namespace ADSD
                     str += Base64UrlEncoder.doubleBase64PadCharacter;
                     goto case 0;
                 case 3:
-                    str += (string) (object) Base64UrlEncoder.base64PadCharacter;
+                    str += Base64UrlEncoder.base64PadCharacter;
                     goto case 0;
                 default:
                     throw new FormatException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX14700: Unable to decode: '{0}' as Base64url encoded string.", (object) str));

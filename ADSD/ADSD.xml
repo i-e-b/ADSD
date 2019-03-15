@@ -9,6 +9,11 @@
             Verify security with Azure Active Directory
             </summary>
         </member>
+        <member name="M:ADSD.AadSecurityCheck.#ctor(ADSD.SecurityConfig)">
+            <summary>
+            Setup a security token checker
+            </summary>
+        </member>
         <member name="M:ADSD.AadSecurityCheck.Validate(System.String)">
             <summary>
             Read authentication headers and check them against an AAD server.
@@ -4708,7 +4713,7 @@
             Config settings to create or verify an AAD JWT token
             </summary>
         </member>
-        <member name="F:ADSD.SecurityConfig.TennantKey">
+        <member name="F:ADSD.SecurityConfig.TenantKey">
             <summary>
             Security tennant key. Must be the same across the AAD organisation.
             </summary>
@@ -4803,6 +4808,21 @@
         <member name="M:ADSD.SigningKeys.ClientWithDefaultProxy">
             <summary>
             Create a HttpClient with system default proxy
+            </summary>
+        </member>
+        <member name="T:ADSD.Sync">
+            <summary>
+            Helper class to properly wait for async tasks
+            </summary>
+        </member>
+        <member name="M:ADSD.Sync.Run``1(System.Func{System.Threading.Tasks.Task{``0}})">
+            <summary>
+            Run an async function synchronously and return the result
+            </summary>
+        </member>
+        <member name="M:ADSD.Sync.Run(System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Run an async function synchronously
             </summary>
         </member>
         <member name="T:SkinnyJson.ChainStep">

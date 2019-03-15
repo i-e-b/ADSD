@@ -8,10 +8,22 @@ namespace ADSD
     /// Verify security with Azure Active Directory
     /// </summary>
     public class AadSecurityCheck: ISecurityCheck {
+        private readonly SecurityConfig _config;
 
-        //private static readonly string TennantKey = "";//SecuritySettings.Config.TennantKey;
-        private static readonly string Audience = "";//SecuritySettings.Config.Audience;
-        private static readonly string Issuer = "";//SecuritySettings.Config.AadTokenIssuer + TennantKey + "/";
+        private readonly string TenantKey;
+        private readonly string Audience;
+        private readonly string Issuer;
+
+        /// <summary>
+        /// Setup a security token checker
+        /// </summary>
+        public AadSecurityCheck(SecurityConfig config)
+        {
+            _config = config;
+            Issuer = _config.AadTokenIssuer + TenantKey + "/";
+            Audience = _config.Audience;
+            TenantKey = _config.TenantKey;
+        }
 
         /// <summary>
         /// Read authentication headers and check them against an AAD server.
