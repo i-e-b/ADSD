@@ -648,7 +648,8 @@ namespace ADSD
                             }
                             else
                             {
-                                CryptoHelper.algorithmDelegateDictionary[algorithm] = () => Expression.New(obj.GetType());
+                                CryptoHelper.algorithmDelegateDictionary[algorithm] =
+                                    () => Expression.New(obj.GetType()).Constructor.Invoke(new object[0]);
                                 return obj;
                             }
                         }

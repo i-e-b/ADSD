@@ -48,6 +48,8 @@ namespace ADSD
                     var x = new JwtSecurityTokenHandler();
                     x.ValidateToken(token, validationParams, out var y);
 
+                    // valid date is in the token `y`
+
                     return (y == null) ? SecurityOutcome.Fail : SecurityOutcome.Pass;
                 }
             }
