@@ -3,13 +3,14 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using JetBrains.Annotations;
 
 namespace ADSD.Crypto
 {
     internal class CanonicalXml
     {
-        private readonly CanonicalXmlDocument m_c14nDoc;
-        private readonly C14NAncestralNamespaceContextManager m_ancMgr;
+        [NotNull]private readonly CanonicalXmlDocument m_c14nDoc;
+        [NotNull]private readonly C14NAncestralNamespaceContextManager m_ancMgr;
 
         internal CanonicalXml(
             Stream inputStream,
@@ -19,10 +20,10 @@ namespace ADSD.Crypto
         {
             if (inputStream == null)
                 throw new ArgumentNullException(nameof (inputStream));
-            this.m_c14nDoc = new CanonicalXmlDocument(true, includeComments);
-            this.m_c14nDoc.XmlResolver = resolver;
-            this.m_c14nDoc.Load(PreProcessStreamInput(inputStream, resolver, strBaseUri));
-            this.m_ancMgr = new C14NAncestralNamespaceContextManager();
+            m_c14nDoc = new CanonicalXmlDocument(true, includeComments);
+            m_c14nDoc.XmlResolver = resolver;
+            m_c14nDoc.Load(PreProcessStreamInput(inputStream, resolver, strBaseUri));
+            m_ancMgr = new C14NAncestralNamespaceContextManager();
         }
 
         internal CanonicalXml(XmlDocument document, XmlResolver resolver)
@@ -30,8 +31,8 @@ namespace ADSD.Crypto
         {
         }
         
-        internal static XmlReader PreProcessStreamInput(
-            Stream inputStream,
+        [NotNull]internal static XmlReader PreProcessStreamInput(
+            [NotNull]Stream inputStream,
             XmlResolver xmlResolver,
             string baseUri)
         {
@@ -49,10 +50,10 @@ namespace ADSD.Crypto
         {
             if (document == null)
                 throw new ArgumentNullException(nameof (document));
-            this.m_c14nDoc = new CanonicalXmlDocument(true, includeComments);
-            this.m_c14nDoc.XmlResolver = resolver;
-            this.m_c14nDoc.Load((XmlReader) new XmlNodeReader((XmlNode) document));
-            this.m_ancMgr = new C14NAncestralNamespaceContextManager();
+            m_c14nDoc = new CanonicalXmlDocument(true, includeComments);
+            m_c14nDoc.XmlResolver = resolver;
+            m_c14nDoc.Load(new XmlNodeReader(document));
+            m_ancMgr = new C14NAncestralNamespaceContextManager();
         }
 
         internal CanonicalXml(XmlNodeList nodeList, XmlResolver resolver, bool includeComments)
@@ -62,11 +63,11 @@ namespace ADSD.Crypto
             XmlDocument ownerDocument = Exml.GetOwnerDocument(nodeList);
             if (ownerDocument == null)
                 throw new ArgumentException(nameof (nodeList));
-            this.m_c14nDoc = new CanonicalXmlDocument(false, includeComments);
-            this.m_c14nDoc.XmlResolver = resolver;
-            this.m_c14nDoc.Load((XmlReader) new XmlNodeReader((XmlNode) ownerDocument));
-            this.m_ancMgr = new C14NAncestralNamespaceContextManager();
-            CanonicalXml.MarkInclusionStateForNodes(nodeList, ownerDocument, (XmlDocument) this.m_c14nDoc);
+            m_c14nDoc = new CanonicalXmlDocument(false, includeComments);
+            m_c14nDoc.XmlResolver = resolver;
+            m_c14nDoc.Load(new XmlNodeReader(ownerDocument));
+            m_ancMgr = new C14NAncestralNamespaceContextManager();
+            MarkInclusionStateForNodes(nodeList, ownerDocument, m_c14nDoc);
         }
 
         private static void MarkNodeAsIncluded(XmlNode node)
@@ -83,29 +84,28 @@ namespace ADSD.Crypto
         {
             CanonicalXmlNodeList canonicalXmlNodeList1 = new CanonicalXmlNodeList();
             CanonicalXmlNodeList canonicalXmlNodeList2 = new CanonicalXmlNodeList();
-            canonicalXmlNodeList1.Add((object) inputRoot);
-            canonicalXmlNodeList2.Add((object) root);
+            canonicalXmlNodeList1.Add(inputRoot);
+            canonicalXmlNodeList2.Add(root);
             int index1 = 0;
             do
             {
-                XmlNode xmlNode1 = canonicalXmlNodeList1[index1];
-                XmlNode xmlNode2 = canonicalXmlNodeList2[index1];
+                XmlNode xmlNode1 = canonicalXmlNodeList1[index1] ?? throw new InvalidOperationException();
+                XmlNode xmlNode2 = canonicalXmlNodeList2[index1] ?? throw new InvalidOperationException();
                 XmlNodeList childNodes1 = xmlNode1.ChildNodes;
                 XmlNodeList childNodes2 = xmlNode2.ChildNodes;
                 for (int index2 = 0; index2 < childNodes1.Count; ++index2)
                 {
-                    canonicalXmlNodeList1.Add((object) childNodes1[index2]);
-                    canonicalXmlNodeList2.Add((object) childNodes2[index2]);
+                    canonicalXmlNodeList1.Add(childNodes1[index2]);
+                    canonicalXmlNodeList2.Add(childNodes2[index2]);
                     if (Exml.NodeInList(childNodes1[index2], nodeList))
-                        CanonicalXml.MarkNodeAsIncluded(childNodes2[index2]);
-                    XmlAttributeCollection attributes = childNodes1[index2].Attributes;
-                    if (attributes != null)
+                        MarkNodeAsIncluded(childNodes2[index2]);
+                    XmlAttributeCollection attributes = childNodes1[index2]?.Attributes;
+                    if (attributes == null) continue;
+
+                    for (int index3 = 0; index3 < attributes.Count; ++index3)
                     {
-                        for (int index3 = 0; index3 < attributes.Count; ++index3)
-                        {
-                            if (Exml.NodeInList((XmlNode) attributes[index3], nodeList))
-                                CanonicalXml.MarkNodeAsIncluded(childNodes2[index2].Attributes.Item(index3));
-                        }
+                        if (Exml.NodeInList(attributes[index3], nodeList))
+                            MarkNodeAsIncluded(childNodes2[index2]?.Attributes?.Item(index3));
                     }
                 }
                 ++index1;
@@ -116,13 +116,13 @@ namespace ADSD.Crypto
         internal byte[] GetBytes()
         {
             StringBuilder strBuilder = new StringBuilder();
-            this.m_c14nDoc.Write(strBuilder, DocPosition.BeforeRootElement, (AncestralNamespaceContextManager) this.m_ancMgr);
+            m_c14nDoc.Write(strBuilder, DocPosition.BeforeRootElement, m_ancMgr);
             return new UTF8Encoding(false).GetBytes(strBuilder.ToString());
         }
 
-        internal byte[] GetDigestedBytes(HashAlgorithm hash)
+        internal byte[] GetDigestedBytes([NotNull]HashAlgorithm hash)
         {
-            this.m_c14nDoc.WriteHash(hash, DocPosition.BeforeRootElement, (AncestralNamespaceContextManager) this.m_ancMgr);
+            m_c14nDoc.WriteHash(hash, DocPosition.BeforeRootElement, m_ancMgr);
             hash.TransformFinalBlock(new byte[0], 0, 0);
             byte[] numArray = (byte[]) hash.Hash.Clone();
             hash.Initialize();

@@ -7,9 +7,7 @@ namespace ADSD.Crypto
 {
     internal class CanonicalizationDispatcher
     {
-        private CanonicalizationDispatcher()
-        {
-        }
+        private CanonicalizationDispatcher() { }
 
         public static void Write(
             XmlNode node,
@@ -17,10 +15,8 @@ namespace ADSD.Crypto
             DocPosition docPos,
             AncestralNamespaceContextManager anc)
         {
-            if (node is ICanonicalizableNode)
-                ((ICanonicalizableNode) node).Write(strBuilder, docPos, anc);
-            else
-                CanonicalizationDispatcher.WriteGenericNode(node, strBuilder, docPos, anc);
+            if (node is ICanonicalizableNode canonicalizableNode) canonicalizableNode.Write(strBuilder, docPos, anc);
+            else WriteGenericNode(node, strBuilder, docPos, anc);
         }
 
         public static void WriteGenericNode(
@@ -29,10 +25,9 @@ namespace ADSD.Crypto
             DocPosition docPos,
             AncestralNamespaceContextManager anc)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof (node));
+            if (node == null) throw new ArgumentNullException(nameof (node));
             foreach (XmlNode childNode in node.ChildNodes)
-                CanonicalizationDispatcher.Write(childNode, strBuilder, docPos, anc);
+                Write(childNode, strBuilder, docPos, anc);
         }
 
         public static void WriteHash(
@@ -44,7 +39,7 @@ namespace ADSD.Crypto
             if (node is ICanonicalizableNode)
                 ((ICanonicalizableNode) node).WriteHash(hash, docPos, anc);
             else
-                CanonicalizationDispatcher.WriteHashGenericNode(node, hash, docPos, anc);
+                WriteHashGenericNode(node, hash, docPos, anc);
         }
 
         public static void WriteHashGenericNode(
@@ -56,7 +51,7 @@ namespace ADSD.Crypto
             if (node == null)
                 throw new ArgumentNullException(nameof (node));
             foreach (XmlNode childNode in node.ChildNodes)
-                CanonicalizationDispatcher.WriteHash(childNode, hash, docPos, anc);
+                WriteHash(childNode, hash, docPos, anc);
         }
     }
 }

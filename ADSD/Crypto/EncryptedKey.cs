@@ -180,7 +180,7 @@ namespace ADSD.Crypto
                 XmlElement element2 = document.CreateElement("EncryptionProperties", "http://www.w3.org/2001/04/xmlenc#");
                 for (int index = 0; index < EncryptionProperties.Count; ++index)
                 {
-                    EncryptionProperty encryptionProperty = EncryptionProperties.Item(index);
+                    EncryptionProperty encryptionProperty = EncryptionProperties[index];
                     element2.AppendChild((XmlNode) encryptionProperty.GetXml(document));
                 }
                 element1.AppendChild((XmlNode) element2);

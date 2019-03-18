@@ -1,100 +1,99 @@
 ﻿using System;
 using System.Collections;
 using System.Xml;
+using JetBrains.Annotations;
 
 namespace ADSD.Crypto
 {
     internal class C14NAncestralNamespaceContextManager : AncestralNamespaceContextManager
     {
-
         private void GetNamespaceToRender(
-            string nsPrefix,
-            SortedList attrListToRender,
-            SortedList nsListToRender,
-            Hashtable nsLocallyDeclared)
+            [NotNull]string nsPrefix,
+            [NotNull]SortedList attrListToRender,
+            [NotNull]SortedList nsListToRender,
+            [NotNull]Hashtable nsLocallyDeclared)
         {
-            foreach (XmlAttribute key in (IEnumerable) nsListToRender.GetKeyList())
+            foreach (XmlAttribute key in nsListToRender.GetKeyList())
             {
                 if (Exml.HasNamespacePrefix(key, nsPrefix))
                     return;
             }
-            foreach (XmlNode key in (IEnumerable) attrListToRender.GetKeyList())
+            foreach (XmlNode key in attrListToRender.GetKeyList())
             {
                 if (key.LocalName.Equals(nsPrefix))
                     return;
             }
-            XmlAttribute a = (XmlAttribute) nsLocallyDeclared[(object) nsPrefix];
+            XmlAttribute a = (XmlAttribute) nsLocallyDeclared[nsPrefix];
             int depth1;
-            XmlAttribute withMatchingPrefix1 = this.GetNearestRenderedNamespaceWithMatchingPrefix(nsPrefix, out depth1);
+            XmlAttribute withMatchingPrefix1 = GetNearestRenderedNamespaceWithMatchingPrefix(nsPrefix, out depth1);
             if (a != null)
             {
-                if (!Exml.IsNonRedundantNamespaceDecl(a, withMatchingPrefix1))
-                    return;
-                nsLocallyDeclared.Remove((object) nsPrefix);
-                if (Exml.IsXmlNamespaceNode((XmlNode) a))
-                    attrListToRender.Add((object) a, (object) null);
-                else
-                    nsListToRender.Add((object) a, (object) null);
+                if (!Exml.IsNonRedundantNamespaceDecl(a, withMatchingPrefix1)) return;
+                nsLocallyDeclared.Remove(nsPrefix);
+                if (Exml.IsXmlNamespaceNode(a)) attrListToRender.Add(a, null);
+                else nsListToRender.Add(a, null);
             }
             else
             {
                 int depth2;
-                XmlAttribute withMatchingPrefix2 = this.GetNearestUnrenderedNamespaceWithMatchingPrefix(nsPrefix, out depth2);
+                var withMatchingPrefix2 = GetNearestUnrenderedNamespaceWithMatchingPrefix(nsPrefix, out depth2);
                 if (withMatchingPrefix2 == null || depth2 <= depth1 || !Exml.IsNonRedundantNamespaceDecl(withMatchingPrefix2, withMatchingPrefix1))
                     return;
-                if (Exml.IsXmlNamespaceNode((XmlNode) withMatchingPrefix2))
-                    attrListToRender.Add((object) withMatchingPrefix2, (object) null);
+                if (Exml.IsXmlNamespaceNode(withMatchingPrefix2))
+                    attrListToRender.Add(withMatchingPrefix2, null);
                 else
-                    nsListToRender.Add((object) withMatchingPrefix2, (object) null);
+                    nsListToRender.Add(withMatchingPrefix2, null);
             }
         }
 
         internal override void GetNamespacesToRender(
-            XmlElement element,
-            SortedList attrListToRender,
-            SortedList nsListToRender,
-            Hashtable nsLocallyDeclared)
+            [NotNull]XmlElement element,
+            [NotNull]SortedList attrListToRender,
+            [NotNull]SortedList nsListToRender,
+            [NotNull]Hashtable nsLocallyDeclared)
         {
             object[] objArray = new object[nsLocallyDeclared.Count];
-            nsLocallyDeclared.Values.CopyTo((Array) objArray, 0);
+            nsLocallyDeclared.Values.CopyTo(objArray, 0);
             foreach (XmlAttribute a in objArray)
             {
-                int depth;
-                XmlAttribute withMatchingPrefix = this.GetNearestRenderedNamespaceWithMatchingPrefix(Exml.GetNamespacePrefix(a), out depth);
-                if (Exml.IsNonRedundantNamespaceDecl(a, withMatchingPrefix))
-                {
-                    nsLocallyDeclared.Remove((object) Exml.GetNamespacePrefix(a));
-                    if (Exml.IsXmlNamespaceNode((XmlNode) a))
-                        attrListToRender.Add((object) a, (object) null);
-                    else
-                        nsListToRender.Add((object) a, (object) null);
-                }
+                var namespacePrefix = Exml.GetNamespacePrefix(a);
+                if (namespacePrefix == null) continue;
+                var withMatchingPrefix = GetNearestRenderedNamespaceWithMatchingPrefix(namespacePrefix, out _);
+                if (!Exml.IsNonRedundantNamespaceDecl(a, withMatchingPrefix)) continue;
+
+                nsLocallyDeclared.Remove(namespacePrefix);
+                if (Exml.IsXmlNamespaceNode(a)) attrListToRender.Add(a, null);
+                else nsListToRender.Add(a, null);
             }
-            for (int i = this.m_ancestorStack.Count - 1; i >= 0; --i)
+            for (int i = m_ancestorStack.Count - 1; i >= 0; --i)
             {
-                foreach (XmlAttribute a in (IEnumerable) this.GetScopeAt(i).GetUnrendered().Values)
+                var values = GetScopeAt(i)?.GetUnrendered()?.Values;
+                if (values != null) foreach (XmlAttribute a in values)
                 {
-                    if (a != null)
-                        this.GetNamespaceToRender(Exml.GetNamespacePrefix(a), attrListToRender, nsListToRender, nsLocallyDeclared);
+                    if (a == null) continue;
+                    var prefix = Exml.GetNamespacePrefix(a);
+                    if (prefix == null) continue;
+
+                    GetNamespaceToRender(prefix, attrListToRender, nsListToRender, nsLocallyDeclared);
                 }
             }
         }
 
         internal override void TrackNamespaceNode(
-            XmlAttribute attr,
-            SortedList nsListToRender,
-            Hashtable nsLocallyDeclared)
+            [NotNull]XmlAttribute attr,
+            [NotNull]SortedList nsListToRender,
+            [NotNull]Hashtable nsLocallyDeclared)
         {
-            nsLocallyDeclared.Add((object) Exml.GetNamespacePrefix(attr), (object) attr);
+            nsLocallyDeclared.Add(Exml.GetNamespacePrefix(attr) ?? throw new InvalidOperationException(), attr);
         }
 
         internal override void TrackXmlNamespaceNode(
-            XmlAttribute attr,
-            SortedList nsListToRender,
-            SortedList attrListToRender,
-            Hashtable nsLocallyDeclared)
+            [NotNull]XmlAttribute attr,
+            [NotNull]SortedList nsListToRender,
+            [NotNull]SortedList attrListToRender,
+            [NotNull]Hashtable nsLocallyDeclared)
         {
-            nsLocallyDeclared.Add((object) Exml.GetNamespacePrefix(attr), (object) attr);
+            nsLocallyDeclared.Add(Exml.GetNamespacePrefix(attr) ?? throw new InvalidOperationException(), attr);
         }
     }
 }

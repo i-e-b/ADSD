@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace ADSD.Crypto
 {
@@ -8,7 +9,7 @@ namespace ADSD.Crypto
     public static class Base64UrlEncoder
     {
         private static char base64PadCharacter = '=';
-        private static readonly string doubleBase64PadCharacter = string.Format((IFormatProvider) CultureInfo.InvariantCulture, "{0}{0}", (object) Base64UrlEncoder.base64PadCharacter);
+        private static readonly string doubleBase64PadCharacter = string.Format(CultureInfo.InvariantCulture, "{0}{0}", base64PadCharacter);
         private static char base64Character62 = '+';
         private static char base64Character63 = '/';
         private static char base64UrlCharacter62 = '-';
@@ -26,7 +27,7 @@ namespace ADSD.Crypto
         {
             if (arg == null)
                 throw new ArgumentNullException(arg);
-            return Base64UrlEncoder.Encode(Encoding.UTF8.GetBytes(arg));
+            return Encode(Encoding.UTF8.GetBytes(arg));
         }
 
         /// <summary>
@@ -41,7 +42,11 @@ namespace ADSD.Crypto
         /// <exception cref="T:System.ArgumentOutOfRangeException">offset or length is negative OR offset plus length is greater than the length of inArray.</exception>
         public static string Encode(byte[] inArray, int offset, int length)
         {
-            return Convert.ToBase64String(inArray, offset, length).Split(Base64UrlEncoder.base64PadCharacter)[0].Replace(Base64UrlEncoder.base64Character62, Base64UrlEncoder.base64UrlCharacter62).Replace(Base64UrlEncoder.base64Character63, Base64UrlEncoder._base64UrlCharacter63);
+            if (inArray == null) throw new ArgumentNullException(nameof(inArray));
+
+            return Convert.ToBase64String(inArray, offset, length).Split(base64PadCharacter)[0]?
+                .Replace(base64Character62, base64UrlCharacter62)
+                .Replace(base64Character63, _base64UrlCharacter63);
         }
 
         /// <summary>
@@ -54,33 +59,35 @@ namespace ADSD.Crypto
         /// <exception cref="T:System.ArgumentOutOfRangeException">offset or length is negative OR offset plus length is greater than the length of inArray.</exception>
         public static string Encode(byte[] inArray)
         {
-            if (inArray == null)
-                throw new ArgumentNullException(nameof (inArray));
-            return Convert.ToBase64String(inArray, 0, inArray.Length).Split(Base64UrlEncoder.base64PadCharacter)[0].Replace(Base64UrlEncoder.base64Character62, Base64UrlEncoder.base64UrlCharacter62).Replace(Base64UrlEncoder.base64Character63, Base64UrlEncoder._base64UrlCharacter63);
+            if (inArray == null) throw new ArgumentNullException(nameof(inArray));
+
+            return Convert.ToBase64String(inArray, 0, inArray.Length).Split(base64PadCharacter)[0]?
+                .Replace(base64Character62, base64UrlCharacter62)
+                .Replace(base64Character63, _base64UrlCharacter63);
         }
 
         /// <summary>
         /// Converts the specified string, which encodes binary data as base-64-url digits, to an equivalent 8-bit unsigned integer array.</summary>
         /// <param name="str">base64Url encoded string.</param>
         /// <returns>UTF8 bytes.</returns>
-        public static byte[] DecodeBytes(string str)
+        [NotNull]public static byte[] DecodeBytes(string str)
         {
             if (str == null) throw new ArgumentNullException(nameof (str));
 
-            str = str.Replace(Base64UrlEncoder.base64UrlCharacter62, Base64UrlEncoder.base64Character62);
-            str = str.Replace(Base64UrlEncoder._base64UrlCharacter63, Base64UrlEncoder.base64Character63);
+            str = str.Replace(base64UrlCharacter62, base64Character62);
+            str = str.Replace(_base64UrlCharacter63, base64Character63);
             switch (str.Length % 4)
             {
                 case 0:
                     return Convert.FromBase64String(str);
                 case 2:
-                    str += Base64UrlEncoder.doubleBase64PadCharacter;
+                    str += doubleBase64PadCharacter;
                     goto case 0;
                 case 3:
-                    str += Base64UrlEncoder.base64PadCharacter;
+                    str += base64PadCharacter;
                     goto case 0;
                 default:
-                    throw new FormatException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX14700: Unable to decode: '{0}' as Base64url encoded string.", (object) str));
+                    throw new FormatException(string.Format(CultureInfo.InvariantCulture, "IDX14700: Unable to decode: '{0}' as Base64url encoded string.", str));
             }
         }
 
@@ -89,7 +96,7 @@ namespace ADSD.Crypto
         /// <returns>UTF8 string.</returns>
         public static string Decode(string arg)
         {
-            return Encoding.UTF8.GetString(Base64UrlEncoder.DecodeBytes(arg));
+            return Encoding.UTF8.GetString(DecodeBytes(arg));
         }
     }
 }

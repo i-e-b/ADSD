@@ -20,7 +20,7 @@ namespace ADSD.Crypto
         /// <param name="cloneBuffer">
         /// <see langword="true" /> to clone the buffer; otherwise, <see langword="false" />.</param>
         public BinarySecretKeyIdentifierClause(byte[] key, bool cloneBuffer)
-            : this(key, cloneBuffer, (byte[]) null, 0)
+            : this(key, cloneBuffer, null, 0)
         {
         }
 
@@ -35,7 +35,7 @@ namespace ADSD.Crypto
             bool cloneBuffer,
             byte[] derivationNonce,
             int derivationLength)
-            : base(new TrustFeb2005Dictionary(new IdentityModelDictionary(new IdentityModelStringsVersion1())).BinarySecretClauseType.Value, key, cloneBuffer, derivationNonce, derivationLength)
+            : base(new TrustFeb2005Dictionary(new IdentityModelDictionary(new IdentityModelStringsVersion1())).BinarySecretClauseType?.Value, key, cloneBuffer, derivationNonce, derivationLength)
         {
         }
 
@@ -43,7 +43,7 @@ namespace ADSD.Crypto
         /// <returns>An array of bytes that represents the key.</returns>
         public byte[] GetKeyBytes()
         {
-            return this.GetBuffer();
+            return GetBuffer();
         }
 
         /// <summary>Gets a value that indicates whether this instance of the class can create a security key.</summary>
@@ -60,9 +60,9 @@ namespace ADSD.Crypto
         /// <returns>The newly created security key.</returns>
         public override SecurityKey CreateKey()
         {
-            if (this.symmetricKey == null)
-                this.symmetricKey = new InMemorySymmetricSecurityKey(this.GetBuffer(), false);
-            return (SecurityKey) this.symmetricKey;
+            if (symmetricKey == null)
+                symmetricKey = new InMemorySymmetricSecurityKey(GetBuffer(), false);
+            return symmetricKey;
         }
 
         /// <summary>Compares whether the key of a specified clause matches this instance's key.</summary>
@@ -75,7 +75,7 @@ namespace ADSD.Crypto
             if (this == identifierClause)
                 return true;
             if (identifierClause != null)
-                return identifierClause.Matches(this.GetRawBuffer());
+                return identifierClause.Matches(GetRawBuffer());
             return false;
         }
     }

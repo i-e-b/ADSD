@@ -1138,91 +1138,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is <see langword="null" />.</exception>
             <exception cref="T:System.Security.Cryptography.CryptographicException">The <see cref="P:System.Xml.XmlElement.LocalName" /> property of the <paramref name="value" /> parameter is not "EncryptionProperty". -or-The <see cref="P:System.Xml.XmlElement.NamespaceURI" /> property of the <paramref name="value" /> parameter is not "http://www.w3.org/2001/04/xmlenc#".</exception>
         </member>
-        <member name="T:ADSD.Crypto.EncryptionPropertyCollection">
-            <summary>Represents a collection of <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> classes used in XML encryption. This class cannot be inherited.</summary>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.#ctor">
-            <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> class.</summary>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.GetEnumerator">
-            <summary>Returns an enumerator that iterates through an <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
-            <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through an <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</returns>
-        </member>
-        <member name="P:ADSD.Crypto.EncryptionPropertyCollection.Count">
-            <summary>Gets the number of elements contained in the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
-            <returns>The number of elements contained in the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</returns>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.Add(ADSD.Crypto.EncryptionProperty)">
-            <summary>Adds an <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
-            <param name="value">An <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to add to the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</param>
-            <returns>The position at which the new element is inserted.</returns>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.Clear">
-            <summary>Removes all items from the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.Contains(ADSD.Crypto.EncryptionProperty)">
-            <summary>Determines whether the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object contains a specific <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object.</summary>
-            <param name="value">The <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to locate in the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object. </param>
-            <returns>
-            <see langword="true" /> if the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object is found in the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object; otherwise, <see langword="false" />. </returns>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.IndexOf(ADSD.Crypto.EncryptionProperty)">
-            <summary>Determines the index of a specific item in the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
-            <param name="value">The <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to locate in the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</param>
-            <returns>The index of <paramref name="value" /> if found in the collection; otherwise, -1.</returns>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.Insert(System.Int32,ADSD.Crypto.EncryptionProperty)">
-            <summary>Inserts an <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object into the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object at the specified position.</summary>
-            <param name="index">The zero-based index at which <paramref name="value" /> should be inserted.</param>
-            <param name="value">An <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to insert into the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</param>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.Remove(ADSD.Crypto.EncryptionProperty)">
-            <summary>Removes the first occurrence of a specific <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object from the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
-            <param name="value">The <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to remove from the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</param>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.RemoveAt(System.Int32)">
-            <summary>Removes the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object at the specified index.</summary>
-            <param name="index">The zero-based index of the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to remove.</param>
-        </member>
-        <member name="P:ADSD.Crypto.EncryptionPropertyCollection.IsFixedSize">
-            <summary>Gets a value that indicates whether the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object has a fixed size.</summary>
-            <returns>
-            <see langword="true" /> if the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object has a fixed size; otherwise, <see langword="false" />.</returns>
-        </member>
-        <member name="P:ADSD.Crypto.EncryptionPropertyCollection.IsReadOnly">
-            <summary>Gets a value that indicates whether the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object is read-only.</summary>
-            <returns>
-            <see langword="true" /> if the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object is read-only; otherwise, <see langword="false" />. </returns>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.Item(System.Int32)">
-            <summary>Returns the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object at the specified index.</summary>
-            <param name="index">The index of the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to return.</param>
-            <returns>The <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object at the specified index.</returns>
-        </member>
-        <member name="P:ADSD.Crypto.EncryptionPropertyCollection.ItemOf(System.Int32)">
-            <summary>Gets or sets the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object at the specified index.</summary>
-            <param name="index">The index of the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to return.</param>
-            <returns>The <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object at the specified index.</returns>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.CopyTo(System.Array,System.Int32)">
-            <summary>Copies the elements of the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object to an array, starting at a particular array index.</summary>
-            <param name="array">The one-dimensional <see cref="T:System.Array" /> object that is the destination of the elements copied from the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object. The array must have zero-based indexing.</param>
-            <param name="index">The zero-based index in <paramref name="array" /> at which copying begins. </param>
-        </member>
-        <member name="M:ADSD.Crypto.EncryptionPropertyCollection.CopyTo(ADSD.Crypto.EncryptionProperty[],System.Int32)">
-            <summary>Copies the elements of the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object to an array of <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> objects, starting at a particular array index.</summary>
-            <param name="array">The one-dimensional array of  <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> objects that is the destination of the elements copied from the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object. The array must have zero-based indexing.</param>
-            <param name="index">The zero-based index in <paramref name="array" /> at which copying begins.</param>
-        </member>
-        <member name="P:ADSD.Crypto.EncryptionPropertyCollection.SyncRoot">
-            <summary>Gets an object that can be used to synchronize access to the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
-            <returns>An object that can be used to synchronize access to the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</returns>
-        </member>
-        <member name="P:ADSD.Crypto.EncryptionPropertyCollection.IsSynchronized">
-            <summary>Gets a value that indicates whether access to the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object is synchronized (thread safe).</summary>
-            <returns>
-            <see langword="true" /> if access to the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object is synchronized (thread safe); otherwise, <see langword="false" />.</returns>
-        </member>
         <member name="T:ADSD.Crypto.EpochTime">
             <summary>
             Returns the absolute DateTime or the Seconds since Unix Epoch, where Epoch is UTC 1970-01-01T0:0:0Z.
@@ -5064,6 +4979,16 @@
         <member name="T:ADSD.SecurityConfig">
             <summary>
             Config settings to create or verify an AAD JWT token
+            </summary>
+        </member>
+        <member name="F:ADSD.SecurityConfig.DefaultKeyDiscoveryUrl">
+            <summary>
+            Default keys for AAD
+            </summary>
+        </member>
+        <member name="F:ADSD.SecurityConfig.DefaultAadTokenIssuer">
+            <summary>
+            Default issuer for AAD
             </summary>
         </member>
         <member name="F:ADSD.SecurityConfig.TenantKey">

@@ -2,6 +2,7 @@
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using JetBrains.Annotations;
 
 namespace ADSD.Crypto
 {
@@ -160,7 +161,7 @@ namespace ADSD.Crypto
             return new string(chArray);
         }
 
-        internal static byte[] DecodeHexString(string s)
+        [NotNull]internal static byte[] DecodeHexString(string s)
         {
             string str = DiscardWhiteSpaces(s);
             uint num = (uint) str.Length / 2U;

@@ -1,11 +1,12 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace ADSD.Crypto
 {
     /// <summary>Represents a base class for key identifier clauses that are based upon binary data.</summary>
     public abstract class BinaryKeyIdentifierClause : SecurityKeyIdentifierClause
     {
-        private readonly byte[] identificationData;
+        [NotNull]private readonly byte[] identificationData;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.BinaryKeyIdentifierClause" /> class using the specified key identifier clause type, binary data and a value that indicates whether the binary data must be cloned. </summary>
         /// <param name="clauseType">The key identifier clause type. Sets the value of the <see cref="P:System.IdentityModel.Tokens.SecurityKeyIdentifierClause.ClauseType" /> property.</param>
@@ -16,11 +17,8 @@ namespace ADSD.Crypto
         /// <paramref name="identificationData" /> is <see langword="null" />.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="identificationData" /> is zero length.</exception>
-        protected BinaryKeyIdentifierClause(
-            string clauseType,
-            byte[] identificationData,
-            bool cloneBuffer)
-            : this(clauseType, identificationData, cloneBuffer, (byte[]) null, 0)
+        protected BinaryKeyIdentifierClause(string clauseType, byte[] identificationData, bool cloneBuffer)
+            : this(clauseType, identificationData, cloneBuffer, null, 0)
         {
         }
 
@@ -51,14 +49,14 @@ namespace ADSD.Crypto
         }
 
         
-        internal static byte[] CloneBuffer(byte[] buffer)
+        [NotNull]internal static byte[] CloneBuffer([NotNull]byte[] buffer)
         {
             return CloneBuffer(buffer, 0, buffer.Length);
         }
-        internal static byte[] CloneBuffer(byte[] buffer, int offset, int len)
+        [NotNull]internal static byte[] CloneBuffer([NotNull]byte[] buffer, int offset, int len)
         {
             byte[] numArray = new byte[len];
-            Buffer.BlockCopy((Array) buffer, offset, (Array) numArray, 0, len);
+            Buffer.BlockCopy(buffer, offset, numArray, 0, len);
             return numArray;
         }
 
@@ -66,14 +64,14 @@ namespace ADSD.Crypto
         /// <returns>An array of <see cref="T:System.Byte" /> that contains the binary data that represents the key identifier.</returns>
         public byte[] GetBuffer()
         {
-            return CloneBuffer(this.identificationData);
+            return CloneBuffer(identificationData);
         }
 
         /// <summary>Gets the binary data that represents the key identifier.</summary>
         /// <returns>An array of <see cref="T:System.Byte" /> that contains the binary data that represents the key identifier.</returns>
         protected byte[] GetRawBuffer()
         {
-            return this.identificationData;
+            return identificationData;
         }
 
         /// <summary>Returns a value that indicates whether the key identifier for this instance is equivalent to the specified key identifier clause.</summary>
@@ -86,7 +84,7 @@ namespace ADSD.Crypto
             if (this == identifierClause)
                 return true;
             if (identifierClause != null)
-                return identifierClause.Matches(this.identificationData);
+                return identifierClause.Matches(identificationData);
             return false;
         }
 
@@ -96,7 +94,7 @@ namespace ADSD.Crypto
         /// <see langword="true" /> if <paramref name="data " />is equivalent to the binary data returned by the <see cref="M:System.IdentityModel.Tokens.BinaryKeyIdentifierClause.GetBuffer" /> method; otherwise, <see langword="false" />.</returns>
         public bool Matches(byte[] data)
         {
-            return this.Matches(data, 0);
+            return Matches(data, 0);
         }
         
         internal static bool MatchesBuffer(byte[] src, byte[] dst)
@@ -111,7 +109,7 @@ namespace ADSD.Crypto
             int index2 = dstOffset;
             while (index1 < src.Length)
             {
-                if ((int) src[index1] != (int) dst[index2])
+                if (src[index1] != dst[index2])
                     return false;
                 ++index1;
                 ++index2;
@@ -128,17 +126,17 @@ namespace ADSD.Crypto
         {
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
 
-            return MatchesBuffer(this.identificationData, 0, data, offset);
+            return MatchesBuffer(identificationData, 0, data, offset);
         }
 
         internal string ToBase64String()
         {
-            return Convert.ToBase64String(this.identificationData);
+            return Convert.ToBase64String(identificationData);
         }
 
         internal string ToHexString()
         {
-            return new SoapHexBinary(this.identificationData).ToString();
+            return new SoapHexBinary(identificationData).ToString();
         }
     }
 }

@@ -10,11 +10,6 @@ namespace ADSD.Crypto
     {
         private readonly string _tokenString;
         private readonly byte[] _tokenBytes;
-        private const string _tokenTypeKey = "K";
-        private const string _tokenKey = "T";
-        private const char _securityTokenType = 'T';
-        private const char _stringTokenType = 'S';
-        private const char _byteTokenType = 'B';
 
         /// <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.BootstrapContext" /> class from a stream.</summary>
         /// <param name="info">The serialized data.</param>
@@ -23,19 +18,19 @@ namespace ADSD.Crypto
         /// <paramref name="info" /> is null.</exception>
         protected BootstrapContext(SerializationInfo info, StreamingContext context)
         {
-            if (info == null)
-                return;
+            if (info == null) return;
             switch (info.GetChar("K"))
             {
                 case 'B':
-                    this._tokenBytes = (byte[]) info.GetValue("T", typeof (byte[]));
+                    _tokenBytes = (byte[])info.GetValue("T", typeof(byte[]));
                     break;
                 case 'S':
-                    this._tokenString = info.GetString("T");
+                    _tokenString = info.GetString("T");
                     break;
                 case 'T':
-                        this._tokenString = Encoding.UTF8.GetString(Convert.FromBase64String(info.GetString("T")));
-                        break;
+                    _tokenString = Encoding.UTF8.GetString(
+                        Convert.FromBase64String(info.GetString("T") ?? throw new InvalidOperationException()));
+                    break;
             }
         }
 
@@ -47,7 +42,7 @@ namespace ADSD.Crypto
         {
             if (token == null)
                 throw new ArgumentNullException(nameof (token));
-            this._tokenString = token;
+            _tokenString = token;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.BootstrapContext" /> class by using the specified array.</summary>
@@ -56,9 +51,7 @@ namespace ADSD.Crypto
         /// <paramref name="token" /> is <see langword="null" />.</exception>
         public BootstrapContext(byte[] token)
         {
-            if (token == null)
-                throw new ArgumentNullException(nameof (token));
-            this._tokenBytes = token;
+            _tokenBytes = token ?? throw new ArgumentNullException(nameof (token));
         }
 
         /// <summary>Populates the <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with data needed to serialize the current <see cref="T:System.IdentityModel.Tokens.BootstrapContext" /> object.</summary>
@@ -68,19 +61,15 @@ namespace ADSD.Crypto
         /// <paramref name="info" /> is <see langword="null" />.</exception>
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if (this._tokenBytes != null)
+            if (_tokenBytes != null)
             {
                 info.AddValue("K", 'B');
-                info.AddValue("T", (object) this._tokenBytes);
+                info.AddValue("T", _tokenBytes);
             }
-            else if (this._tokenString != null)
+            else if (_tokenString != null)
             {
                 info.AddValue("K", 'S');
-                info.AddValue("T", (object) this._tokenString);
-            }
-            else
-            {
-                return;
+                info.AddValue("T", _tokenString);
             }
         }
 
@@ -90,7 +79,7 @@ namespace ADSD.Crypto
         {
             get
             {
-                return this._tokenBytes;
+                return _tokenBytes;
             }
         }
 
@@ -100,7 +89,7 @@ namespace ADSD.Crypto
         {
             get
             {
-                return this._tokenString;
+                return _tokenString;
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace ADSD.Crypto
@@ -12,7 +13,8 @@ namespace ADSD.Crypto
         private string m_encoding;
         private EncryptionMethod m_encryptionMethod;
         private CipherData m_cipherData;
-        private EncryptionPropertyCollection m_props;
+        //private EncryptionPropertyCollection m_props;
+        private List<EncryptionProperty> m_props;
         private KeyInfo m_keyInfo;
         internal XmlElement m_cachedXml;
 
@@ -117,12 +119,12 @@ namespace ADSD.Crypto
 
         /// <summary>Gets or sets the <see langword="&lt;EncryptionProperties&gt;" /> element in XML encryption.</summary>
         /// <returns>An <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</returns>
-        public virtual EncryptionPropertyCollection EncryptionProperties
+        public virtual List<EncryptionProperty> EncryptionProperties
         {
             get
             {
                 if (this.m_props == null)
-                    this.m_props = new EncryptionPropertyCollection();
+                    this.m_props = new List<EncryptionProperty>(); //new EncryptionPropertyCollection();
                 return this.m_props;
             }
         }

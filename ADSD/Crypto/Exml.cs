@@ -5,6 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using JetBrains.Annotations;
 
 namespace ADSD.Crypto
 {
@@ -157,9 +158,9 @@ namespace ADSD.Crypto
             return false;
         }
 
-        public static string EscapeAttributeValue(string value)
+        [NotNull]public static string EscapeAttributeValue(string value)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append(value);
             sb.Replace("&", "&amp;");
             sb.Replace("<", "&lt;");
