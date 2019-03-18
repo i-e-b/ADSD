@@ -20,9 +20,9 @@ namespace ADSD
         public AadSecurityCheck(SecurityConfig config)
         {
             _config = config;
-            Issuer = _config.AadTokenIssuer + TenantKey + "/";
-            Audience = _config.Audience;
             TenantKey = _config.TenantKey;
+            Audience = _config.Audience;
+            Issuer = _config.AadTokenIssuer + TenantKey + "/";
         }
 
         /// <summary>
@@ -43,7 +43,14 @@ namespace ADSD
                     {
                         ValidAudience = Audience,
                         ValidIssuer = Issuer,
-                        IssuerSigningTokens = signingTokens
+                        IssuerSigningTokens = signingTokens,
+
+                        // Set what we want to ensure: (these are all defaults:)
+                        ValidateIssuer = true,
+                        ValidateLifetime = true,
+                        RequireExpirationTime = true,
+                        RequireSignedTokens = true,
+                        ValidateIssuerSigningKey = true
                     };
                     var x = new JwtSecurityTokenHandler();
                     x.ValidateToken(token, validationParams, out var y);

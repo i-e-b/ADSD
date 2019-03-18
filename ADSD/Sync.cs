@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace ADSD
 {
@@ -9,7 +10,7 @@ namespace ADSD
     /// </summary>
     public static class Sync  
     {
-        private static readonly TaskFactory _taskFactory = new
+        [NotNull]private static readonly TaskFactory _taskFactory = new
             TaskFactory(CancellationToken.None,
                 TaskCreationOptions.None,
                 TaskContinuationOptions.None,
@@ -18,11 +19,10 @@ namespace ADSD
         /// <summary>
         /// Run an async function synchronously and return the result
         /// </summary>
-        public static TResult Run<TResult>(Func<Task<TResult>> func) => _taskFactory.StartNew(func).Unwrap().GetAwaiter().GetResult();
-
-        /// <summary>
-        /// Run an async function synchronously
-        /// </summary>
-        public static void Run(Func<Task> func) => _taskFactory.StartNew(func).Unwrap().GetAwaiter().GetResult();
+        public static TResult Run<TResult>([NotNull]Func<Task<TResult>> func) {
+            var raw = _taskFactory.StartNew(func).Unwrap();
+            if (raw == null) throw new Exception("Failed to access task in Sync.Run");
+            return raw.GetAwaiter().GetResult();
+        }
     }
 }

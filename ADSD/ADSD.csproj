@@ -19,10 +19,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MiniResharperAnnotations" Version="1.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Json\" />
   </ItemGroup>
 

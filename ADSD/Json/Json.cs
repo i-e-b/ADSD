@@ -26,9 +26,7 @@ namespace SkinnyJson
 		/// <summary> Turn an object into a JSON string </summary>
 		public static string Freeze(object obj)
 		{
-            if (obj is DynamicWrapper dyn) {
-                return Freeze(dyn.Parsed);
-            }
+
             if (IsAnonymousTypedObject(obj))
             { // If we are passed an anon type, turn off type information -- it will all be junk.
                 var jsonParameters = DefaultParameters.Clone();
@@ -46,9 +44,6 @@ namespace SkinnyJson
         {
             if (encoding == null) encoding = DefaultStreamEncoding;
 
-            if (obj is DynamicWrapper dyn) {
-                Freeze(dyn.Parsed, target);
-            }
             if (IsAnonymousTypedObject(obj))
             { // If we are passed an anon type, turn off type information -- it will all be junk.
                 var jsonParameters = DefaultParameters.Clone();
@@ -114,12 +109,6 @@ namespace SkinnyJson
         public static object Defrost(Stream json, Type runtimeType, Encoding encoding = null)
         {
             return Instance.ToObject(json, runtimeType, encoding);
-        }
-
-        /// <summary> Turn a JSON string into an object containing properties found </summary>
-        public static dynamic DefrostDynamic(string json)
-        {
-            return new DynamicWrapper(Parse(json));
         }
         
         /// <summary>

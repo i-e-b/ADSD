@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
+using JetBrains.Annotations;
 using SkinnyJson;
 
 namespace ADSD
@@ -17,8 +17,9 @@ namespace ADSD
         /// <summary>
         /// Map of kid=>x5c data
         /// </summary>
-        private static readonly Dictionary<string,string> KeyCache = new Dictionary<string,string>();
-        private static readonly object KeyLock = new object();
+        [NotNull]private static readonly Dictionary<string,string> KeyCache = new Dictionary<string,string>();
+        [NotNull]private static readonly object KeyLock = new object();
+        private static DateTime _lastRefresh = DateTime.MinValue;
 
         /// <summary>
         /// Return a disposable collection of security tokens for all known signing keys.
@@ -45,8 +46,31 @@ namespace ADSD
         public static X509Certificate2 PublicKeyForKid(string kid) {
             lock (KeyLock)
             {
+                if (kid == null) return null;
                 if (!KeyCache.ContainsKey(kid)) return null;
-                return new X509Certificate2(Convert.FromBase64String(KeyCache[kid]));
+
+                var value = KeyCache[kid];
+                if (string.IsNullOrWhiteSpace(value)) return null;
+                return new X509Certificate2(Convert.FromBase64String(value));
+            }
+        }
+
+        /// <summary>
+        /// Ensure signing keys are available and fresh.
+        /// If no keys are loaded, this method will block. Otherwise,
+        /// any refresh will happen in the background
+        /// </summary>
+        public static void RefreshKeys(string keyDiscoveryUrl, TimeSpan maxAge)
+        {
+            // ReSharper disable once InconsistentlySynchronizedField
+            if (KeyCache.Count < 1)
+            {
+                LoadCacheSync(keyDiscoveryUrl);
+                return;
+            }
+            if (DateTime.UtcNow - _lastRefresh > maxAge) {
+                _lastRefresh = DateTime.UtcNow;
+                UpdateKeyCache(keyDiscoveryUrl);
             }
         }
 
@@ -58,16 +82,32 @@ namespace ADSD
             if (keyDiscoveryUrl == null) return;
 
             new Thread(()=>{
+                LoadCacheSync(keyDiscoveryUrl);
+            }).Start();
+        }
+
+        /// <summary>
+        /// Update the key cache synchronously.
+        /// This method will not return until keys are read.
+        /// </summary>
+        public static void LoadCacheSync(string keyDiscoveryUrl) {
+            
+            if (keyDiscoveryUrl == null) return;
                 using (var client = ClientWithDefaultProxy()) {
+                    if (client == null) throw new Exception("Failed to create a HTTP client. No tokens will be validated.");
+
                     // ReSharper disable once AccessToDisposedClosure
                     var str = Sync.Run(() => client.GetStringAsync(keyDiscoveryUrl));
+
                     var data = Json.Defrost<JwkSet>(str);
+                    if (data?.keys == null) return;
 
                     foreach (var key in data.keys)
                     {
-                        if (key.x5c.Count != 1) continue; // we don't handle multi-part certificates
+                        if (key.x5c?.Count != 1) continue; // we don't handle multi-part certificates
                         if (key.use != "sig") continue;   // we only use signature keys
                         if (key.kty != "RSA") continue;   // currently only uses RSA certificates
+                        if (string.IsNullOrWhiteSpace(key.kid)) continue; // invalid ID
 
                         lock (KeyLock)
                         {
@@ -79,7 +119,6 @@ namespace ADSD
                     }
 
                 }
-            }).Start();
         }
 
         /// <summary>

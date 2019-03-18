@@ -3970,6 +3970,7 @@
         </member>
         <member name="P:ADSD.TokenValidationParameters.RequireSignedTokens">
             <summary>
+            Default: true.
             Gets or sets a value indicating whether a <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> can be valid if not signed.
             </summary>
         </member>
@@ -3985,11 +3986,13 @@
         </member>
         <member name="P:ADSD.TokenValidationParameters.ValidateLifetime">
             <summary>
+            Default: true.
             Gets or sets a boolean to control if the lifetime will be validated during token validation.
             </summary>
         </member>
         <member name="P:ADSD.TokenValidationParameters.RequireExpirationTime">
             <summary>
+            Default: true.
             Gets or sets a value indicating whether tokens must have an 'expiration' value.
             </summary>
         </member>
@@ -4010,6 +4013,7 @@
         </member>
         <member name="P:ADSD.TokenValidationParameters.ValidateIssuer">
             <summary>
+            Default: true.
             Gets or sets a boolean to control if the issuer will be validated during token validation.
             </summary>
         </member>
@@ -4020,6 +4024,7 @@
         </member>
         <member name="P:ADSD.TokenValidationParameters.ValidateIssuerSigningKey">
             <summary>
+            Default: true.
             Gets or sets a boolean that controls if validation of the <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that signed the securityToken is called.
             </summary>
         </member>
@@ -4800,9 +4805,22 @@
             <para>A new certificate is created for each call, and should be disposed by the caller</para>
             </summary>
         </member>
+        <member name="M:ADSD.SigningKeys.RefreshKeys(System.String,System.TimeSpan)">
+            <summary>
+            Ensure signing keys are available and fresh.
+            If no keys are loaded, this method will block. Otherwise,
+            any refresh will happen in the background
+            </summary>
+        </member>
         <member name="M:ADSD.SigningKeys.UpdateKeyCache(System.String)">
             <summary>
             Update the key cache on a background thread. This method will return before the new keys are available.
+            </summary>
+        </member>
+        <member name="M:ADSD.SigningKeys.LoadCacheSync(System.String)">
+            <summary>
+            Update the key cache synchronously.
+            This method will not return until keys are read.
             </summary>
         </member>
         <member name="M:ADSD.SigningKeys.ClientWithDefaultProxy">
@@ -4818,122 +4836,6 @@
         <member name="M:ADSD.Sync.Run``1(System.Func{System.Threading.Tasks.Task{``0}})">
             <summary>
             Run an async function synchronously and return the result
-            </summary>
-        </member>
-        <member name="M:ADSD.Sync.Run(System.Func{System.Threading.Tasks.Task})">
-            <summary>
-            Run an async function synchronously
-            </summary>
-        </member>
-        <member name="T:SkinnyJson.ChainStep">
-            <summary>
-            Represents a step in a dynamic call chain
-            </summary>
-        </member>
-        <member name="P:SkinnyJson.ChainStep.Name">
-            <summary>
-            Name of property
-            </summary>
-        </member>
-        <member name="P:SkinnyJson.ChainStep.SingleIndex">
-            <summary>
-            Index lookup, if any
-            </summary>
-        </member>
-        <member name="P:SkinnyJson.ChainStep.IsIndex">
-            <summary>
-            True if there is an index
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.ChainStep.PropertyStep(System.String)">
-            <summary>
-            Make a property lookup
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.ChainStep.IndexStep(System.Int32)">
-            <summary>
-            Make an indexed lookup
-            </summary>
-        </member>
-        <member name="T:SkinnyJson.DynamicWrapper">
-            <summary>
-            Wrapper around a parser object
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.#ctor(System.Object)">
-            <summary>
-            Wrap a parser output object in a dynamic object
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.#ctor(System.Object,System.Collections.Generic.List{SkinnyJson.ChainStep},SkinnyJson.ChainStep)">
-            <summary>
-            Wrap parser output object in a dynamic object with a query path chain
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.TryInvokeMember(System.Dynamic.InvokeMemberBinder,System.Object[],System.Object@)">
-            <summary>
-            Syntax: dyn.path.elems()
-            Access value at position
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.TryInvoke(System.Dynamic.InvokeBinder,System.Object[],System.Object@)">
-            <summary>
-            Syntax: dyn.path.elems[0]()
-            Try to directly invoke an instance
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
-            <summary>
-            Syntax: dyn.parent.child.grandchild
-            Add a step in the path to access
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.TryGetIndex(System.Dynamic.GetIndexBinder,System.Object[],System.Object@)">
-            <summary>
-            Syntax: Check.That....[predicate]
-            applies predicate to matching paths.
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.TrySetIndex(System.Dynamic.SetIndexBinder,System.Object[],System.Object)">
-            <summary>
-            Syntax: dyn.path.elems[0] = x
-            Update wrapped object at path with a new array item
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
-            <summary>
-            Syntax: dyn.path.elems = x
-            Update wrapped object at path with a new value
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.TryConvert(System.Dynamic.ConvertBinder,System.Object@)">
-            <summary>
-            Handle conversions
-            </summary>
-        </member>
-        <member name="T:SkinnyJson.DynamicWrapper.Valuate">
-            <summary>
-            Helper.
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.op_Explicit(SkinnyJson.DynamicWrapper)~SkinnyJson.DynamicWrapper.Valuate">
-            <summary>
-            Cast path to an integer value
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.ToObject(SkinnyJson.DynamicWrapper)">
-            <summary>
-            Cast to object by resolving path
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.op_Explicit(SkinnyJson.DynamicWrapper)~System.Int32">
-            <summary>
-            Cast path to an integer value
-            </summary>
-        </member>
-        <member name="M:SkinnyJson.DynamicWrapper.op_Explicit(SkinnyJson.DynamicWrapper)~System.String">
-            <summary>
-            Cast path to an integer value
             </summary>
         </member>
         <member name="T:SkinnyJson.Json">
@@ -4979,9 +4881,6 @@
         </member>
         <member name="M:SkinnyJson.Json.Defrost(System.IO.Stream,System.Type,System.Text.Encoding)">
             <summary> Turn a JSON data stream into a runtime type </summary>
-        </member>
-        <member name="M:SkinnyJson.Json.DefrostDynamic(System.String)">
-            <summary> Turn a JSON string into an object containing properties found </summary>
         </member>
         <member name="M:SkinnyJson.Json.DefrostFromPath``1(System.String,System.String)">
             <summary>
@@ -5255,6 +5154,18 @@
             <summary>
             Dictionary with thread locks
             </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.CanBeNullAttribute">
+            <summary>Marked element could be <c>null</c></summary>
+        </member>
+        <member name="T:JetBrains.Annotations.NotNullAttribute">
+            <summary>Marked element could never be <c>null</c></summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ItemNotNullAttribute">
+            <summary>IEnumerable, Task.Result, or Lazy.Value property can never be null.</summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ItemCanBeNullAttribute">
+            <summary>IEnumerable, Task.Result, or Lazy.Value property can be null.</summary>
         </member>
     </members>
 </doc>

@@ -46,9 +46,10 @@ namespace ADSD
         public string ValidAudience { get; set; }
 
         /// <summary>
+        /// Default: true.
         /// Gets or sets a value indicating whether a <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> can be valid if not signed.
         /// </summary>
-        public bool RequireSignedTokens { get; set; }
+        public bool RequireSignedTokens { get; set; } = true;
 
         /// <summary>
         /// Issuer that is trusted
@@ -61,14 +62,16 @@ namespace ADSD
         public IEnumerable<string> ValidIssuers { get; set; }
         
         /// <summary>
+        /// Default: true.
         /// Gets or sets a boolean to control if the lifetime will be validated during token validation.
         /// </summary>
-        public bool ValidateLifetime { get; set; }
+        public bool ValidateLifetime { get; set; } = true;
         
         /// <summary>
+        /// Default: true.
         /// Gets or sets a value indicating whether tokens must have an 'expiration' value.
         /// </summary>
-        public bool RequireExpirationTime { get; set; }
+        public bool RequireExpirationTime { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the clock skew to apply when validating times
@@ -86,9 +89,10 @@ namespace ADSD
         public bool ValidateAudience { get; set; }
 
         /// <summary>
+        /// Default: true.
         /// Gets or sets a boolean to control if the issuer will be validated during token validation.
         /// </summary>
-        public bool ValidateIssuer { get; set; }
+        public bool ValidateIssuer { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the <see cref="T:System.Collections.Generic.ICollection`1" /> that contains valid audiences that will be used during token validation.
@@ -96,9 +100,10 @@ namespace ADSD
         public IEnumerable<string> ValidAudiences { get; set; }
         
         /// <summary>
+        /// Default: true.
         /// Gets or sets a boolean that controls if validation of the <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> that signed the securityToken is called.
         /// </summary>
-        public bool ValidateIssuerSigningKey { get; set; }
+        public bool ValidateIssuerSigningKey { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a boolean to control if the original token is saved when a session is created.
