@@ -572,6 +572,7 @@ namespace ADSD.Crypto
                 case "http://www.w3.org/2000/09/xmldsig#sha1":
                     return (object) new SHA1Managed();
                 case "http://www.w3.org/2001/04/xmldsig-more#hmac-sha256":
+                case "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256": // <-- TEST!!
                     return (object)new HMACSHA256();
                 case "http://www.w3.org/2001/04/xmlenc#aes128-cbc":
                 case "http://www.w3.org/2001/04/xmlenc#aes192-cbc":
@@ -604,7 +605,11 @@ namespace ADSD.Crypto
 
             object obj = (object) null;
             Func<object> func1 = (Func<object>) null;
-            if (!algorithmDelegateDictionary.TryGetValue(algorithm, out func1))
+            if (algorithmDelegateDictionary.TryGetValue(algorithm, out func1))
+            {
+                if (func1 != null) return func1();
+            }
+            else
             {
                 lock (AlgorithmDictionaryLock)
                 {
@@ -619,6 +624,7 @@ namespace ADSD.Crypto
                             Console.WriteLine(ex);
                             algorithmDelegateDictionary[algorithm] = (Func<object>) null;
                         }
+
                         if (obj == null)
                         {
                             algorithmDelegateDictionary[algorithm] = (Func<object>) null;
@@ -640,14 +646,17 @@ namespace ADSD.Crypto
                     }
                 }
             }
-            else if (func1 != null)
-                return func1();
+
             if (algorithm != "SHA256" && algorithm != "http://www.w3.org/2001/04/xmlenc#sha256")
             {
                 if (algorithm != "http://www.w3.org/2000/09/xmldsig#sha1")
                 {
                     if (algorithm == "http://www.w3.org/2000/09/xmldsig#hmac-sha1")
                         return (object) new HMACSHA1(GenerateRandomBytes(64));
+                    
+                    //if (algorithm == "http://www.w3.org/2000/09/xmldsig#hmac-sha1")
+                    //    return new HMACSHA256(GenerateRandomBytes(64));
+
                     return (object) null;
                 }
                 return (object) new SHA1Managed();

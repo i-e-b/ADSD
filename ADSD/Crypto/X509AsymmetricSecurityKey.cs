@@ -232,7 +232,7 @@ namespace ADSD.Crypto
                     RSA publicKey = this.PublicKey as RSA;
                     if (publicKey == null) throw new NotSupportedException("PublicKeyNotRSA");
 
-                    return (AsymmetricSignatureDeformatter) new RSAPKCS1SignatureDeformatter((AsymmetricAlgorithm) publicKey);
+                    return (AsymmetricSignatureDeformatter) new ADSD.Crypto.RSAPKCS1SignatureDeformatter((AsymmetricAlgorithm) publicKey);
                 }
                 throw new NotSupportedException("UnsupportedCryptoAlgorithm");
             }

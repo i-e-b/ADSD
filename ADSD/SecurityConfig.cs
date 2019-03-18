@@ -6,6 +6,16 @@
     public struct SecurityConfig
     {
         /// <summary>
+        /// Default keys for AAD
+        /// </summary>
+        public const string DefaultKeyDiscoveryUrl = "https://login.microsoftonline.com/common/discovery/keys";
+        /// <summary>
+        /// Default issuer for AAD
+        /// </summary>
+        public const string DefaultAadTokenIssuer = "https://sts.windows.net/";
+
+
+        /// <summary>
         /// Security tennant key. Must be the same across the AAD organisation.
         /// </summary>
         public string TenantKey;

@@ -2979,6 +2979,37 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is <see langword="null" />. </exception>
             <exception cref="T:System.Security.Cryptography.CryptographicException">The <paramref name="value" /> parameter is not a valid <see cref="T:System.Security.Cryptography.RSA" /> key clause XML element. </exception>
         </member>
+        <member name="T:ADSD.Crypto.RSAPKCS1SignatureDeformatter">
+            <summary>Verifies an <see cref="T:System.Security.Cryptography.RSA" /> PKCS #1 version 1.5 signature.</summary>
+        </member>
+        <member name="M:ADSD.Crypto.RSAPKCS1SignatureDeformatter.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.RSAPKCS1SignatureDeformatter" /> class.</summary>
+        </member>
+        <member name="M:ADSD.Crypto.RSAPKCS1SignatureDeformatter.#ctor(System.Security.Cryptography.AsymmetricAlgorithm)">
+            <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.RSAPKCS1SignatureDeformatter" /> class with the specified key.</summary>
+            <param name="key">The instance of <see cref="T:System.Security.Cryptography.RSA" /> that holds the public key. </param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="key " />is <see langword="null" />.</exception>
+        </member>
+        <member name="M:ADSD.Crypto.RSAPKCS1SignatureDeformatter.SetKey(System.Security.Cryptography.AsymmetricAlgorithm)">
+            <summary>Sets the public key to use for verifying the signature.</summary>
+            <param name="key">The instance of <see cref="T:System.Security.Cryptography.RSA" /> that holds the public key. </param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="key " />is <see langword="null" />.</exception>
+        </member>
+        <member name="M:ADSD.Crypto.RSAPKCS1SignatureDeformatter.SetHashAlgorithm(System.String)">
+            <summary>Sets the hash algorithm to use for verifying the signature.</summary>
+            <param name="strName">The name of the hash algorithm to use for verifying the signature. </param>
+        </member>
+        <member name="M:ADSD.Crypto.RSAPKCS1SignatureDeformatter.VerifySignature(System.Byte[],System.Byte[])">
+            <summary>Verifies the <see cref="T:System.Security.Cryptography.RSA" /> PKCS#1 signature for the specified data.</summary>
+            <param name="rgbHash">The data signed with <paramref name="rgbSignature" />. </param>
+            <param name="rgbSignature">The signature to be verified for <paramref name="rgbHash" />. </param>
+            <returns>
+            <see langword="true" /> if <paramref name="rgbSignature" /> matches the signature computed using the specified hash algorithm and key on <paramref name="rgbHash" />; otherwise, <see langword="false" />.</returns>
+            <exception cref="T:System.Security.Cryptography.CryptographicUnexpectedOperationException">The key is <see langword="null" />.-or- The hash algorithm is <see langword="null" />. </exception>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="rgbHash" /> parameter is <see langword="null" />.-or- The <paramref name="rgbSignature" /> parameter is <see langword="null" />. </exception>
+        </member>
         <member name="T:ADSD.Crypto.SecurityKey">
             <summary>Base class for security keys.</summary>
         </member>

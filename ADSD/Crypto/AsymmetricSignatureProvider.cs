@@ -11,9 +11,9 @@ namespace ADSD.Crypto
     {
         private bool disposed;
         private HashAlgorithm hash;
-        private AsymmetricSignatureFormatter formatter;
-        private AsymmetricSignatureDeformatter deformatter;
-        private AsymmetricSecurityKey key;
+        private readonly AsymmetricSignatureFormatter formatter;
+        private readonly AsymmetricSignatureDeformatter deformatter;
+        private readonly AsymmetricSecurityKey key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.AsymmetricSignatureProvider" /> class used to create and verify signatures.
@@ -86,38 +86,38 @@ namespace ADSD.Crypto
             this.key = key;
             try
             {
-                this.hash = this.key.GetHashAlgorithmForSignature(algorithm);
+                hash = this.key.GetHashAlgorithmForSignature(algorithm);
             }
             catch (Exception ex)
             {
                     throw new InvalidOperationException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10618: AsymmetricSecurityKey.GetHashAlgorithmForSignature( '{0}' ) threw an exception.\nAsymmetricSecurityKey: '{1}'\nSignatureAlgorithm: '{0}', check to make sure the SignatureAlgorithm is supported.\nException: '{2}'.", (object) algorithm, (object) this.key.ToString(), (object) ex), ex);
             }
-            if (this.hash == null)
+            if (hash == null)
                 throw new InvalidOperationException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10611: AsymmetricSecurityKey.GetHashAlgorithmForSignature( '{0}' ) returned null.\nKey: '{1}'\nSignatureAlgorithm: '{0}'", (object) algorithm, (object) this.key.ToString()));
             if (willCreateSignatures)
             {
                 try
                 {
-                    this.formatter = this.key.GetSignatureFormatter(algorithm);
-                    this.formatter.SetHashAlgorithm(this.hash.GetType().ToString());
+                    formatter = this.key.GetSignatureFormatter(algorithm);
+                    formatter.SetHashAlgorithm(hash.GetType().ToString());
                 }
                 catch (Exception ex)
                 {
                         throw new InvalidOperationException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10614: AsymmetricSecurityKey.GetSignatureFormater( '{0}' ) threw an exception.\nKey: '{1}'\nSignatureAlgorithm: '{0}', check to make sure the SignatureAlgorithm is supported.\nException:'{2}'.\nIf you only need to verify signatures the parameter 'willBeUseForSigning' should be false if the private key is not be available.", (object) algorithm, (object) this.key.ToString(), (object) ex), ex);
                 }
-                if (this.formatter == null)
+                if (formatter == null)
                     throw new InvalidOperationException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10615: AsymmetricSecurityKey.GetSignatureFormater( '{0}' ) returned null.\nKey: '{1}'\nSignatureAlgorithm: '{0}', check to make sure the SignatureAlgorithm is supported.", (object) algorithm, (object) this.key.ToString()));
             }
             try
             {
-                this.deformatter = this.key.GetSignatureDeformatter(algorithm);
-                this.deformatter.SetHashAlgorithm(this.hash.GetType().ToString());
+                deformatter = this.key.GetSignatureDeformatter(algorithm);
+                deformatter.SetHashAlgorithm(hash.GetType().ToString());
             }
             catch (Exception ex)
             {
                     throw new InvalidOperationException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10616: AsymmetricSecurityKey.GetSignatureDeformatter( '{0}' ) threw an exception.\nKey: '{1}'\nSignatureAlgorithm: '{0}, check to make sure the SignatureAlgorithm is supported.'\nException:'{2}'.", (object) algorithm, (object) this.key.ToString(), (object) ex), ex);
             }
-            if (this.deformatter == null)
+            if (deformatter == null)
                 throw new InvalidOperationException(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10617: AsymmetricSecurityKey.GetSignatureDeFormater( '{0}' ) returned null.\nKey: '{1}'\nSignatureAlgorithm: '{0}', check to make sure the SignatureAlgorithm is supported.", (object) algorithm, (object) this.key.ToString()));
         }
 
@@ -137,13 +137,13 @@ namespace ADSD.Crypto
                 throw new ArgumentNullException(nameof (input));
             if (input.Length == 0)
                 throw new ArgumentException("IDX10624: Cannot sign 'input' byte array has length 0.");
-            if (this.disposed)
-                throw new ObjectDisposedException(this.GetType().ToString());
-            if (this.formatter == null)
+            if (disposed)
+                throw new ObjectDisposedException(GetType().ToString());
+            if (formatter == null)
                 throw new InvalidOperationException("IDX10620: The AsymmetricSignatureFormatter is null, cannot sign data.  Was this AsymmetricSignatureProvider constructor called specifying setting parameter: 'willCreateSignatures' == 'true'?.");
-            if (this.hash == null)
+            if (hash == null)
                 throw new InvalidOperationException("IDX10621: This AsymmetricSignatureProvider has a minimum key size requirement of: '{0}', the AsymmetricSecurityKey in has a KeySize of: '{1}'.");
-            return this.formatter.CreateSignature(this.hash.ComputeHash(input));
+            return formatter.CreateSignature(hash.ComputeHash(input));
         }
 
         /// <summary>
@@ -169,13 +169,14 @@ namespace ADSD.Crypto
                 throw new ArgumentException("IDX10625: Cannot verify signature 'input' byte array has length 0.");
             if (signature.Length == 0)
                 throw new ArgumentException("IDX10626: Cannot verify signature 'signature' byte array has length 0.");
-            if (this.disposed)
-                throw new ObjectDisposedException(this.GetType().ToString());
-            if (this.deformatter == null)
+            if (disposed)
+                throw new ObjectDisposedException(GetType().ToString());
+            if (deformatter == null)
                 throw new InvalidOperationException("IDX10629: The AsymmetricSignatureDeformatter is null, cannot sign data. If a derived AsymmetricSignatureProvider is being used, make sure to call the base constructor.");
-            if (this.hash == null)
+            if (hash == null)
                 throw new InvalidOperationException("IDX10621: This AsymmetricSignatureProvider has a minimum key size requirement of: '{0}', the AsymmetricSecurityKey in has a KeySize of: '{1}'.");
-            return this.deformatter.VerifySignature(this.hash.ComputeHash(input), signature);
+
+            return deformatter.VerifySignature(hash.ComputeHash(input), signature);
         }
 
         /// <summary>
@@ -184,13 +185,13 @@ namespace ADSD.Crypto
         /// <param name="disposing">true, if called from Dispose(), false, if invoked inside a finalizer.</param>
         protected override void Dispose(bool disposing)
         {
-            if (this.disposed || !disposing)
+            if (disposed || !disposing)
                 return;
-            this.disposed = true;
-            if (this.hash == null)
+            disposed = true;
+            if (hash == null)
                 return;
-            this.hash.Dispose();
-            this.hash = (HashAlgorithm) null;
+            hash.Dispose();
+            hash = (HashAlgorithm) null;
         }
     }
 }

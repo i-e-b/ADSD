@@ -699,8 +699,7 @@ namespace ADSD.Crypto
             SecurityKeyIdentifier signingKeyIdentifier = jwtSecurityToken.Header.SigningKeyIdentifier;
             if (signingKeyIdentifier.Count > 0)
             {
-                SecurityKey securityKey;
-                    securityKey = this.ResolveIssuerSigningKey(token, (SecurityToken) jwtSecurityToken, signingKeyIdentifier, validationParameters);
+                var securityKey = this.ResolveIssuerSigningKey(token, (SecurityToken) jwtSecurityToken, signingKeyIdentifier, validationParameters);
                     if (securityKey == null)
                         throw new Exception(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10500: Signature validation failed. Unable to resolve SecurityKeyIdentifier: '{0}', \ntoken: '{1}'.", (object) signingKeyIdentifier, (object) jwtSecurityToken.ToString()));
                 try
@@ -713,6 +712,8 @@ namespace ADSD.Crypto
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine("oid = " + jwtSecurityToken?.Payload?["oid"]);
+
                     throw new Exception(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10502: Signature validation failed. Key tried: '{0}'.\nException caught:\n '{1}'.\ntoken: '{2}'", (object) JwtSecurityTokenHandler.CreateKeyString(securityKey), (object) ex.ToString(), (object) jwtSecurityToken.ToString()), ex);
                 }
                 throw new Exception(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "IDX10501: Signature validation failed. Key tried: '{0}'.\ntoken: '{1}'", (object) JwtSecurityTokenHandler.CreateKeyString(securityKey), (object) jwtSecurityToken.ToString()));
