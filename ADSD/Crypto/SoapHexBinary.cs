@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Wraps an XSD <see langword="hexBinary" /> type.</summary>
     [ComVisible(true)]
@@ -27,7 +27,7 @@ namespace ADSD
         /// <returns>A <see cref="T:System.String" /> that indicates the XSD of the current SOAP type.</returns>
         public string GetXsdType()
         {
-            return SoapHexBinary.XsdType;
+            return XsdType;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Runtime.Remoting.Metadata.W3cXsd2001.SoapHexBinary" /> class.</summary>
@@ -39,7 +39,7 @@ namespace ADSD
         /// <param name="value">A <see cref="T:System.Byte" /> array that contains a hexadecimal number. </param>
         public SoapHexBinary(byte[] value)
         {
-            this._value = value;
+            _value = value;
         }
 
         /// <summary>Gets or sets the hexadecimal representation of a number.</summary>
@@ -48,11 +48,11 @@ namespace ADSD
         {
             get
             {
-                return this._value;
+                return _value;
             }
             set
             {
-                this._value = value;
+                _value = value;
             }
         }
 
@@ -60,15 +60,15 @@ namespace ADSD
         /// <returns>A <see cref="T:System.String" /> that is obtained from <see cref="P:System.Runtime.Remoting.Metadata.W3cXsd2001.SoapHexBinary.Value" />.</returns>
         public override string ToString()
         {
-            this.sb.Length = 0;
-            for (int index = 0; index < this._value.Length; ++index)
+            sb.Length = 0;
+            for (int index = 0; index < _value.Length; ++index)
             {
-                string str = this._value[index].ToString("X", (IFormatProvider) CultureInfo.InvariantCulture);
+                string str = _value[index].ToString("X", (IFormatProvider) CultureInfo.InvariantCulture);
                 if (str.Length == 1)
-                    this.sb.Append('0');
-                this.sb.Append(str);
+                    sb.Append('0');
+                sb.Append(str);
             }
-            return this.sb.ToString();
+            return sb.ToString();
         }
 
         /*
@@ -87,7 +87,7 @@ namespace ADSD
 
             byte[] numArray = new byte[charArray.Length / 2];
             for (int index = 0; index < charArray.Length / 2; ++index)
-                numArray[index] = (byte) ((uint) SoapHexBinary.ToByte(charArray[index * 2], value) * 16U + (uint) SoapHexBinary.ToByte(charArray[index * 2 + 1], value));
+                numArray[index] = (byte) ((uint) ToByte(charArray[index * 2], value) * 16U + (uint) ToByte(charArray[index * 2 + 1], value));
             return numArray;
         }
 

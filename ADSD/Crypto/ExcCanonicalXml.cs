@@ -4,12 +4,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class ExcCanonicalXml
     {
-        private CanonicalXmlDocument m_c14nDoc;
-        private ExcAncestralNamespaceContextManager m_ancMgr;
+        private readonly CanonicalXmlDocument m_c14nDoc;
+        private readonly ExcAncestralNamespaceContextManager m_ancMgr;
 
         internal ExcCanonicalXml(
             Stream inputStream,

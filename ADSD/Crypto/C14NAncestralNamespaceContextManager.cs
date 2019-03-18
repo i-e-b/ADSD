@@ -2,13 +2,10 @@
 using System.Collections;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class C14NAncestralNamespaceContextManager : AncestralNamespaceContextManager
     {
-        internal C14NAncestralNamespaceContextManager()
-        {
-        }
 
         private void GetNamespaceToRender(
             string nsPrefix,

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the <see langword="&lt;Signature&gt;" /> element of an XML signature.</summary>
     public class Signature
@@ -14,20 +14,9 @@ namespace ADSD
         private string m_signatureValueId;
         private KeyInfo m_keyInfo;
         private IList m_embeddedObjects;
-        private CanonicalXmlNodeList m_referencedItems;
-        private SignedXml m_signedXml;
+        private readonly CanonicalXmlNodeList m_referencedItems;
 
-        internal SignedXml SignedXml
-        {
-            get
-            {
-                return this.m_signedXml;
-            }
-            set
-            {
-                this.m_signedXml = value;
-            }
-        }
+        internal SignedXml SignedXml { get; set; }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.Signature" /> class.</summary>
         public Signature()

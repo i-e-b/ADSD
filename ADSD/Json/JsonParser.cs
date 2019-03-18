@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace SkinnyJson
+namespace ADSD.Json
 {
     /// <summary>
     /// This class encodes and decodes JSON strings.

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents a key identifier.</summary>
     public class SecurityKeyIdentifier : IEnumerable<SecurityKeyIdentifierClause>, IEnumerable

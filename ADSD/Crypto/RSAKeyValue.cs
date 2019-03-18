@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the &lt;<see langword="RSAKeyValu" />e&gt; element of an XML signature.</summary>
     public class RSAKeyValue : KeyInfoClause
@@ -12,14 +12,14 @@ namespace ADSD
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.RSAKeyValue" /> class with a new randomly generated <see cref="T:System.Security.Cryptography.RSA" /> public key.</summary>
         public RSAKeyValue()
         {
-            this.m_key = RSA.Create();
+            m_key = RSA.Create();
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.RSAKeyValue" /> class with the specified <see cref="T:System.Security.Cryptography.RSA" /> public key.</summary>
         /// <param name="key">The instance of an implementation of <see cref="T:System.Security.Cryptography.RSA" /> that holds the public key. </param>
         public RSAKeyValue(RSA key)
         {
-            this.m_key = key;
+            m_key = key;
         }
 
         /// <summary>Gets or sets the instance of <see cref="T:System.Security.Cryptography.RSA" /> that holds the public key.</summary>
@@ -28,11 +28,11 @@ namespace ADSD
         {
             get
             {
-                return this.m_key;
+                return m_key;
             }
             set
             {
-                this.m_key = value;
+                m_key = value;
             }
         }
 
@@ -40,7 +40,7 @@ namespace ADSD
         /// <returns>The XML representation of the <see cref="T:System.Security.Cryptography.RSA" /> key clause.</returns>
         public override XmlElement GetXml()
         {
-            return this.GetXml(new XmlDocument()
+            return GetXml(new XmlDocument()
             {
                 PreserveWhitespace = true
             });
@@ -48,7 +48,7 @@ namespace ADSD
 
         internal override XmlElement GetXml(XmlDocument xmlDocument)
         {
-            RSAParameters rsaParameters = this.m_key.ExportParameters(false);
+            RSAParameters rsaParameters = m_key.ExportParameters(false);
             XmlElement element1 = xmlDocument.CreateElement("KeyValue", "http://www.w3.org/2000/09/xmldsig#");
             XmlElement element2 = xmlDocument.CreateElement(nameof (RSAKeyValue), "http://www.w3.org/2000/09/xmldsig#");
             XmlElement element3 = xmlDocument.CreateElement("Modulus", "http://www.w3.org/2000/09/xmldsig#");
@@ -69,7 +69,7 @@ namespace ADSD
         {
             if (value == null)
                 throw new ArgumentNullException(nameof (value));
-            this.m_key.FromXmlString(value.OuterXml);
+            m_key.FromXmlString(value.OuterXml);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the abstract base class from which all implementations of <see cref="T:System.Security.Cryptography.Xml.KeyInfo" /> subelements inherit.</summary>
     public abstract class KeyInfoClause

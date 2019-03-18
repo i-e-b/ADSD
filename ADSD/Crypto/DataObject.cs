@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the object element of an XML signature that holds data to be signed.</summary>
     public class DataObject
@@ -15,8 +15,8 @@ namespace ADSD
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.DataObject" /> class.</summary>
         public DataObject()
         {
-            this.m_cachedXml = (XmlElement) null;
-            this.m_elData = new CanonicalXmlNodeList();
+            m_cachedXml = (XmlElement) null;
+            m_elData = new CanonicalXmlNodeList();
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.DataObject" /> class with the specified identification, MIME type, encoding, and data.</summary>
@@ -29,12 +29,12 @@ namespace ADSD
         {
             if (data == null)
                 throw new ArgumentNullException(nameof (data));
-            this.m_id = id;
-            this.m_mimeType = mimeType;
-            this.m_encoding = encoding;
-            this.m_elData = new CanonicalXmlNodeList();
-            this.m_elData.Add((object) data);
-            this.m_cachedXml = (XmlElement) null;
+            m_id = id;
+            m_mimeType = mimeType;
+            m_encoding = encoding;
+            m_elData = new CanonicalXmlNodeList();
+            m_elData.Add((object) data);
+            m_cachedXml = (XmlElement) null;
         }
 
         /// <summary>Gets or sets the identification of the current <see cref="T:System.Security.Cryptography.Xml.DataObject" /> object.</summary>
@@ -43,12 +43,12 @@ namespace ADSD
         {
             get
             {
-                return this.m_id;
+                return m_id;
             }
             set
             {
-                this.m_id = value;
-                this.m_cachedXml = (XmlElement) null;
+                m_id = value;
+                m_cachedXml = (XmlElement) null;
             }
         }
 
@@ -58,12 +58,12 @@ namespace ADSD
         {
             get
             {
-                return this.m_mimeType;
+                return m_mimeType;
             }
             set
             {
-                this.m_mimeType = value;
-                this.m_cachedXml = (XmlElement) null;
+                m_mimeType = value;
+                m_cachedXml = (XmlElement) null;
             }
         }
 
@@ -73,12 +73,12 @@ namespace ADSD
         {
             get
             {
-                return this.m_encoding;
+                return m_encoding;
             }
             set
             {
-                this.m_encoding = value;
-                this.m_cachedXml = (XmlElement) null;
+                m_encoding = value;
+                m_cachedXml = (XmlElement) null;
             }
         }
 
@@ -89,16 +89,16 @@ namespace ADSD
         {
             get
             {
-                return (XmlNodeList) this.m_elData;
+                return (XmlNodeList) m_elData;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof (value));
-                this.m_elData = new CanonicalXmlNodeList();
+                m_elData = new CanonicalXmlNodeList();
                 foreach (XmlNode xmlNode in value)
-                    this.m_elData.Add((object) xmlNode);
-                this.m_cachedXml = (XmlElement) null;
+                    m_elData.Add((object) xmlNode);
+                m_cachedXml = (XmlElement) null;
             }
         }
 
@@ -106,7 +106,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_cachedXml != null;
+                return m_cachedXml != null;
             }
         }
 
@@ -114,9 +114,9 @@ namespace ADSD
         /// <returns>The XML representation of the <see cref="T:System.Security.Cryptography.Xml.DataObject" /> object.</returns>
         public XmlElement GetXml()
         {
-            if (this.CacheValid)
-                return this.m_cachedXml;
-            return this.GetXml(new XmlDocument()
+            if (CacheValid)
+                return m_cachedXml;
+            return GetXml(new XmlDocument()
             {
                 PreserveWhitespace = true
             });
@@ -125,15 +125,15 @@ namespace ADSD
         internal XmlElement GetXml(XmlDocument document)
         {
             XmlElement element = document.CreateElement("Object", "http://www.w3.org/2000/09/xmldsig#");
-            if (!string.IsNullOrEmpty(this.m_id))
-                element.SetAttribute("Id", this.m_id);
-            if (!string.IsNullOrEmpty(this.m_mimeType))
-                element.SetAttribute("MimeType", this.m_mimeType);
-            if (!string.IsNullOrEmpty(this.m_encoding))
-                element.SetAttribute("Encoding", this.m_encoding);
-            if (this.m_elData != null)
+            if (!string.IsNullOrEmpty(m_id))
+                element.SetAttribute("Id", m_id);
+            if (!string.IsNullOrEmpty(m_mimeType))
+                element.SetAttribute("MimeType", m_mimeType);
+            if (!string.IsNullOrEmpty(m_encoding))
+                element.SetAttribute("Encoding", m_encoding);
+            if (m_elData != null)
             {
-                foreach (XmlNode node in (XmlNodeList) this.m_elData)
+                foreach (XmlNode node in (XmlNodeList) m_elData)
                     element.AppendChild(document.ImportNode(node, true));
             }
             return element;
@@ -146,12 +146,12 @@ namespace ADSD
         {
             if (value == null)
                 throw new ArgumentNullException(nameof (value));
-            this.m_id = Exml.GetAttribute(value, "Id", "http://www.w3.org/2000/09/xmldsig#");
-            this.m_mimeType = Exml.GetAttribute(value, "MimeType", "http://www.w3.org/2000/09/xmldsig#");
-            this.m_encoding = Exml.GetAttribute(value, "Encoding", "http://www.w3.org/2000/09/xmldsig#");
+            m_id = Exml.GetAttribute(value, "Id", "http://www.w3.org/2000/09/xmldsig#");
+            m_mimeType = Exml.GetAttribute(value, "MimeType", "http://www.w3.org/2000/09/xmldsig#");
+            m_encoding = Exml.GetAttribute(value, "Encoding", "http://www.w3.org/2000/09/xmldsig#");
             foreach (XmlNode childNode in value.ChildNodes)
-                this.m_elData.Add((object) childNode);
-            this.m_cachedXml = value;
+                m_elData.Add((object) childNode);
+            m_cachedXml = value;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security;
 using System.Security.Permissions;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// EvidenceBase
@@ -16,7 +16,7 @@ namespace ADSD
         /// <exception cref="T:System.InvalidOperationException">An object to be used as evidence is not serializable.</exception>
         protected EvidenceBase()
         {
-            if (!this.GetType().IsSerializable)
+            if (!GetType().IsSerializable)
                 throw new InvalidOperationException("Policy_EvidenceMustBeSerializable");
         }
 

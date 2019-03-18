@@ -3,22 +3,22 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the exclusive C14N XML canonicalization transform for a digital signature as defined by the World Wide Web Consortium (W3C), without comments.</summary>
     public class XmlDsigExcC14NTransform : Transform
     {
-        private Type[] _inputTypes = new Type[3]
+        private readonly Type[] _inputTypes = new Type[3]
         {
             typeof (Stream),
             typeof (XmlDocument),
             typeof (XmlNodeList)
         };
-        private Type[] _outputTypes = new Type[1]
+        private readonly Type[] _outputTypes = new Type[1]
         {
             typeof (Stream)
         };
-        private bool _includeComments;
+        private readonly bool _includeComments;
         private string _inclusiveNamespacesPrefixList;
         private ExcCanonicalXml _excCanonicalXml;
 

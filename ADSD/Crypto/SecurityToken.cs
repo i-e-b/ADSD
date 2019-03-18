@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents a base class used to implement all security tokens.</summary>
     public abstract class SecurityToken

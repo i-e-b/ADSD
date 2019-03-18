@@ -2,36 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security;
-using System.Security.Permissions;
 using System.Security.Policy;
 using System.Threading;
 
-namespace System.Security.Policy
-{
-    internal interface ILegacyEvidenceAdapter
-    {
-        object EvidenceObject { get; }
-
-        Type EvidenceType { get; }
-    }
-    
-    internal interface IDelayEvaluatedEvidence
-    {
-        bool IsVerified { [SecurityCritical] get; }
-
-        bool WasUsed { get; }
-
-        void MarkUsed();
-    }
-}
-
-
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// Policy evidence

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>AudienceValidator</summary>
     public static class Validators

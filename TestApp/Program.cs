@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using ADSD;
-using SkinnyJson;
+using ADSD.Json;
 
 namespace TestApp
 {
@@ -10,7 +10,7 @@ namespace TestApp
         static void Main(string[] args)
         {
             var raw = File.ReadAllText(@"C:\Temp\security.json");
-            var config = Json.Defrost<SecurityConfig>(raw);
+            var config = JsonTool.Defrost<SecurityConfig>(raw);
 
             Console.WriteLine("Cache is populating.");
             SigningKeys.RefreshKeys(config.KeyDiscoveryUrl, TimeSpan.FromHours(1));

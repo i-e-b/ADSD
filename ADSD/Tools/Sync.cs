@@ -3,12 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
-namespace ADSD
+namespace ADSD.Tools
 {
     /// <summary>
     /// Helper class to properly wait for async tasks
     /// </summary>
-    public static class Sync  
+    internal static class Sync  
     {
         [NotNull]private static readonly TaskFactory _taskFactory = new
             TaskFactory(CancellationToken.None,

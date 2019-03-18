@@ -6,16 +6,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace SkinnyJson
+namespace ADSD.Json
 {
     /// <summary>
     /// SkinnyJson entry point. Use the static methods of this class to interact with JSON data
     /// </summary>
-    public partial class Json
+    public partial class JsonTool
     {
         /// <summary>
         /// String encoding to use for streams, when no specific encoding is provided.
@@ -168,8 +167,8 @@ namespace SkinnyJson
         /// </summary>
         public static JsonParameters DefaultParameters = new JsonParameters();
 
-    	internal static readonly Json Instance = new Json();
-        private Json(){
+    	internal static readonly JsonTool Instance = new JsonTool();
+        private JsonTool(){
             DefaultParameters = DefaultParameters ?? new JsonParameters();
             jsonParameters = DefaultParameters;
         }

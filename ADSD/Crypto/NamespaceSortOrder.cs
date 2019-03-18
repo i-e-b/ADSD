@@ -2,14 +2,10 @@
 using System.Collections;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class NamespaceSortOrder : IComparer
     {
-        internal NamespaceSortOrder()
-        {
-        }
-
         public int Compare(object a, object b)
         {
             XmlNode n1 = a as XmlNode;

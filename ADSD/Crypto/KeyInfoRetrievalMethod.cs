@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>References <see cref="T:System.Security.Cryptography.Xml.KeyInfo" /> objects stored at a different location when using XMLDSIG or XML encryption.</summary>
     public class KeyInfoRetrievalMethod : KeyInfoClause

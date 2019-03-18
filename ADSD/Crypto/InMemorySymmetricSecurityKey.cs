@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents keys that are generated using symmetric algorithms and are only stored in the local computer's random access memory.</summary>
     public class InMemorySymmetricSecurityKey : SymmetricSecurityKey
     {
-        private int keySize;
-        private byte[] symmetricKey;
+        private readonly int keySize;
+        private readonly byte[] symmetricKey;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.InMemorySymmetricSecurityKey" /> class using the specified symmetric key. </summary>
         /// <param name="symmetricKey">An array of <see cref="T:System.Byte" /> that contains the symmetric key.</param>

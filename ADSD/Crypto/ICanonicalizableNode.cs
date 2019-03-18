@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal interface ICanonicalizableNode
     {

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents a security token that is based upon an X.509 certificate.</summary>
     public class X509SecurityToken : SecurityToken, IDisposable
@@ -15,10 +13,10 @@ namespace ADSD
         private DateTime effectiveTime = new DateTime(2299, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private DateTime expirationTime = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private string id;
-        private X509Certificate2 certificate;
+        private readonly X509Certificate2 certificate;
         private List<SecurityKey> securityKeys;
         private bool disposed;
-        private bool disposable;
+        private readonly bool disposable;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.X509SecurityToken" /> class using the specified X.509 certificate. </summary>
         /// <param name="certificate">An <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2" /> that contains the X.509 certificate. Sets the <see cref="P:System.IdentityModel.Tokens.X509SecurityToken.Certificate" /> property.</param>

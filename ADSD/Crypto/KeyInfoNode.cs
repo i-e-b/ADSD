@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Handles <see cref="T:System.Security.Cryptography.Xml.KeyInfo" /> subelements that do not have specific implementations or handlers registered on the machine.</summary>
     public class KeyInfoNode : KeyInfoClause

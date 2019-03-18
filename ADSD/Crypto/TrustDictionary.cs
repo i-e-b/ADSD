@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class TrustDictionary
     {

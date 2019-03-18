@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     [Serializable]
     internal sealed class EvidenceTypeDescriptor
@@ -18,23 +18,23 @@ namespace ADSD
 
         private EvidenceTypeDescriptor(EvidenceTypeDescriptor descriptor)
         {
-            this.m_hostCanGenerate = descriptor.m_hostCanGenerate;
+            m_hostCanGenerate = descriptor.m_hostCanGenerate;
             if (descriptor.m_assemblyEvidence != null)
-                this.m_assemblyEvidence = descriptor.m_assemblyEvidence.Clone();
+                m_assemblyEvidence = descriptor.m_assemblyEvidence.Clone();
             if (descriptor.m_hostEvidence == null)
                 return;
-            this.m_hostEvidence = descriptor.m_hostEvidence.Clone();
+            m_hostEvidence = descriptor.m_hostEvidence.Clone();
         }
 
         public EvidenceBase AssemblyEvidence
         {
             get
             {
-                return this.m_assemblyEvidence;
+                return m_assemblyEvidence;
             }
             set
             {
-                this.m_assemblyEvidence = value;
+                m_assemblyEvidence = value;
             }
         }
 
@@ -42,11 +42,11 @@ namespace ADSD
         {
             get
             {
-                return this.m_generated;
+                return m_generated;
             }
             set
             {
-                this.m_generated = value;
+                m_generated = value;
             }
         }
 
@@ -54,11 +54,11 @@ namespace ADSD
         {
             get
             {
-                return this.m_hostCanGenerate;
+                return m_hostCanGenerate;
             }
             set
             {
-                this.m_hostCanGenerate = value;
+                m_hostCanGenerate = value;
             }
         }
 
@@ -66,11 +66,11 @@ namespace ADSD
         {
             get
             {
-                return this.m_hostEvidence;
+                return m_hostEvidence;
             }
             set
             {
-                this.m_hostEvidence = value;
+                m_hostEvidence = value;
             }
         }
 

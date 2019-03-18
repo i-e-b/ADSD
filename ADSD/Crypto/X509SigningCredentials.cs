@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents an X.509 token used as the signing credential.</summary>
     public class X509SigningCredentials : SigningCredentials
     {
-        private X509Certificate2 certificate;
+        private readonly X509Certificate2 certificate;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.X509SigningCredentials" /> class based on the specified X.509 certificate.</summary>
         /// <param name="certificate">The X.509 certificate.</param>

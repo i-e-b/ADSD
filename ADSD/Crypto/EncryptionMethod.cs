@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// EncryptionMethod
@@ -15,22 +15,22 @@ namespace ADSD
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.EncryptionMethod" /> class. </summary>
         public EncryptionMethod()
         {
-            this.m_cachedXml = (XmlElement) null;
+            m_cachedXml = (XmlElement) null;
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.EncryptionMethod" /> class specifying an algorithm Uniform Resource Identifier (URI). </summary>
         /// <param name="algorithm">The Uniform Resource Identifier (URI) that describes the algorithm represented by an instance of the <see cref="T:System.Security.Cryptography.Xml.EncryptionMethod" /> class. </param>
         public EncryptionMethod(string algorithm)
         {
-            this.m_algorithm = algorithm;
-            this.m_cachedXml = (XmlElement) null;
+            m_algorithm = algorithm;
+            m_cachedXml = (XmlElement) null;
         }
 
         private bool CacheValid
         {
             get
             {
-                return this.m_cachedXml != null;
+                return m_cachedXml != null;
             }
         }
 
@@ -41,14 +41,14 @@ namespace ADSD
         {
             get
             {
-                return this.m_keySize;
+                return m_keySize;
             }
             set
             {
                 if (value <= 0)
                     throw new ArgumentOutOfRangeException(nameof(KeySize), "Cryptography error: Invalid key size (7)");
-                this.m_keySize = value;
-                this.m_cachedXml = (XmlElement) null;
+                m_keySize = value;
+                m_cachedXml = (XmlElement) null;
             }
         }
 
@@ -58,12 +58,12 @@ namespace ADSD
         {
             get
             {
-                return this.m_algorithm;
+                return m_algorithm;
             }
             set
             {
-                this.m_algorithm = value;
-                this.m_cachedXml = (XmlElement) null;
+                m_algorithm = value;
+                m_cachedXml = (XmlElement) null;
             }
         }
 
@@ -71,9 +71,9 @@ namespace ADSD
         /// <returns>An <see cref="T:System.Xml.XmlElement" /> object that encapsulates an instance of the <see cref="T:System.Security.Cryptography.Xml.EncryptionMethod" /> class.</returns>
         public XmlElement GetXml()
         {
-            if (this.CacheValid)
-                return this.m_cachedXml;
-            return this.GetXml(new XmlDocument()
+            if (CacheValid)
+                return m_cachedXml;
+            return GetXml(new XmlDocument()
             {
                 PreserveWhitespace = true
             });
@@ -82,12 +82,12 @@ namespace ADSD
         internal XmlElement GetXml(XmlDocument document)
         {
             XmlElement element1 = document.CreateElement(nameof (EncryptionMethod), "http://www.w3.org/2001/04/xmlenc#");
-            if (!string.IsNullOrEmpty(this.m_algorithm))
-                element1.SetAttribute("Algorithm", this.m_algorithm);
-            if (this.m_keySize > 0)
+            if (!string.IsNullOrEmpty(m_algorithm))
+                element1.SetAttribute("Algorithm", m_algorithm);
+            if (m_keySize > 0)
             {
                 XmlElement element2 = document.CreateElement("KeySize", "http://www.w3.org/2001/04/xmlenc#");
-                element2.AppendChild((XmlNode) document.CreateTextNode(this.m_keySize.ToString((string) null, (IFormatProvider) null)));
+                element2.AppendChild((XmlNode) document.CreateTextNode(m_keySize.ToString((string) null, (IFormatProvider) null)));
                 element1.AppendChild((XmlNode) element2);
             }
             return element1;
@@ -129,11 +129,11 @@ namespace ADSD
                 throw new ArgumentNullException(nameof (value));
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(value.OwnerDocument.NameTable);
             nsmgr.AddNamespace("enc", "http://www.w3.org/2001/04/xmlenc#");
-            this.m_algorithm = GetAttribute(value, "Algorithm", "http://www.w3.org/2001/04/xmlenc#");
+            m_algorithm = GetAttribute(value, "Algorithm", "http://www.w3.org/2001/04/xmlenc#");
             XmlNode xmlNode = value.SelectSingleNode("enc:KeySize", nsmgr);
             if (xmlNode != null)
-                this.KeySize = Convert.ToInt32(DiscardWhiteSpaces(xmlNode.InnerText, 0, xmlNode.InnerText.Length), (IFormatProvider) null);
-            this.m_cachedXml = value;
+                KeySize = Convert.ToInt32(DiscardWhiteSpaces(xmlNode.InnerText, 0, xmlNode.InnerText.Length), (IFormatProvider) null);
+            m_cachedXml = value;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal static class SymmetricKeyWrap
     {

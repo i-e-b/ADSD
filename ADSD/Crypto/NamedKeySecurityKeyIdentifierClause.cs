@@ -1,15 +1,12 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// A <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" /> that can be used to match <see cref="T:System.IdentityModel.Tokens.NamedKeySecurityToken" />.
     /// </summary>
     public class NamedKeySecurityKeyIdentifierClause : SecurityKeyIdentifierClause
     {
-        private const string NameKeySecurityKeyIdentifierClauseType = "NamedKeySecurityKeyIdentifierClause";
-        private string name;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.NamedKeySecurityKeyIdentifierClause" /> class. The 'name' for matching key identifiers found in the securityToken.
         /// </summary>
@@ -24,20 +21,14 @@ namespace ADSD
                 throw new ArgumentNullException(nameof (name));
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentNullException(nameof (id));
-            this.name = name;
-            this.Id = id;
+            Name = name;
+            Id = id;
         }
 
         /// <summary>
         /// Gets the name of the <see cref="T:System.IdentityModel.Tokens.SecurityKey" />(s) this <see cref="T:System.IdentityModel.Tokens.NamedKeySecurityKeyIdentifierClause" /> represents.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-        }
+        public string Name { get; }
 
         /// <summary>
         /// Determines if a <see cref="T:System.IdentityModel.Tokens.SecurityKeyIdentifierClause" /> matches this instance.
@@ -55,7 +46,7 @@ namespace ADSD
             if (keyIdentifierClause == null)
                 throw new ArgumentNullException(nameof (keyIdentifierClause));
             NamedKeySecurityKeyIdentifierClause identifierClause = keyIdentifierClause as NamedKeySecurityKeyIdentifierClause;
-            if (identifierClause != null && string.Equals(identifierClause.Name, this.Name, StringComparison.Ordinal) && string.Equals(identifierClause.Id, this.Id, StringComparison.Ordinal))
+            if (identifierClause != null && string.Equals(identifierClause.Name, Name, StringComparison.Ordinal) && string.Equals(identifierClause.Id, Id, StringComparison.Ordinal))
                 return true;
             return base.Matches(keyIdentifierClause);
         }

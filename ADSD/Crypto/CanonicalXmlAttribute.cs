@@ -2,12 +2,10 @@
 using System.Text;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class CanonicalXmlAttribute : XmlAttribute, ICanonicalizableNode
     {
-        private bool m_isInNodeSet;
-
         public CanonicalXmlAttribute(
             string prefix,
             string localName,
@@ -19,17 +17,7 @@ namespace ADSD
             this.IsInNodeSet = defaultNodeSetInclusionState;
         }
 
-        public bool IsInNodeSet
-        {
-            get
-            {
-                return this.m_isInNodeSet;
-            }
-            set
-            {
-                this.m_isInNodeSet = value;
-            }
-        }
+        public bool IsInNodeSet { get; set; }
 
         public void Write(
             StringBuilder strBuilder,

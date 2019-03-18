@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Contains information about the canonicalization algorithm and signature algorithm used for the XML signature.</summary>
     public class SignedInfo : ICollection

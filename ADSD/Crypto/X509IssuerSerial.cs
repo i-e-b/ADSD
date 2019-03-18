@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the &lt;<see langword="X509IssuerSerial" />&gt; element of an XML digital signature.</summary>
     public struct X509IssuerSerial

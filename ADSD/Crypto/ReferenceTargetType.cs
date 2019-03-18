@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     [Serializable]
     internal enum ReferenceTargetType

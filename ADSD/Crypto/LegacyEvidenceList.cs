@@ -5,20 +5,20 @@ using System.Security;
 using System.Security.Permissions;
 using System.Security.Policy;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     [Serializable]
     internal sealed class LegacyEvidenceList : EvidenceBase, IEnumerable<EvidenceBase>, IEnumerable, ILegacyEvidenceAdapter
     {
-        private List<EvidenceBase> m_legacyEvidenceList = new List<EvidenceBase>();
+        private readonly List<EvidenceBase> m_legacyEvidenceList = new List<EvidenceBase>();
 
         public object EvidenceObject
         {
             get
             {
-                if (this.m_legacyEvidenceList.Count <= 0)
+                if (m_legacyEvidenceList.Count <= 0)
                     return (object) null;
-                return (object) this.m_legacyEvidenceList[0];
+                return (object) m_legacyEvidenceList[0];
             }
         }
 
@@ -26,26 +26,26 @@ namespace ADSD
         {
             get
             {
-                ILegacyEvidenceAdapter legacyEvidence = this.m_legacyEvidenceList[0] as ILegacyEvidenceAdapter;
+                ILegacyEvidenceAdapter legacyEvidence = m_legacyEvidenceList[0] as ILegacyEvidenceAdapter;
                 if (legacyEvidence != null)
                     return legacyEvidence.EvidenceType;
-                return this.m_legacyEvidenceList[0].GetType();
+                return m_legacyEvidenceList[0].GetType();
             }
         }
 
         public void Add(EvidenceBase evidence)
         {
-            this.m_legacyEvidenceList.Add(evidence);
+            m_legacyEvidenceList.Add(evidence);
         }
 
         public IEnumerator<EvidenceBase> GetEnumerator()
         {
-            return (IEnumerator<EvidenceBase>) this.m_legacyEvidenceList.GetEnumerator();
+            return (IEnumerator<EvidenceBase>) m_legacyEvidenceList.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator) this.m_legacyEvidenceList.GetEnumerator();
+            return (IEnumerator) m_legacyEvidenceList.GetEnumerator();
         }
 
         [SecuritySafeCritical]

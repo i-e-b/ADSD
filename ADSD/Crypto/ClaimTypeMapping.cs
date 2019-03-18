@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// Defines the inbound and outbound mapping for claim claim types from jwt to .net claim
     /// </summary>
     internal static class ClaimTypeMapping
     {
-        private static Dictionary<string, string> shortToLongClaimTypeMapping = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> shortToLongClaimTypeMapping = new Dictionary<string, string>()
         {
             {
                 "actort",
@@ -303,17 +302,17 @@ namespace ADSD
                 "http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname"
             }
         };
-        private static IDictionary<string, string> longToShortClaimTypeMapping = (IDictionary<string, string>) new Dictionary<string, string>();
-        private static HashSet<string> inboundClaimFilter;
+        private static readonly IDictionary<string, string> longToShortClaimTypeMapping = (IDictionary<string, string>) new Dictionary<string, string>();
+        private static readonly HashSet<string> inboundClaimFilter;
 
         static ClaimTypeMapping()
         {
-            foreach (KeyValuePair<string, string> keyValuePair in ClaimTypeMapping.shortToLongClaimTypeMapping)
+            foreach (KeyValuePair<string, string> keyValuePair in shortToLongClaimTypeMapping)
             {
-                if (!ClaimTypeMapping.longToShortClaimTypeMapping.ContainsKey(keyValuePair.Value))
-                    ClaimTypeMapping.longToShortClaimTypeMapping.Add(keyValuePair.Value, keyValuePair.Key);
+                if (longToShortClaimTypeMapping != null && !longToShortClaimTypeMapping.ContainsKey(keyValuePair.Value))
+                    longToShortClaimTypeMapping.Add(keyValuePair.Value, keyValuePair.Key);
             }
-            ClaimTypeMapping.inboundClaimFilter = new HashSet<string>();
+            inboundClaimFilter = new HashSet<string>();
         }
 
         /// <summary>
@@ -323,7 +322,7 @@ namespace ADSD
         {
             get
             {
-                return (IDictionary<string, string>) ClaimTypeMapping.shortToLongClaimTypeMapping;
+                return shortToLongClaimTypeMapping;
             }
         }
 
@@ -334,7 +333,7 @@ namespace ADSD
         {
             get
             {
-                return ClaimTypeMapping.longToShortClaimTypeMapping;
+                return longToShortClaimTypeMapping;
             }
         }
 
@@ -342,7 +341,7 @@ namespace ADSD
         {
             get
             {
-                return (ISet<string>) ClaimTypeMapping.inboundClaimFilter;
+                return (ISet<string>) inboundClaimFilter;
             }
         }
     }

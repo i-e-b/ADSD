@@ -7,10 +7,9 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Permissions;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Provides a wrapper on a core XML signature object to facilitate creating XML signatures.</summary>
     public class SignedXml
@@ -35,11 +34,6 @@ namespace ADSD
         internal XmlElement m_context;
         private bool m_bResolverSet;
         private Collection<string> m_safeCanonicalizationMethods;
-        private const string XmlDsigMoreHMACMD5Url = "http://www.w3.org/2001/04/xmldsig-more#hmac-md5";
-        private const string XmlDsigMoreHMACSHA256Url = "http://www.w3.org/2001/04/xmldsig-more#hmac-sha256";
-        private const string XmlDsigMoreHMACSHA384Url = "http://www.w3.org/2001/04/xmldsig-more#hmac-sha384";
-        private const string XmlDsigMoreHMACSHA512Url = "http://www.w3.org/2001/04/xmldsig-more#hmac-sha512";
-        private const string XmlDsigMoreHMACRIPEMD160Url = "http://www.w3.org/2001/04/xmldsig-more#hmac-ripemd160";
         private EncryptedXml m_exml;
         /// <summary>Represents the Uniform Resource Identifier (URI) for the standard namespace for XML digital signatures. This field is constant.</summary>
         public const string XmlDsigNamespaceUrl = "http://www.w3.org/2000/09/xmldsig#";

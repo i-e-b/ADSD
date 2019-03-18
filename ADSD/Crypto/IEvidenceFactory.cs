@@ -1,4 +1,4 @@
-﻿namespace ADSD
+﻿namespace ADSD.Crypto
 {
     /// <summary>Gets an object's <see cref="T:System.Security.Policy.Evidence" />.</summary>
     public interface IEvidenceFactory

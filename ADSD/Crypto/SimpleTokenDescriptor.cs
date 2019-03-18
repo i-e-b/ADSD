@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// 

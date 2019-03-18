@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents a key identifier clause that identifies a <see cref="T:System.IdentityModel.Tokens.X509SecurityToken" /> security token using the X.509 certificate's raw data.</summary>
     public class X509RawDataKeyIdentifierClause : BinaryKeyIdentifierClause

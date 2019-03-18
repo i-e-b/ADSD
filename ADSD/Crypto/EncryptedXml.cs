@@ -7,10 +7,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
-    /// 
+    /// A helper for XML data in encrypted tokens
     /// </summary>
     public sealed class EncryptedData : EncryptedType
   {

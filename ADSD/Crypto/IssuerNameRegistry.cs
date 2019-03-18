@@ -1,4 +1,4 @@
-﻿namespace ADSD
+﻿namespace ADSD.Crypto
 {
     /// <summary>The abstract base class for an issuer name registry. An issuer name registry is used to associate a mnemonic name to the cryptographic material that is needed to verify the signatures of tokens produced by the corresponding issuer. The issuer name registry maintains a list of issuers that are trusted by a relying party (RP) application.</summary>
     public abstract class IssuerNameRegistry

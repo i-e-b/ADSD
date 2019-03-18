@@ -2,13 +2,13 @@
 using System.Globalization;
 using System.Text;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Encodes and Decodes strings as Base64Url encoding.</summary>
     public static class Base64UrlEncoder
     {
         private static char base64PadCharacter = '=';
-        private static string doubleBase64PadCharacter = string.Format((IFormatProvider) CultureInfo.InvariantCulture, "{0}{0}", (object) Base64UrlEncoder.base64PadCharacter);
+        private static readonly string doubleBase64PadCharacter = string.Format((IFormatProvider) CultureInfo.InvariantCulture, "{0}{0}", (object) Base64UrlEncoder.base64PadCharacter);
         private static char base64Character62 = '+';
         private static char base64Character63 = '/';
         private static char base64UrlCharacter62 = '-';

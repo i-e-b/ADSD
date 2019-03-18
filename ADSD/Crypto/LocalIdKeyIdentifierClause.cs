@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents a key identifier clause that identifies a security tokens specified in the security header of the SOAP message.</summary>
     public class LocalIdKeyIdentifierClause : SecurityKeyIdentifierClause

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SkinnyJson {
+namespace ADSD.Json {
     /// <summary>
     /// Dictionary with thread locks
     /// </summary>

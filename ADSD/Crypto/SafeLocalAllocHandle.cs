@@ -4,16 +4,11 @@ using System.Runtime.InteropServices;
 using System.Security;
 using Microsoft.Win32.SafeHandles;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     [SecurityCritical]
     internal sealed class SafeLocalAllocHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
-        private SafeLocalAllocHandle()
-            : base(true)
-        {
-        }
-
         internal SafeLocalAllocHandle(IntPtr handle)
             : base(true)
         {

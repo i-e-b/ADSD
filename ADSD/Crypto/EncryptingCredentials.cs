@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the cryptographic key and encrypting algorithm that are used to encrypt the proof key. </summary>
     public class EncryptingCredentials

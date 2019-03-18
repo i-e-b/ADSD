@@ -3,14 +3,14 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// Provides signing and verifying operations using a <see cref="T:System.IdentityModel.Tokens.SymmetricSecurityKey" /> and specifying an algorithm.
     /// </summary>
     public class SymmetricSignatureProvider : SignatureProvider
     {
-        private static byte[] bytesA = new byte[32]
+        private static readonly byte[] bytesA = new byte[32]
         {
             (byte) 0,
             (byte) 1,
@@ -45,7 +45,7 @@ namespace ADSD
             (byte) 30,
             (byte) 31
         };
-        private static byte[] bytesB = new byte[32]
+        private static readonly byte[] bytesB = new byte[32]
         {
             (byte) 31,
             (byte) 30,

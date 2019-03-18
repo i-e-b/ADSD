@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal abstract class AncestralNamespaceContextManager
     {

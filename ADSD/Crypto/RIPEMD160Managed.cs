@@ -2,7 +2,7 @@
 using System.Security;
 using System.Security.Cryptography;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Computes the <see cref="T:System.Security.Cryptography.RIPEMD160" /> hash for the input data using the managed library. </summary>
     public class RIPEMD160Managed  : HashAlgorithm

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents a base class for key identifier clauses that are based upon binary data.</summary>
     public abstract class BinaryKeyIdentifierClause : SecurityKeyIdentifierClause

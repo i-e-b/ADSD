@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents an issuer name registry that maintains a list of trusted issuers loaded from elements in the application configuration file that associate each issuer name to the X.509 certificate that is needed to verify the signature of tokens produced by the issuer.</summary>
     public class ConfigurationBasedIssuerNameRegistry : IssuerNameRegistry
     {
-        private Dictionary<string, string> _configuredTrustedIssuers = new Dictionary<string, string>((IEqualityComparer<string>) new ConfigurationBasedIssuerNameRegistry.ThumbprintKeyComparer());
+        private readonly Dictionary<string, string> _configuredTrustedIssuers = new Dictionary<string, string>((IEqualityComparer<string>) new ConfigurationBasedIssuerNameRegistry.ThumbprintKeyComparer());
 
         /// <summary>Loads the trusted issuers from configuration.</summary>
         /// <param name="customConfiguration">The XML that represents the map of trusted issuers that is specified in the configuration file.</param>

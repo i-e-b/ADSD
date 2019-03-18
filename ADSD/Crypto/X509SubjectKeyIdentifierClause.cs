@@ -2,14 +2,11 @@
 using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents a key identifier clause that identifies a <see cref="T:System.IdentityModel.Tokens.X509SecurityToken" /> security token using the X.509 certificate's subject key identifier extension.</summary>
     public class X509SubjectKeyIdentifierClause : BinaryKeyIdentifierClause
     {
-        private const string SubjectKeyIdentifierOid = "2.5.29.14";
-        private const int SkiDataOffset = 2;
-
         /// <summary>Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.X509SubjectKeyIdentifierClause" /> class using the specified subject key identifier. </summary>
         /// <param name="ski">An array of <see cref="T:System.Byte" /> that contains the subject key identifier.</param>
         /// <exception cref="T:System.ArgumentNullException">

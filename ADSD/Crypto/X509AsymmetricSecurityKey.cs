@@ -2,13 +2,13 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents an asymmetric key for X.509 certificates.</summary>
     public class X509AsymmetricSecurityKey : AsymmetricSecurityKey
     {
-        private object thisLock = new object();
-        private X509Certificate2 certificate;
+        private readonly object thisLock = new object();
+        private readonly X509Certificate2 certificate;
         private AsymmetricAlgorithm privateKey;
         private bool privateKeyAvailabilityDetermined;
         private AsymmetricAlgorithm publicKey;
@@ -20,9 +20,7 @@ namespace ADSD
         /// <paramref name="certificate" /> is <see langword="null" />.</exception>
         public X509AsymmetricSecurityKey(X509Certificate2 certificate)
         {
-            if (certificate == null)
-                throw new ArgumentNullException(nameof (certificate));
-            this.certificate = certificate;
+            this.certificate = certificate ?? throw new ArgumentNullException(nameof (certificate));
         }
 
         /// <summary>Gets the size, in bits, of the public key associated with the X.509 certificate.</summary>

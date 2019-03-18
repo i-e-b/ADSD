@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace SkinnyJson
+namespace ADSD.Json
 {
     internal static class Formatter
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// Creates <see cref="T:System.IdentityModel.Tokens.SignatureProvider" />s by specifying a <see cref="T:System.IdentityModel.Tokens.SecurityKey" /> and algorithm.

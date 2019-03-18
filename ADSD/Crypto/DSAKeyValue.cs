@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the <see cref="T:System.Security.Cryptography.DSA" /> private key of the <see langword="&lt;KeyInfo&gt;" /> element.</summary>
     public class DSAKeyValue : KeyInfoClause
@@ -12,14 +12,14 @@ namespace ADSD
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.DSAKeyValue" /> class with a new, randomly-generated <see cref="T:System.Security.Cryptography.DSA" /> public key.</summary>
         public DSAKeyValue()
         {
-            this.m_key = DSA.Create();
+            m_key = DSA.Create();
         }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.DSAKeyValue" /> class with the specified <see cref="T:System.Security.Cryptography.DSA" /> public key.</summary>
         /// <param name="key">The instance of an implementation of the <see cref="T:System.Security.Cryptography.DSA" /> class that holds the public key. </param>
         public DSAKeyValue(DSA key)
         {
-            this.m_key = key;
+            m_key = key;
         }
 
         /// <summary>Gets or sets the key value represented by a <see cref="T:System.Security.Cryptography.DSA" /> object.</summary>
@@ -28,11 +28,11 @@ namespace ADSD
         {
             get
             {
-                return this.m_key;
+                return m_key;
             }
             set
             {
-                this.m_key = value;
+                m_key = value;
             }
         }
 
@@ -40,7 +40,7 @@ namespace ADSD
         /// <returns>The XML representation of the <see cref="T:System.Security.Cryptography.Xml.DSAKeyValue" /> element.</returns>
         public override XmlElement GetXml()
         {
-            return this.GetXml(new XmlDocument()
+            return GetXml(new XmlDocument()
             {
                 PreserveWhitespace = true
             });
@@ -48,7 +48,7 @@ namespace ADSD
 
         internal override XmlElement GetXml(XmlDocument xmlDocument)
         {
-            DSAParameters dsaParameters = this.m_key.ExportParameters(false);
+            DSAParameters dsaParameters = m_key.ExportParameters(false);
             XmlElement element1 = xmlDocument.CreateElement("KeyValue", "http://www.w3.org/2000/09/xmldsig#");
             XmlElement element2 = xmlDocument.CreateElement(nameof (DSAKeyValue), "http://www.w3.org/2000/09/xmldsig#");
             XmlElement element3 = xmlDocument.CreateElement("P", "http://www.w3.org/2000/09/xmldsig#");
@@ -109,7 +109,7 @@ namespace ADSD
         {
             if (value == null)
                 throw new ArgumentNullException(nameof (value));
-            this.m_key.FromXmlString(value.OuterXml);
+            m_key.FromXmlString(value.OuterXml);
         }
     }
 }

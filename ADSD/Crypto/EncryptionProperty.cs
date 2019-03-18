@@ -2,13 +2,11 @@
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the <see langword="&lt;EncryptionProperty&gt;" /> element used in XML encryption. This class cannot be inherited.</summary>
     public sealed class EncryptionProperty
     {
-        private string m_target;
-        private string m_id;
         private XmlElement m_elemProp;
         private XmlElement m_cachedXml;
 
@@ -27,29 +25,17 @@ namespace ADSD
                 throw new ArgumentNullException(nameof (elementProperty));
             if (elementProperty.LocalName != nameof (EncryptionProperty) || elementProperty.NamespaceURI != "http://www.w3.org/2001/04/xmlenc#")
                 throw new CryptographicException("Cryptography_Xml_InvalidEncryptionProperty");
-            this.m_elemProp = elementProperty;
-            this.m_cachedXml = (XmlElement) null;
+            m_elemProp = elementProperty;
+            m_cachedXml = (XmlElement) null;
         }
 
         /// <summary>Gets the ID of the current <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object.</summary>
         /// <returns>The ID of the current <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object.</returns>
-        public string Id
-        {
-            get
-            {
-                return this.m_id;
-            }
-        }
+        public string Id { get; private set; }
 
         /// <summary>Gets the target of the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object.</summary>
         /// <returns>The target of the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object.</returns>
-        public string Target
-        {
-            get
-            {
-                return this.m_target;
-            }
-        }
+        public string Target { get; private set; }
 
         /// <summary>Gets or sets an <see cref="T:System.Xml.XmlElement" /> object that represents an <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object. </summary>
         /// <returns>An <see cref="T:System.Xml.XmlElement" /> object that represents an <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object.</returns>
@@ -59,7 +45,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_elemProp;
+                return m_elemProp;
             }
             set
             {
@@ -67,8 +53,8 @@ namespace ADSD
                     throw new ArgumentNullException(nameof (value));
                 if (value.LocalName != nameof (EncryptionProperty) || value.NamespaceURI != "http://www.w3.org/2001/04/xmlenc#")
                     throw new CryptographicException("Cryptography_Xml_InvalidEncryptionProperty");
-                this.m_elemProp = value;
-                this.m_cachedXml = (XmlElement) null;
+                m_elemProp = value;
+                m_cachedXml = (XmlElement) null;
             }
         }
 
@@ -76,7 +62,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_cachedXml != null;
+                return m_cachedXml != null;
             }
         }
 
@@ -84,9 +70,9 @@ namespace ADSD
         /// <returns>An <see cref="T:System.Xml.XmlElement" /> object that encapsulates an instance of the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> class.</returns>
         public XmlElement GetXml()
         {
-            if (this.CacheValid)
-                return this.m_cachedXml;
-            return this.GetXml(new XmlDocument()
+            if (CacheValid)
+                return m_cachedXml;
+            return GetXml(new XmlDocument()
             {
                 PreserveWhitespace = true
             });
@@ -94,7 +80,7 @@ namespace ADSD
 
         internal XmlElement GetXml(XmlDocument document)
         {
-            return document.ImportNode((XmlNode) this.m_elemProp, true) as XmlElement;
+            return document.ImportNode((XmlNode) m_elemProp, true) as XmlElement;
         }
 
         /// <summary>Parses the input <see cref="T:System.Xml.XmlElement" /> and configures the internal state of the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to match.</summary>
@@ -107,10 +93,10 @@ namespace ADSD
                 throw new ArgumentNullException(nameof (value));
             if (value.LocalName != nameof (EncryptionProperty) || value.NamespaceURI != "http://www.w3.org/2001/04/xmlenc#")
                 throw new CryptographicException("Cryptography_Xml_InvalidEncryptionProperty");
-            this.m_cachedXml = value;
-            this.m_id = Exml.GetAttribute(value, "Id", "http://www.w3.org/2001/04/xmlenc#");
-            this.m_target = Exml.GetAttribute(value, "Target", "http://www.w3.org/2001/04/xmlenc#");
-            this.m_elemProp = value;
+            m_cachedXml = value;
+            Id = Exml.GetAttribute(value, "Id", "http://www.w3.org/2001/04/xmlenc#");
+            Target = Exml.GetAttribute(value, "Target", "http://www.w3.org/2001/04/xmlenc#");
+            m_elemProp = value;
         }
     }
 }

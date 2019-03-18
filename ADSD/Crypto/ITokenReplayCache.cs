@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// Interface that defines a simple cache for tacking replaying of security tokens.

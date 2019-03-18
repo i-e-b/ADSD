@@ -3,13 +3,13 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents an XML digital signature or XML encryption <see langword="&lt;KeyInfo&gt;" /> element.</summary>
     public class KeyInfo : IEnumerable
     {
         private string m_id;
-        private ArrayList m_KeyInfoClauses;
+        private readonly ArrayList m_KeyInfoClauses;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.KeyInfo" /> class.</summary>
         public KeyInfo()

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal interface IRuntimeEvidenceFactory
     {

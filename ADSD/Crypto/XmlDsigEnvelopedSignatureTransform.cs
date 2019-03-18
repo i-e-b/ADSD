@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the enveloped signature transform for an XML digital signature as defined by the W3C.</summary>
     public class XmlDsigEnvelopedSignatureTransform : Transform

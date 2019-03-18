@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents a key identifier clause that identifies a <see cref="T:System.IdentityModel.Tokens.X509SecurityToken" /> security tokens using the distinguished name of the certificate issuer and the X.509 certificate's serial number.</summary>
     public class X509IssuerSerialKeyIdentifierClause : SecurityKeyIdentifierClause

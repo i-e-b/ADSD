@@ -2,29 +2,17 @@
 using System.Text;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class CanonicalXmlText : XmlText, ICanonicalizableNode
     {
-        private bool m_isInNodeSet;
-
         public CanonicalXmlText(string strData, XmlDocument doc, bool defaultNodeSetInclusionState)
             : base(strData, doc)
         {
-            this.m_isInNodeSet = defaultNodeSetInclusionState;
+            this.IsInNodeSet = defaultNodeSetInclusionState;
         }
 
-        public bool IsInNodeSet
-        {
-            get
-            {
-                return this.m_isInNodeSet;
-            }
-            set
-            {
-                this.m_isInNodeSet = value;
-            }
-        }
+        public bool IsInNodeSet { get; set; }
 
         public void Write(
             StringBuilder strBuilder,

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class IdentityModelDictionary : IXmlDictionary
     {
         public static readonly IdentityModelDictionary Version1 = new IdentityModelDictionary((IdentityModelStrings) new IdentityModelStringsVersion1());
-        private IdentityModelStrings strings;
-        private int count;
+        private readonly IdentityModelStrings strings;
+        private readonly int count;
         private XmlDictionaryString[] dictionaryStrings;
         private Dictionary<string, int> dictionary;
         private XmlDictionaryString[] versionedDictionaryStrings;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// Initializes a new instance of <see cref="T:System.IdentityModel.Tokens.JwtPayload" /> which contains JSON objects representing the claims contained in the JWT. Each claim is a JSON object of the form { Name, Value }.

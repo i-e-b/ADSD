@@ -1,4 +1,4 @@
-﻿namespace SkinnyJson
+﻿namespace ADSD.Json
 {
     /// <summary>
     /// Parameters for serialising and deserialising.

@@ -4,8 +4,10 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using ADSD.Crypto;
+using ADSD.Json;
+using ADSD.Tools;
 using JetBrains.Annotations;
-using SkinnyJson;
 
 namespace ADSD
 {
@@ -99,7 +101,7 @@ namespace ADSD
                     // ReSharper disable once AccessToDisposedClosure
                     var str = Sync.Run(() => client.GetStringAsync(keyDiscoveryUrl));
 
-                    var data = Json.Defrost<JwkSet>(str);
+                    var data = JsonTool.Defrost<JwkSet>(str);
                     if (data?.keys == null) return;
 
                     foreach (var key in data.keys)

@@ -1,4 +1,4 @@
-﻿namespace ADSD
+﻿namespace ADSD.Crypto
 {
     internal abstract class IdentityModelStrings
     {

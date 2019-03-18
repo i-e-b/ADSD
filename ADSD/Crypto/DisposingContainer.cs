@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// A wrapper around List, which calls `Dispose` on contained items when they are removed, replaced, or the list itself is disposed.

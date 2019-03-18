@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// Temp?

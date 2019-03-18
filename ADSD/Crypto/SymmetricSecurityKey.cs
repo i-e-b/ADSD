@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the abstract base class for all keys that are generated using symmetric algorithms.</summary>
     public abstract class SymmetricSecurityKey : SecurityKey

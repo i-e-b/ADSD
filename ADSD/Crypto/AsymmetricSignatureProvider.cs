@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// Provides signing and verifying operations when working with an <see cref="T:System.IdentityModel.Tokens.AsymmetricSecurityKey" />

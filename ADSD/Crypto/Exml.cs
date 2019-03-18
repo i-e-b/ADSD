@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// A massive dump-bag of XML helpers
@@ -18,7 +18,7 @@ namespace ADSD
             string localName,
             string namespaceURI)
         {
-            return this.CreateAttribute(prefix, localName, namespaceURI);
+            return CreateAttribute(prefix, localName, namespaceURI);
         }
         
         

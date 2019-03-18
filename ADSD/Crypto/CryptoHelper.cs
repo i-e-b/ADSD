@@ -4,23 +4,17 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Permissions;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal static class CryptoHelper
     {
-        private static Dictionary<string, Func<object>> algorithmDelegateDictionary = new Dictionary<string, Func<object>>();
-        private static object AlgorithmDictionaryLock = new object();
-        private static byte[] emptyBuffer;
+        private static readonly Dictionary<string, Func<object>> algorithmDelegateDictionary = new Dictionary<string, Func<object>>();
+        private static readonly object AlgorithmDictionaryLock = new object();
+        private static byte[] EmptyBuffer = new byte[0];
         private static RandomNumberGenerator random;
         private static Rijndael rijndael;
         private static TripleDES tripleDES;
-        public const int WindowsVistaMajorNumber = 6;
-        private const string SHAString = "SHA";
-        private const string SHA1String = "SHA1";
-        private const string SHA256String = "SHA256";
-        private const string SystemSecurityCryptographySha1String = "System.Security.Cryptography.SHA1";
 
         public static int CeilingDivide(int dividend, int divisor)
         {
@@ -31,27 +25,17 @@ namespace ADSD
             return num2;
         }
 
-        internal static byte[] EmptyBuffer
-        {
-            get
-            {
-                if (CryptoHelper.emptyBuffer == null)
-                    CryptoHelper.emptyBuffer = new byte[0];
-                return CryptoHelper.emptyBuffer;
-            }
-        }
-
         internal static Rijndael Rijndael
         {
             get
             {
-                if (CryptoHelper.rijndael == null)
+                if (rijndael == null)
                 {
                     Rijndael rijndael = new RijndaelManaged();
                     rijndael.Padding = PaddingMode.ISO10126;
                     CryptoHelper.rijndael = rijndael;
                 }
-                return CryptoHelper.rijndael;
+                return rijndael;
             }
         }
 
@@ -59,13 +43,13 @@ namespace ADSD
         {
             get
             {
-                if (CryptoHelper.tripleDES == null)
+                if (tripleDES == null)
                 {
                     TripleDESCryptoServiceProvider cryptoServiceProvider = new TripleDESCryptoServiceProvider();
                     cryptoServiceProvider.Padding = PaddingMode.ISO10126;
-                    CryptoHelper.tripleDES = (TripleDES) cryptoServiceProvider;
+                    tripleDES = (TripleDES) cryptoServiceProvider;
                 }
-                return CryptoHelper.tripleDES;
+                return tripleDES;
             }
         }
 
@@ -73,47 +57,47 @@ namespace ADSD
         {
             get
             {
-                if (CryptoHelper.random == null)
-                    CryptoHelper.random = (RandomNumberGenerator) new RNGCryptoServiceProvider();
-                return CryptoHelper.random;
+                if (random == null)
+                    random = (RandomNumberGenerator) new RNGCryptoServiceProvider();
+                return random;
             }
         }
 
         internal static SymmetricAlgorithm NewDefaultEncryption()
         {
-            return CryptoHelper.GetSymmetricAlgorithm((byte[]) null, "http://www.w3.org/2001/04/xmlenc#aes256-cbc");
+            return GetSymmetricAlgorithm((byte[]) null, "http://www.w3.org/2001/04/xmlenc#aes256-cbc");
         }
 
         internal static HashAlgorithm NewSha1HashAlgorithm()
         {
-            return CryptoHelper.CreateHashAlgorithm("http://www.w3.org/2000/09/xmldsig#sha1");
+            return CreateHashAlgorithm("http://www.w3.org/2000/09/xmldsig#sha1");
         }
 
         internal static HashAlgorithm NewSha256HashAlgorithm()
         {
-            return CryptoHelper.CreateHashAlgorithm("http://www.w3.org/2001/04/xmlenc#sha256");
+            return CreateHashAlgorithm("http://www.w3.org/2001/04/xmlenc#sha256");
         }
 
         internal static KeyedHashAlgorithm NewHmacSha1KeyedHashAlgorithm()
         {
-            KeyedHashAlgorithm algorithmFromConfig = CryptoHelper.GetAlgorithmFromConfig("http://www.w3.org/2000/09/xmldsig#hmac-sha1") as KeyedHashAlgorithm;
+            KeyedHashAlgorithm algorithmFromConfig = GetAlgorithmFromConfig("http://www.w3.org/2000/09/xmldsig#hmac-sha1") as KeyedHashAlgorithm;
             if (algorithmFromConfig == null) throw new Exception("Unacceptable SHA1 HMAC. Failed to load matching algorithm from config");
             return algorithmFromConfig;
         }
 
         internal static KeyedHashAlgorithm NewHmacSha1KeyedHashAlgorithm(byte[] key)
         {
-            return CryptoHelper.CreateKeyedHashAlgorithm(key, "http://www.w3.org/2000/09/xmldsig#hmac-sha1");
+            return CreateKeyedHashAlgorithm(key, "http://www.w3.org/2000/09/xmldsig#hmac-sha1");
         }
 
         internal static KeyedHashAlgorithm NewHmacSha256KeyedHashAlgorithm(byte[] key)
         {
-            return CryptoHelper.CreateKeyedHashAlgorithm(key, "http://www.w3.org/2001/04/xmldsig-more#hmac-sha256");
+            return CreateKeyedHashAlgorithm(key, "http://www.w3.org/2001/04/xmldsig-more#hmac-sha256");
         }
 
         internal static Rijndael NewRijndaelSymmetricAlgorithm()
         {
-            Rijndael symmetricAlgorithm = CryptoHelper.GetSymmetricAlgorithm((byte[]) null, "http://www.w3.org/2001/04/xmlenc#aes128-cbc") as Rijndael;
+            Rijndael symmetricAlgorithm = GetSymmetricAlgorithm((byte[]) null, "http://www.w3.org/2001/04/xmlenc#aes128-cbc") as Rijndael;
             if (symmetricAlgorithm != null) return symmetricAlgorithm;
 
             throw new InvalidOperationException("CustomCryptoAlgorithmIsNotValidSymmetricAlgorithm");
@@ -124,7 +108,7 @@ namespace ADSD
             byte[] iv,
             string algorithm)
         {
-            object algorithmFromConfig = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+            object algorithmFromConfig = GetAlgorithmFromConfig(algorithm);
             if (algorithmFromConfig != null)
             {
                 SymmetricAlgorithm symmetricAlgorithm = algorithmFromConfig as SymmetricAlgorithm;
@@ -133,9 +117,9 @@ namespace ADSD
                 throw new InvalidOperationException("CustomCryptoAlgorithmIsNotValidSymmetricAlgorithm: "+ algorithm);
             }
             if (algorithm == "http://www.w3.org/2001/04/xmlenc#tripledes-cbc")
-                return CryptoHelper.TripleDES.CreateDecryptor(key, iv);
+                return TripleDES.CreateDecryptor(key, iv);
             if (algorithm == "http://www.w3.org/2001/04/xmlenc#aes128-cbc" || algorithm == "http://www.w3.org/2001/04/xmlenc#aes192-cbc" || algorithm == "http://www.w3.org/2001/04/xmlenc#aes256-cbc")
-                return CryptoHelper.Rijndael.CreateDecryptor(key, iv);
+                return Rijndael.CreateDecryptor(key, iv);
             throw new InvalidOperationException("UnsupportedEncryptionAlgorithm: "+ algorithm);
         }
 
@@ -144,7 +128,7 @@ namespace ADSD
             byte[] iv,
             string algorithm)
         {
-            object algorithmFromConfig = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+            object algorithmFromConfig = GetAlgorithmFromConfig(algorithm);
             if (algorithmFromConfig != null)
             {
                 SymmetricAlgorithm symmetricAlgorithm = algorithmFromConfig as SymmetricAlgorithm;
@@ -153,15 +137,15 @@ namespace ADSD
                 throw new InvalidOperationException("CustomCryptoAlgorithmIsNotValidSymmetricAlgorithm: " + algorithm);
             }
             if (algorithm == "http://www.w3.org/2001/04/xmlenc#tripledes-cbc")
-                return CryptoHelper.TripleDES.CreateEncryptor(key, iv);
+                return TripleDES.CreateEncryptor(key, iv);
             if (algorithm == "http://www.w3.org/2001/04/xmlenc#aes128-cbc" || algorithm == "http://www.w3.org/2001/04/xmlenc#aes192-cbc" || algorithm == "http://www.w3.org/2001/04/xmlenc#aes256-cbc")
-                return CryptoHelper.Rijndael.CreateEncryptor(key, iv);
+                return Rijndael.CreateEncryptor(key, iv);
             throw new InvalidOperationException("UnsupportedEncryptionAlgorithm:"+algorithm);
         }
 
         internal static HashAlgorithm CreateHashAlgorithm(string algorithm)
         {
-            object algorithmFromConfig = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+            object algorithmFromConfig = GetAlgorithmFromConfig(algorithm);
             if (algorithmFromConfig != null)
             {
                 HashAlgorithm hashAlgorithm = algorithmFromConfig as HashAlgorithm;
@@ -184,7 +168,7 @@ namespace ADSD
             byte[] key,
             string algorithm)
         {
-            object algorithmFromConfig = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+            object algorithmFromConfig = GetAlgorithmFromConfig(algorithm);
             if (algorithmFromConfig != null)
             {
                 KeyedHashAlgorithm keyedHashAlgorithm = algorithmFromConfig as KeyedHashAlgorithm;
@@ -206,7 +190,7 @@ namespace ADSD
 
         internal static byte[] ComputeHash(byte[] buffer)
         {
-            using (HashAlgorithm hashAlgorithm = CryptoHelper.NewSha1HashAlgorithm())
+            using (HashAlgorithm hashAlgorithm = NewSha1HashAlgorithm())
                 return hashAlgorithm.ComputeHash(buffer);
         }
 
@@ -226,7 +210,7 @@ namespace ADSD
 
         internal static int GetIVSize(string algorithm)
         {
-            object algorithmFromConfig = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+            object algorithmFromConfig = GetAlgorithmFromConfig(algorithm);
             if (algorithmFromConfig != null)
             {
                 var symmetricAlgorithm = algorithmFromConfig as SymmetricAlgorithm;
@@ -234,21 +218,21 @@ namespace ADSD
 
                 throw new InvalidOperationException("CustomCryptoAlgorithmIsNotValidSymmetricAlgorithm: " + algorithm);
             }
-            if (algorithm == "http://www.w3.org/2001/04/xmlenc#tripledes-cbc") return CryptoHelper.TripleDES.BlockSize;
+            if (algorithm == "http://www.w3.org/2001/04/xmlenc#tripledes-cbc") return TripleDES.BlockSize;
             if (algorithm == "http://www.w3.org/2001/04/xmlenc#aes128-cbc" || algorithm == "http://www.w3.org/2001/04/xmlenc#aes192-cbc" || algorithm == "http://www.w3.org/2001/04/xmlenc#aes256-cbc")
-                return CryptoHelper.Rijndael.BlockSize;
+                return Rijndael.BlockSize;
 
             throw new InvalidOperationException("UnsupportedEncryptionAlgorithm: " + algorithm);
         }
 
         internal static void FillRandomBytes(byte[] buffer)
         {
-            CryptoHelper.RandomNumberGenerator.GetBytes(buffer);
+            RandomNumberGenerator.GetBytes(buffer);
         }
 
         public static void GenerateRandomBytes(byte[] data)
         {
-            CryptoHelper.RandomNumberGenerator.GetNonZeroBytes(data);
+            RandomNumberGenerator.GetNonZeroBytes(data);
         }
 
         public static byte[] GenerateRandomBytes(int sizeInBits)
@@ -258,7 +242,7 @@ namespace ADSD
             if (length * 8 != sizeInBits) throw new ArgumentOutOfRangeException(nameof(sizeInBits));
 
             byte[] data = new byte[length];
-            CryptoHelper.GenerateRandomBytes(data);
+            GenerateRandomBytes(data);
             return data;
         }
 
@@ -266,7 +250,7 @@ namespace ADSD
             byte[] key,
             string algorithm)
         {
-            object algorithmFromConfig = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+            object algorithmFromConfig = GetAlgorithmFromConfig(algorithm);
             if (algorithmFromConfig != null)
             {
                 SymmetricAlgorithm symmetricAlgorithm = algorithmFromConfig as SymmetricAlgorithm;
@@ -315,7 +299,7 @@ namespace ADSD
             AsymmetricAlgorithm asymmetricAlgorithm = key.GetAsymmetricAlgorithm("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", true);
             RSACryptoServiceProvider rsaProvider = asymmetricAlgorithm as RSACryptoServiceProvider;
             if (rsaProvider != null)
-                return CryptoHelper.GetSignatureFormatterForSha256(rsaProvider);
+                return GetSignatureFormatterForSha256(rsaProvider);
             return (AsymmetricSignatureFormatter) new RSAPKCS1SignatureFormatter(asymmetricAlgorithm);
         }
 
@@ -341,7 +325,7 @@ namespace ADSD
             AsymmetricAlgorithm asymmetricAlgorithm = key.GetAsymmetricAlgorithm("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", false);
             RSACryptoServiceProvider rsaProvider = asymmetricAlgorithm as RSACryptoServiceProvider;
             if (rsaProvider != null)
-                return CryptoHelper.GetSignatureDeFormatterForSha256(rsaProvider);
+                return GetSignatureDeFormatterForSha256(rsaProvider);
             return (AsymmetricSignatureDeformatter) new RSAPKCS1SignatureDeformatter(asymmetricAlgorithm);
         }
 
@@ -366,7 +350,7 @@ namespace ADSD
             object obj;
             try
             {
-                obj = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+                obj = GetAlgorithmFromConfig(algorithm);
             }
             catch (InvalidOperationException)
             {
@@ -386,7 +370,7 @@ namespace ADSD
             object obj;
             try
             {
-                obj = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+                obj = GetAlgorithmFromConfig(algorithm);
             }
             catch (InvalidOperationException)
             {
@@ -431,7 +415,7 @@ namespace ADSD
             object obj = (object) null;
             try
             {
-                obj = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+                obj = GetAlgorithmFromConfig(algorithm);
             }
             catch (InvalidOperationException)
             {
@@ -481,7 +465,7 @@ namespace ADSD
 
         internal static byte[] UnwrapKey(byte[] wrappingKey, byte[] wrappedKey, string algorithm)
         {
-            object algorithmFromConfig = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+            object algorithmFromConfig = GetAlgorithmFromConfig(algorithm);
             if (algorithmFromConfig != null)
             {
                 SymmetricAlgorithm symmetricAlgorithm = algorithmFromConfig as SymmetricAlgorithm;
@@ -517,7 +501,7 @@ namespace ADSD
 
         internal static byte[] WrapKey(byte[] wrappingKey, byte[] keyToBeWrapped, string algorithm)
         {
-            object algorithmFromConfig = CryptoHelper.GetAlgorithmFromConfig(algorithm);
+            object algorithmFromConfig = GetAlgorithmFromConfig(algorithm);
             if (algorithmFromConfig != null)
             {
                 SymmetricAlgorithm symmetricAlgorithm = algorithmFromConfig as SymmetricAlgorithm;
@@ -620,11 +604,11 @@ namespace ADSD
 
             object obj = (object) null;
             Func<object> func1 = (Func<object>) null;
-            if (!CryptoHelper.algorithmDelegateDictionary.TryGetValue(algorithm, out func1))
+            if (!algorithmDelegateDictionary.TryGetValue(algorithm, out func1))
             {
-                lock (CryptoHelper.AlgorithmDictionaryLock)
+                lock (AlgorithmDictionaryLock)
                 {
-                    if (!CryptoHelper.algorithmDelegateDictionary.ContainsKey(algorithm))
+                    if (!algorithmDelegateDictionary.ContainsKey(algorithm))
                     {
                         try
                         {
@@ -633,22 +617,22 @@ namespace ADSD
                         catch (TargetInvocationException ex)
                         {
                             Console.WriteLine(ex);
-                            CryptoHelper.algorithmDelegateDictionary[algorithm] = (Func<object>) null;
+                            algorithmDelegateDictionary[algorithm] = (Func<object>) null;
                         }
                         if (obj == null)
                         {
-                            CryptoHelper.algorithmDelegateDictionary[algorithm] = (Func<object>) null;
+                            algorithmDelegateDictionary[algorithm] = (Func<object>) null;
                         }
                         else
                         {
-                            object defaultAlgorithm = CryptoHelper.GetDefaultAlgorithm(algorithm);
+                            object defaultAlgorithm = GetDefaultAlgorithm(algorithm);
                             if (obj is SHA1CryptoServiceProvider || defaultAlgorithm != null && defaultAlgorithm.GetType() == obj.GetType())
                             {
-                                CryptoHelper.algorithmDelegateDictionary[algorithm] = (Func<object>) null;
+                                algorithmDelegateDictionary[algorithm] = (Func<object>) null;
                             }
                             else
                             {
-                                CryptoHelper.algorithmDelegateDictionary[algorithm] =
+                                algorithmDelegateDictionary[algorithm] =
                                     () => Expression.New(obj.GetType()).Constructor.Invoke(new object[0]);
                                 return obj;
                             }
@@ -663,7 +647,7 @@ namespace ADSD
                 if (algorithm != "http://www.w3.org/2000/09/xmldsig#sha1")
                 {
                     if (algorithm == "http://www.w3.org/2000/09/xmldsig#hmac-sha1")
-                        return (object) new HMACSHA1(CryptoHelper.GenerateRandomBytes(64));
+                        return (object) new HMACSHA1(GenerateRandomBytes(64));
                     return (object) null;
                 }
                 return (object) new SHA1Managed();
@@ -681,7 +665,7 @@ namespace ADSD
 
         public static class KeyGenerator
         {
-            private static RandomNumberGenerator _random = CryptoHelper.RandomNumberGenerator;
+            private static RandomNumberGenerator _random = RandomNumberGenerator;
             private const int _maxKeyIterations = 20;
 
             public static byte[] ComputeCombinedKey(
@@ -693,9 +677,9 @@ namespace ADSD
                     throw new ArgumentNullException(nameof (requestorEntropy));
                 if (issuerEntropy == null)
                     throw new ArgumentNullException(nameof (issuerEntropy));
-                int length = CryptoHelper.KeyGenerator.ValidateKeySizeInBytes(keySizeInBits);
+                int length = ValidateKeySizeInBytes(keySizeInBits);
                 byte[] numArray1 = new byte[length];
-                using (KeyedHashAlgorithm keyedHashAlgorithm = CryptoHelper.NewHmacSha1KeyedHashAlgorithm())
+                using (KeyedHashAlgorithm keyedHashAlgorithm = NewHmacSha1KeyedHashAlgorithm())
                 {
                     keyedHashAlgorithm.Key = requestorEntropy;
                     byte[] buffer1 = issuerEntropy;
@@ -744,8 +728,8 @@ namespace ADSD
 
             public static byte[] GenerateSymmetricKey(int keySizeInBits)
             {
-                byte[] data = new byte[CryptoHelper.KeyGenerator.ValidateKeySizeInBytes(keySizeInBits)];
-                CryptoHelper.GenerateRandomBytes(data);
+                byte[] data = new byte[ValidateKeySizeInBytes(keySizeInBits)];
+                GenerateRandomBytes(data);
                 return data;
             }
 
@@ -756,19 +740,19 @@ namespace ADSD
             {
                 if (senderEntropy == null)
                     throw new ArgumentNullException(nameof (senderEntropy));
-                int length = CryptoHelper.KeyGenerator.ValidateKeySizeInBytes(keySizeInBits);
+                int length = ValidateKeySizeInBytes(keySizeInBits);
                 receiverEntropy = new byte[length];
-                CryptoHelper.KeyGenerator._random.GetNonZeroBytes(receiverEntropy);
-                return CryptoHelper.KeyGenerator.ComputeCombinedKey(senderEntropy, receiverEntropy, keySizeInBits);
+                _random.GetNonZeroBytes(receiverEntropy);
+                return ComputeCombinedKey(senderEntropy, receiverEntropy, keySizeInBits);
             }
 
             public static byte[] GenerateDESKey(int keySizeInBits)
             {
-                byte[] numArray = new byte[CryptoHelper.KeyGenerator.ValidateKeySizeInBytes(keySizeInBits)];
+                byte[] numArray = new byte[ValidateKeySizeInBytes(keySizeInBits)];
                 int num = 0;
                 while (num <= 20)
                 {
-                    CryptoHelper.GenerateRandomBytes(numArray);
+                    GenerateRandomBytes(numArray);
                     ++num;
                     if (!TripleDES.IsWeakKey(numArray))
                         return numArray;
@@ -781,14 +765,14 @@ namespace ADSD
                 byte[] senderEntropy,
                 out byte[] receiverEntropy)
             {
-                int length = CryptoHelper.KeyGenerator.ValidateKeySizeInBytes(keySizeInBits);
+                int length = ValidateKeySizeInBytes(keySizeInBits);
                 byte[] numArray = new byte[length];
                 int num = 0;
                 while (num <= 20)
                 {
                     receiverEntropy = new byte[length];
-                    CryptoHelper.KeyGenerator._random.GetNonZeroBytes(receiverEntropy);
-                    byte[] combinedKey = CryptoHelper.KeyGenerator.ComputeCombinedKey(senderEntropy, receiverEntropy, keySizeInBits);
+                    _random.GetNonZeroBytes(receiverEntropy);
+                    byte[] combinedKey = ComputeCombinedKey(senderEntropy, receiverEntropy, keySizeInBits);
                     ++num;
                     if (!TripleDES.IsWeakKey(combinedKey))
                         return combinedKey;

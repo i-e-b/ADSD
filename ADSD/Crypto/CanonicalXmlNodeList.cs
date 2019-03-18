@@ -5,7 +5,7 @@ using System.Linq;
 using System.Xml;
 using JetBrains.Annotations;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class CanonicalXmlNodeList : XmlNodeList, IList
     {

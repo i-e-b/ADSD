@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Helper class for adding DateTimes and Timespans.</summary>
     internal static class DateTimeUtil

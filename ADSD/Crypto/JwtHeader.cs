@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// Initializes a new instance of <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> which contains JSON objects representing the cryptographic operations applied to the JWT and optionally any additional properties of the JWT.
@@ -11,7 +11,6 @@ namespace ADSD
     /// </summary>
     public class JwtHeader : Dictionary<string, object>
     {
-        private SigningCredentials signingCredentials;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.IdentityModel.Tokens.JwtHeader" /> class. Default string comparer <see cref="P:System.StringComparer.Ordinal" />.
@@ -49,7 +48,7 @@ namespace ADSD
             this["typ"] = (object) "JWT";
             if (signingCredentials != null)
             {
-                this.signingCredentials = signingCredentials;
+                this.SigningCredentials = signingCredentials;
                 string index = signingCredentials.SignatureAlgorithm;
                 if (JwtSecurityTokenHandler.OutboundAlgorithmMap.ContainsKey(signingCredentials.SignatureAlgorithm))
                     index = JwtSecurityTokenHandler.OutboundAlgorithmMap[index];
@@ -88,13 +87,7 @@ namespace ADSD
         /// Gets the <see cref="P:System.IdentityModel.Tokens.JwtHeader.SigningCredentials" /> passed in the constructor.
         /// </summary>
         /// <remarks>This value may be null.</remarks>
-        public SigningCredentials SigningCredentials
-        {
-            get
-            {
-                return this.signingCredentials;
-            }
-        }
+        public SigningCredentials SigningCredentials { get; }
 
         /// <summary>Gets the mime type (Typ) of the token.</summary>
         /// <remarks>If the mime type is not found, null is returned.</remarks>

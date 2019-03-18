@@ -1,4 +1,4 @@
-﻿namespace ADSD
+﻿namespace ADSD.Crypto
 {
     /// <summary>Base class for security keys.</summary>
     public abstract class SecurityKey

@@ -4,14 +4,14 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// A sequence of transforms
     /// </summary>
     public class TransformChain
     {
-        private ArrayList m_transforms;
+        private readonly ArrayList m_transforms;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.TransformChain" /> class.</summary>
         public TransformChain()

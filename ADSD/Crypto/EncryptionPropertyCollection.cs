@@ -2,24 +2,26 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
+    // TODO: replace with List<EncryptionProperty>
+
     /// <summary>Represents a collection of <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> classes used in XML encryption. This class cannot be inherited.</summary>
     public sealed class EncryptionPropertyCollection : IList, ICollection, IEnumerable
     {
-        private ArrayList m_props;
+        private readonly ArrayList m_props;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> class.</summary>
         public EncryptionPropertyCollection()
         {
-            this.m_props = new ArrayList();
+            m_props = new ArrayList();
         }
 
         /// <summary>Returns an enumerator that iterates through an <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
         /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through an <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</returns>
         public IEnumerator GetEnumerator()
         {
-            return this.m_props.GetEnumerator();
+            return m_props.GetEnumerator();
         }
 
         /// <summary>Gets the number of elements contained in the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
@@ -28,7 +30,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_props.Count;
+                return m_props.Count;
             }
         }
 
@@ -36,7 +38,7 @@ namespace ADSD
         {
             if (!(value is EncryptionProperty))
                 throw new ArgumentException("Cryptography_Xml_IncorrectObjectType", nameof (value));
-            return this.m_props.Add(value);
+            return m_props.Add(value);
         }
 
         /// <summary>Adds an <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
@@ -44,20 +46,20 @@ namespace ADSD
         /// <returns>The position at which the new element is inserted.</returns>
         public int Add(EncryptionProperty value)
         {
-            return this.m_props.Add((object) value);
+            return m_props.Add((object) value);
         }
 
         /// <summary>Removes all items from the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
         public void Clear()
         {
-            this.m_props.Clear();
+            m_props.Clear();
         }
 
         bool IList.Contains(object value)
         {
             if (!(value is EncryptionProperty))
                 throw new ArgumentException("Cryptography_Xml_IncorrectObjectType", nameof (value));
-            return this.m_props.Contains(value);
+            return m_props.Contains(value);
         }
 
         /// <summary>Determines whether the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object contains a specific <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object.</summary>
@@ -66,14 +68,14 @@ namespace ADSD
         /// <see langword="true" /> if the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object is found in the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object; otherwise, <see langword="false" />. </returns>
         public bool Contains(EncryptionProperty value)
         {
-            return this.m_props.Contains((object) value);
+            return m_props.Contains((object) value);
         }
 
         int IList.IndexOf(object value)
         {
             if (!(value is EncryptionProperty))
                 throw new ArgumentException("Cryptography_Xml_IncorrectObjectType", nameof (value));
-            return this.m_props.IndexOf(value);
+            return m_props.IndexOf(value);
         }
 
         /// <summary>Determines the index of a specific item in the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
@@ -81,14 +83,14 @@ namespace ADSD
         /// <returns>The index of <paramref name="value" /> if found in the collection; otherwise, -1.</returns>
         public int IndexOf(EncryptionProperty value)
         {
-            return this.m_props.IndexOf((object) value);
+            return m_props.IndexOf((object) value);
         }
 
         void IList.Insert(int index, object value)
         {
             if (!(value is EncryptionProperty))
                 throw new ArgumentException("Cryptography_Xml_IncorrectObjectType", nameof (value));
-            this.m_props.Insert(index, value);
+            m_props.Insert(index, value);
         }
 
         /// <summary>Inserts an <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object into the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object at the specified position.</summary>
@@ -96,28 +98,28 @@ namespace ADSD
         /// <param name="value">An <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to insert into the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</param>
         public void Insert(int index, EncryptionProperty value)
         {
-            this.m_props.Insert(index, (object) value);
+            m_props.Insert(index, (object) value);
         }
 
         void IList.Remove(object value)
         {
             if (!(value is EncryptionProperty))
                 throw new ArgumentException("Cryptography_Xml_IncorrectObjectType", nameof (value));
-            this.m_props.Remove(value);
+            m_props.Remove(value);
         }
 
         /// <summary>Removes the first occurrence of a specific <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object from the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
         /// <param name="value">The <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to remove from the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</param>
         public void Remove(EncryptionProperty value)
         {
-            this.m_props.Remove((object) value);
+            m_props.Remove((object) value);
         }
 
         /// <summary>Removes the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object at the specified index.</summary>
         /// <param name="index">The zero-based index of the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object to remove.</param>
         public void RemoveAt(int index)
         {
-            this.m_props.RemoveAt(index);
+            m_props.RemoveAt(index);
         }
 
         /// <summary>Gets a value that indicates whether the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object has a fixed size.</summary>
@@ -127,7 +129,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_props.IsFixedSize;
+                return m_props.IsFixedSize;
             }
         }
 
@@ -138,7 +140,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_props.IsReadOnly;
+                return m_props.IsReadOnly;
             }
         }
 
@@ -147,7 +149,7 @@ namespace ADSD
         /// <returns>The <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object at the specified index.</returns>
         public EncryptionProperty Item(int index)
         {
-            return (EncryptionProperty) this.m_props[index];
+            return (EncryptionProperty) m_props[index];
         }
 
         /// <summary>Gets or sets the <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> object at the specified index.</summary>
@@ -170,13 +172,13 @@ namespace ADSD
         {
             get
             {
-                return this.m_props[index];
+                return m_props[index];
             }
             set
             {
                 if (!(value is EncryptionProperty))
                     throw new ArgumentException("Cryptography_Xml_IncorrectObjectType", nameof (value));
-                this.m_props[index] = value;
+                m_props[index] = value;
             }
         }
 
@@ -185,7 +187,7 @@ namespace ADSD
         /// <param name="index">The zero-based index in <paramref name="array" /> at which copying begins. </param>
         public void CopyTo(Array array, int index)
         {
-            this.m_props.CopyTo(array, index);
+            m_props.CopyTo(array, index);
         }
 
         /// <summary>Copies the elements of the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object to an array of <see cref="T:System.Security.Cryptography.Xml.EncryptionProperty" /> objects, starting at a particular array index.</summary>
@@ -193,7 +195,7 @@ namespace ADSD
         /// <param name="index">The zero-based index in <paramref name="array" /> at which copying begins.</param>
         public void CopyTo(EncryptionProperty[] array, int index)
         {
-            this.m_props.CopyTo((Array) array, index);
+            m_props.CopyTo((Array) array, index);
         }
 
         /// <summary>Gets an object that can be used to synchronize access to the <see cref="T:System.Security.Cryptography.Xml.EncryptionPropertyCollection" /> object.</summary>
@@ -202,7 +204,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_props.SyncRoot;
+                return m_props.SyncRoot;
             }
         }
 
@@ -213,7 +215,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_props.IsSynchronized;
+                return m_props.IsSynchronized;
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Base class for asymmetric keys.</summary>
     public abstract class AsymmetricSecurityKey : SecurityKey

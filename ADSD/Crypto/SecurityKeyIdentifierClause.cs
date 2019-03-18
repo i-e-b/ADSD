@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents an abstract base class for a key identifier clause.</summary>
     public abstract class SecurityKeyIdentifierClause

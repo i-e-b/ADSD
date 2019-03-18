@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents the <see langword="&lt;ReferenceList&gt;" /> element used in XML encryption. This class cannot be inherited.</summary>
     public sealed class ReferenceList : IList, ICollection, IEnumerable
     {
-        private ArrayList m_references;
+        private readonly ArrayList m_references;
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> class. </summary>
         public ReferenceList()
         {
-            this.m_references = new ArrayList();
+            m_references = new ArrayList();
         }
 
         /// <summary>Returns an enumerator that iterates through a <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> collection.</summary>
         /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through a <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> collection.</returns>
         public IEnumerator GetEnumerator()
         {
-            return this.m_references.GetEnumerator();
+            return m_references.GetEnumerator();
         }
 
         /// <summary>Gets the number of elements contained in the <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> object.</summary>
@@ -27,7 +27,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_references.Count;
+                return m_references.Count;
             }
         }
 
@@ -42,13 +42,13 @@ namespace ADSD
                 throw new ArgumentNullException(nameof (value));
             if (!(value is DataReference) && !(value is KeyReference))
                 throw new ArgumentException("Cryptography_Xml_IncorrectObjectType", nameof (value));
-            return this.m_references.Add(value);
+            return m_references.Add(value);
         }
 
         /// <summary>Removes all items from the <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> collection.</summary>
         public void Clear()
         {
-            this.m_references.Clear();
+            m_references.Clear();
         }
 
         /// <summary>Determines whether the <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> collection contains a specific <see cref="T:System.Security.Cryptography.Xml.DataReference" /> or <see cref="T:System.Security.Cryptography.Xml.KeyReference" /> object.</summary>
@@ -57,7 +57,7 @@ namespace ADSD
         /// <see langword="true" /> if the <see cref="T:System.Security.Cryptography.Xml.DataReference" /> or <see cref="T:System.Security.Cryptography.Xml.KeyReference" /> object is found in the <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> collection; otherwise, <see langword="false" />. </returns>
         public bool Contains(object value)
         {
-            return this.m_references.Contains(value);
+            return m_references.Contains(value);
         }
 
         /// <summary>Determines the index of a specific item in the <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> collection.</summary>
@@ -65,7 +65,7 @@ namespace ADSD
         /// <returns>The index of <paramref name="value" /> if found in the collection; otherwise, -1.</returns>
         public int IndexOf(object value)
         {
-            return this.m_references.IndexOf(value);
+            return m_references.IndexOf(value);
         }
 
         /// <summary>Inserts a <see cref="T:System.Security.Cryptography.Xml.DataReference" /> or <see cref="T:System.Security.Cryptography.Xml.KeyReference" /> object into the <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> collection at the specified position.</summary>
@@ -79,21 +79,21 @@ namespace ADSD
                 throw new ArgumentNullException(nameof (value));
             if (!(value is DataReference) && !(value is KeyReference))
                 throw new ArgumentException("Cryptography_Xml_IncorrectObjectType", nameof (value));
-            this.m_references.Insert(index, value);
+            m_references.Insert(index, value);
         }
 
         /// <summary>Removes the first occurrence of a specific <see cref="T:System.Security.Cryptography.Xml.DataReference" /> or <see cref="T:System.Security.Cryptography.Xml.KeyReference" /> object from the <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> collection.</summary>
         /// <param name="value">The <see cref="T:System.Security.Cryptography.Xml.DataReference" /> or <see cref="T:System.Security.Cryptography.Xml.KeyReference" /> object to remove from the <see cref="T:System.Security.Cryptography.Xml.ReferenceList" /> collection.</param>
         public void Remove(object value)
         {
-            this.m_references.Remove(value);
+            m_references.Remove(value);
         }
 
         /// <summary>Removes the <see cref="T:System.Security.Cryptography.Xml.DataReference" /> or <see cref="T:System.Security.Cryptography.Xml.KeyReference" /> object at the specified index.</summary>
         /// <param name="index">The zero-based index of the <see cref="T:System.Security.Cryptography.Xml.DataReference" /> or <see cref="T:System.Security.Cryptography.Xml.KeyReference" /> object to remove.</param>
         public void RemoveAt(int index)
         {
-            this.m_references.RemoveAt(index);
+            m_references.RemoveAt(index);
         }
  /*
         /// <summary>Returns the <see cref="T:System.Security.Cryptography.Xml.DataReference" /> or <see cref="T:System.Security.Cryptography.Xml.KeyReference" /> object at the specified index.</summary>
@@ -112,7 +112,7 @@ namespace ADSD
         {
             get
             {
-                return (EncryptedReference)this.m_references[index];
+                return (EncryptedReference)m_references[index];
             }
             set
             {
@@ -124,7 +124,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_references[index];
+                return m_references[index];
             }
             set
             {
@@ -132,7 +132,7 @@ namespace ADSD
                     throw new ArgumentNullException(nameof (value));
                 if (!(value is DataReference) && !(value is KeyReference))
                     throw new ArgumentException("Cryptography_Xml_IncorrectObjectType", nameof (value));
-                this.m_references[index] = value;
+                m_references[index] = value;
             }
         }
 
@@ -141,14 +141,14 @@ namespace ADSD
         /// <param name="index">The zero-based index in <paramref name="array" /> at which copying begins.</param>
         public void CopyTo(Array array, int index)
         {
-            this.m_references.CopyTo(array, index);
+            m_references.CopyTo(array, index);
         }
 
         bool IList.IsFixedSize
         {
             get
             {
-                return this.m_references.IsFixedSize;
+                return m_references.IsFixedSize;
             }
         }
 
@@ -156,7 +156,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_references.IsReadOnly;
+                return m_references.IsReadOnly;
             }
         }
 
@@ -166,7 +166,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_references.SyncRoot;
+                return m_references.SyncRoot;
             }
         }
 
@@ -177,7 +177,7 @@ namespace ADSD
         {
             get
             {
-                return this.m_references.IsSynchronized;
+                return m_references.IsSynchronized;
             }
         }
     }

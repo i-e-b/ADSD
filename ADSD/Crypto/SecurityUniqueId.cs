@@ -3,40 +3,40 @@ using System.Globalization;
 using System.Threading;
 using JetBrains.Annotations;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class SecurityUniqueId
     {
         private static long nextId = 0;
-        private static string commonPrefix = "uuid-" + Guid.NewGuid().ToString() + "-";
-        private long id;
-        private string prefix;
+        private static readonly string commonPrefix = "uuid-" + Guid.NewGuid() + "-";
+        private readonly long id;
+        private readonly string prefix;
         private string val;
 
         private SecurityUniqueId(string prefix, long id)
         {
             this.id = id;
             this.prefix = prefix;
-            this.val = (string) null;
+            val = (string) null;
         }
 
         [NotNull]public static SecurityUniqueId Create()
         {
-            return SecurityUniqueId.Create(SecurityUniqueId.commonPrefix);
+            return Create(commonPrefix);
         }
 
         [NotNull]public static SecurityUniqueId Create(string prefix)
         {
-            return new SecurityUniqueId(prefix, Interlocked.Increment(ref SecurityUniqueId.nextId));
+            return new SecurityUniqueId(prefix, Interlocked.Increment(ref nextId));
         }
 
         public string Value
         {
             get
             {
-                if (this.val == null)
-                    this.val = this.prefix + this.id.ToString((IFormatProvider) CultureInfo.InvariantCulture);
-                return this.val;
+                if (val == null)
+                    val = prefix + id.ToString((IFormatProvider) CultureInfo.InvariantCulture);
+                return val;
             }
         }
     }

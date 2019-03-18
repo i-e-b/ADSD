@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Security;
 using JetBrains.Annotations;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// An X509 key used in signing JWT tokens

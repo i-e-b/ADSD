@@ -1,6 +1,6 @@
-﻿using SkinnyJson;
+﻿using ADSD.Json;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Dictionary extensions for serializations</summary>
     public static class JsonExtensions
@@ -10,7 +10,7 @@ namespace ADSD
         /// <returns>the object as JSON.</returns>
         public static string SerializeToJson(object value)
         {
-            return Json.Freeze(value);
+            return JsonTool.Freeze(value);
         }
 
         /// <summary>Deserialzes JSON into an instance of type T.</summary>
@@ -19,7 +19,7 @@ namespace ADSD
         /// <returns>a new instance of type T.</returns>
         public static T DeserializeFromJson<T>(string jsonString) where T : class
         {
-            return Json.Defrost<T>(jsonString);
+            return JsonTool.Defrost<T>(jsonString);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace ADSD
         /// <returns>a new instance <see cref="T:System.IdentityModel.Tokens.JwtHeader" />.</returns>
         public static JwtHeader DeserializeJwtHeader(string jsonString)
         {
-            return Json.Defrost<JwtHeader>(jsonString);
+            return JsonTool.Defrost<JwtHeader>(jsonString);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace ADSD
         /// <returns>a new instance <see cref="T:System.IdentityModel.Tokens.JwtPayload" />.</returns>
         public static JwtPayload DeserializeJwtPayload(string jsonString)
         {
-            return Json.Defrost<JwtPayload>(jsonString);
+            return JsonTool.Defrost<JwtPayload>(jsonString);
         }
     }
 }

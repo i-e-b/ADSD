@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Specifies the permitted access to X.509 certificate stores.</summary>
     [Flags]

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal static class Asn1IntegerConverter
     {
-        private static List<byte[]> powersOfTwo = new List<byte[]>((IEnumerable<byte[]>) new byte[1][]
+        private static readonly List<byte[]> powersOfTwo = new List<byte[]>((IEnumerable<byte[]>) new byte[1][]
         {
             new byte[1]{ (byte) 1 }
         });

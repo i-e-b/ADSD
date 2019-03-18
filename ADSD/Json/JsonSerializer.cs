@@ -7,7 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace SkinnyJson
+namespace ADSD.Json
 {
     internal class JsonSerializer
     {
@@ -300,11 +300,11 @@ namespace SkinnyJson
             if (jsonParameters.UseExtensions)
             {
                 if (jsonParameters.UsingGlobalTypes == false)
-                    WritePairFast("$type", Json.Instance.GetTypeAssemblyName(t));
+                    WritePairFast("$type", JsonTool.Instance.GetTypeAssemblyName(t));
                 else
                 {
                     int dt;
-                    var ct = Json.Instance.GetTypeAssemblyName(t);
+                    var ct = JsonTool.Instance.GetTypeAssemblyName(t);
                     if (globalTypes.TryGetValue(ct, out dt) == false)
                     {
                         dt = globalTypes.Count + 1;
@@ -315,7 +315,7 @@ namespace SkinnyJson
                 append = true;
             }
 
-            var readableProperties = Json.Instance.GetGetters(t);
+            var readableProperties = JsonTool.Instance.GetGetters(t);
             foreach (var property in readableProperties)
             {
                 var o = GetInstanceValue(obj, t, property);

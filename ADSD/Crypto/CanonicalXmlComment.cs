@@ -2,13 +2,10 @@
 using System.Text;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class CanonicalXmlComment : XmlComment, ICanonicalizableNode
     {
-        private bool m_isInNodeSet;
-        private bool m_includeComments;
-
         public CanonicalXmlComment(
             string comment,
             XmlDocument doc,
@@ -16,29 +13,13 @@ namespace ADSD
             bool includeComments)
             : base(comment, doc)
         {
-            this.m_isInNodeSet = defaultNodeSetInclusionState;
-            this.m_includeComments = includeComments;
+            this.IsInNodeSet = defaultNodeSetInclusionState;
+            this.IncludeComments = includeComments;
         }
 
-        public bool IsInNodeSet
-        {
-            get
-            {
-                return this.m_isInNodeSet;
-            }
-            set
-            {
-                this.m_isInNodeSet = value;
-            }
-        }
+        public bool IsInNodeSet { get; set; }
 
-        public bool IncludeComments
-        {
-            get
-            {
-                return this.m_includeComments;
-            }
-        }
+        public bool IncludeComments { get; }
 
         public void Write(
             StringBuilder strBuilder,

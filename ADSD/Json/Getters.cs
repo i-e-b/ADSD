@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace SkinnyJson
+namespace ADSD.Json
 {
     internal class Getters
     {
         public string Name;
-        public Json.GenericGetter Getter;
+        public JsonTool.GenericGetter Getter;
         public Type PropertyType;
 		public FieldInfo FieldInfo;
     }

@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>
     /// A <see cref="T:System.IdentityModel.Tokens.SecurityToken" /> designed for representing a JSON Web Token (JWT).

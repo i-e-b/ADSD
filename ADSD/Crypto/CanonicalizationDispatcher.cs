@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     internal class CanonicalizationDispatcher
     {

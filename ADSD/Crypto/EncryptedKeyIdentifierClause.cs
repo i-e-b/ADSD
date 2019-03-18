@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Represents a key identifier clause that identifies an encrypted key.</summary>
     public sealed class EncryptedKeyIdentifierClause : BinaryKeyIdentifierClause

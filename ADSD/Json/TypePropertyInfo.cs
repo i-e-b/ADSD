@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace SkinnyJson
+namespace ADSD.Json
 {
-    public partial class Json
+    public partial class JsonTool
     {
         /// <summary>
         /// Record of reflected type infor for fields and properties on objects

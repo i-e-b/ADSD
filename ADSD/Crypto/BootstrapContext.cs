@@ -1,17 +1,15 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Xml;
 
-namespace ADSD
+namespace ADSD.Crypto
 {
     /// <summary>Contains a serialized version of the original token that was used at sign-in time.</summary>
     [Serializable]
     public class BootstrapContext : ISerializable
     {
-        private string _tokenString;
-        private byte[] _tokenBytes;
+        private readonly string _tokenString;
+        private readonly byte[] _tokenBytes;
         private const string _tokenTypeKey = "K";
         private const string _tokenKey = "T";
         private const char _securityTokenType = 'T';
